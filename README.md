@@ -1,81 +1,148 @@
-# FINM_33200_Group_8
+# FINM 33200 Group 8: CORN ETF Direction Forecast MVP
 
-## 任务概览
+本项目实现一个可跑通的初版 pipeline，用来预测 `CORN` ETF 下一周 log return 是否为正，并比较三组信息集：
 
-本项目目标是预测 CORN ETF 的未来表现，并比较不同数据源对预测效果的提升。
+- 方案 A：历史价格
+- 方案 B：历史价格 + 玉米带天气
+- 方案 C：历史价格 + 玉米带天气 + USDA 文本
 
-## 1. 数据源
+初版优先保证端到端可复现。天气模块提供 ERA5/CFSv2/GEFS 的 adapter 和缓存入口，但默认 demo 不下载多年 GRIB 数据。
 
-### 1.1 历史价格数据
+## Quick Start
 
-数据来源：
+```bash
+uv sync --extra dev
+uv run python -m corn_forecast.cli all --demo
+```
 
-- Yahoo Finance API
+运行后会生成：
 
-待确定：
+- `data/raw/prices_CORN.csv`
+- `data/raw/usda_releases.csv`
+- `data/interim/weather_weekly.parquet`
+- `data/processed/feature_panel.parquet`
+- `reports/metrics.json`
+- `reports/predictions.csv`
+- `reports/model_report.md`
+- `reports/figures/predicted_probabilities.png`
+- `reports/figures/roc_curves.png`
 
-- 使用日度数据还是周度数据
-- 使用多长时间区间的数据
+这些数据和报告输出默认被 `.gitignore` 忽略，避免把大文件或本地结果提交进仓库。
 
-### 1.2 天气数据
+## CLI
 
-可能的数据来源：
+一键 demo：
 
-- NOAA API
-- ERA5 reanalysis: https://cds.climate.copernicus.eu/datasets/derived-era5-single-levels-daily-statistics?tab=download
+```bash
+uv run python -m corn_forecast.cli all --demo
+```
 
-### 1.3 文本数据
+分步运行：
 
-可能的数据来源：
+```bash
+uv run python -m corn_forecast.cli fetch-prices --demo
+uv run python -m corn_forecast.cli fetch-usda --demo
+uv run python -m corn_forecast.cli fetch-weather --demo
+uv run python -m corn_forecast.cli build-features
+uv run python -m corn_forecast.cli train-evaluate
+uv run python -m corn_forecast.cli make-report
+```
 
-- USDA Crop Progress Report: https://esmis.nal.usda.gov/publication/crop-progress
-- AgWeb corn price 页面: https://www.agweb.com/markets/futures/corn-price
-- WRDS
-- WSJ
+常用参数：
 
-## 2. 预测目标
+- `--symbol CORN`：Yahoo Finance 标的，默认 `CORN`
+- `--start 2011-01-01`：数据开始日期
+- `--end YYYY-MM-DD`：数据结束日期，默认到当前日期
+- `--split-date 2022-12-31`：训练集最后一周，之后为测试集
+- `--root PATH`：指定输出目录，测试或临时运行时很有用
+- `--demo`：使用确定性离线样本，不访问外部 API
 
-主要预测对象：
+## Data Sources
 
-- CORN ETF
+价格数据：
 
-待确定的预测目标包括：
+- Yahoo Finance through `yfinance`
 
-- 预测价格
-- 预测回报
-- 预测是否出现大幅上涨
+天气数据：
 
-## 3. 预测方案
+- ERA5 daily statistics: `derived-era5-single-levels-daily-statistics`
+- NOAA CFSv2 operational 9-month forecast
+- NOAA GEFSv12 retrospective S3 reforecast
+- 玉米带 bbox 固定为 `[49, -104, 37, -80]`
 
-预测频率：
+真实天气数据的完整 GRIB 下载和聚合通常较重。当前 MVP 的 `fetch-weather` 在非 demo 且没有缓存时，会写出 `data/interim/weather_request_catalog.csv`，说明 ERA5/CFSv2/GEFS 的请求形状；之后可把处理好的周频天气表放到 `data/interim/weather_weekly.parquet`。
 
-- 提前一周预测
+文本数据：
 
-比较以下三个方案：
+- USDA Crop Progress
+- USDA Weekly Weather and Crop Bulletin
 
-### 方案 A：历史价格 Baseline
+文本特征按报告发布日期对齐到周五周频。TF-IDF 在模型 pipeline 内只用训练集拟合，避免测试期文本信息泄漏。
 
-只使用历史价格数据进行预测。
+## Modeling Design
 
-### 方案 B：历史价格 + 天气数据
+预测目标：
 
-在历史价格数据基础上加入天气数据。
+- `target_log_return_next = log(close_t+1 / close_t)`
+- `target_up_next = 1[target_log_return_next > 0]`
 
-### 方案 C：历史价格 + 天气数据 + 文本数据
+价格特征：
 
-在历史价格和天气数据基础上加入文本数据，例如新闻、报告或表格信息。
+- 1/2/4/12 周滞后收益率
+- 4/12 周 rolling volatility
+- 4/12 周 momentum
+- 4 周 volume change
 
-## 4. 评估
+天气特征：
 
-需要比较不同方案的预测效果，判断加入天气数据和文本数据是否能提升模型表现。
+- weekly mean temperature
+- precipitation
+- growing degree days
+- temperature/precipitation anomaly
+- week-1/week-2 forecast-style demo features
 
-## 5. 未来改进
+文本特征：
 
-未来可以进一步完善：
+- USDA report text
+- small TF-IDF representation inside the model pipeline
+- keyword counts for drought, rain, heat, planting, harvest, yield, export, ethanol
 
-- 数据频率选择
-- 数据时间跨度
-- 天气变量选择
-- 文本数据来源
-- 预测目标定义
-- 模型评估方式
+模型：
+
+- `StandardScaler` + `LogisticRegression(class_weight="balanced")`
+- 文本方案额外使用 `TfidfVectorizer(max_features=30)`
+
+评估：
+
+- chronological split，默认训练到 `2022-12-31`
+- metrics: accuracy, balanced accuracy, F1, ROC-AUC, log loss, confusion matrix counts
+
+## Tests
+
+```bash
+uv run pytest
+```
+
+测试覆盖：
+
+- target shift 是否只把下一周收益作为标签
+- USDA listing parser 和周频文本对齐
+- ERA5/CFSv2/GEFS adapter URL/request shape
+- price/weather/text feature join
+- `all --demo` smoke test
+
+## Team Workflow
+
+建议协作方式：
+
+1. 不直接改 `main`，在 feature branch 上开发。
+2. 小步提交：scaffold、data ingestion、features/models、tests/docs。
+3. 不提交本地下载数据或报告输出。
+4. PR 中附上 `uv run pytest` 和 `uv run python -m corn_forecast.cli all --demo` 的结果。
+
+可分工模块：
+
+- Data: Yahoo/USDA/weather adapter 和缓存表
+- Features: 周频对齐、target、weather/text feature engineering
+- Modeling: A/B/C 方案、指标和图表
+- Reporting: README、报告文字、结果解释和 presentation 图表
