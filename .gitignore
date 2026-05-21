@@ -1,0 +1,22 @@
+.DS_Store
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Keep source-controlled placeholders, but do not commit downloaded data or model output.
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+reports/*.csv
+reports/*.json
+reports/*.md
+reports/figures/*
+!reports/figures/.gitkeep
