@@ -49,6 +49,22 @@ uv run python -m corn_forecast.cli train-evaluate
 uv run python -m corn_forecast.cli make-report
 ```
 
+只用历史价格测试预测目标：
+
+```bash
+uv run python -m corn_forecast.cli test-price-targets --demo
+```
+
+该命令先只构造价格滞后特征，然后比较两个下一周目标：
+
+- 连续目标：预测 `target_log_return_next`
+- 三分类目标：`return <= -5%`、`-5% < return < 5%`、`return >= 5%`
+
+输出：
+
+- `reports/price_target_tests.json`
+- `reports/price_target_predictions.csv`
+
 常用参数：
 
 - `--symbol CORN`：Yahoo Finance 标的，默认 `CORN`

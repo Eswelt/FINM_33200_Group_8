@@ -72,3 +72,11 @@ class ProjectConfig:
     @property
     def report_path(self) -> Path:
         return self.root / "reports" / "model_report.md"
+
+    @property
+    def price_target_metrics_path(self) -> Path:
+        return self.root / "reports" / "price_target_tests.json"
+
+    @property
+    def price_target_predictions_path(self) -> Path:
+        return self.root / "reports" / "price_target_predictions.csv"

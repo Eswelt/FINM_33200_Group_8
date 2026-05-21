@@ -8,6 +8,7 @@ from corn_forecast.data.weather import load_weather_features
 from corn_forecast.features import build_feature_panel
 from corn_forecast.models import train_evaluate
 from corn_forecast.paths import PROJECT_ROOT, ensure_project_dirs
+from corn_forecast.price_target_tests import run_price_only_target_tests
 from corn_forecast.reports import make_report_artifacts, save_metrics, save_predictions
 from corn_forecast.storage import read_table, write_table
 
@@ -36,6 +37,7 @@ def build_parser() -> argparse.ArgumentParser:
         "fetch-weather",
         "build-features",
         "train-evaluate",
+        "test-price-targets",
         "make-report",
         "all",
     ):
@@ -99,6 +101,22 @@ def train_and_evaluate(config: ProjectConfig) -> None:
     print(f"Wrote predictions: {config.predictions_path}")
 
 
+def test_price_targets(config: ProjectConfig, demo: bool) -> None:
+    prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
+    panel = build_feature_panel(prices=prices)
+    metrics, predictions = run_price_only_target_tests(
+        panel=panel,
+        split_date=config.split_date,
+        test_window_weeks=config.test_window_weeks,
+        retrain_step_weeks=config.retrain_step_weeks,
+        three_class_threshold=0.05,
+    )
+    save_metrics(metrics, config.price_target_metrics_path)
+    save_predictions(predictions, config.price_target_predictions_path)
+    print(f"Wrote price target metrics: {config.price_target_metrics_path}")
+    print(f"Wrote price target predictions: {config.price_target_predictions_path}")
+
+
 def make_report(config: ProjectConfig) -> None:
     make_report_artifacts(
         metrics_path=config.metrics_path,
@@ -123,6 +141,8 @@ def run(args: argparse.Namespace) -> int:
         build_features(config)
     elif args.command == "train-evaluate":
         train_and_evaluate(config)
+    elif args.command == "test-price-targets":
+        test_price_targets(config, demo=args.demo)
     elif args.command == "make-report":
         make_report(config)
     elif args.command == "all":
