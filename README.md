@@ -26,6 +26,7 @@ uv run python -m corn_forecast.cli all --demo
 - `reports/model_report.md`
 - `reports/figures/predicted_probabilities.png`
 - `reports/figures/roc_curves.png`
+- `reports/figures/cumulative_returns.png`
 
 这些数据和报告输出默认被 `.gitignore` 忽略，避免把大文件或本地结果提交进仓库。
 
@@ -54,8 +55,14 @@ uv run python -m corn_forecast.cli make-report
 - `--start 2011-01-01`：数据开始日期
 - `--end YYYY-MM-DD`：数据结束日期，默认到当前日期
 - `--split-date 2022-12-31`：训练集最后一周，之后为测试集
+- `--test-window-weeks 13`：每个 walk-forward 测试窗口长度
+- `--retrain-step-weeks 13`：每隔多少周重新扩展训练集并训练
+- `--long-threshold 0.55`：预测上涨概率达到该阈值时持有 CORN
+- `--transaction-cost-bps 5`：每次仓位变化的单边交易成本
 - `--root PATH`：指定输出目录，测试或临时运行时很有用
 - `--demo`：使用确定性离线样本，不访问外部 API
+
+`config/research.example.toml` 是带注释的研究配置说明，记录默认 target、walk-forward、模型和策略假设。
 
 ## Data Sources
 
@@ -109,13 +116,23 @@ uv run python -m corn_forecast.cli make-report
 
 模型：
 
-- `StandardScaler` + `LogisticRegression(class_weight="balanced")`
-- 文本方案额外使用 `TfidfVectorizer(max_features=30)`
+- Baseline: `StandardScaler` + `LogisticRegression(class_weight="balanced")`
+- Main model: `HistGradientBoostingClassifier`
+- 文本方案额外使用 `TfidfVectorizer(max_features=30)`，并与数值特征一起进入模型
+
+行业化验证与交易层：
+
+- 使用 expanding walk-forward，而不是随机切分。
+- 默认从 `2023-01-01` 后开始 out-of-sample，每 13 周测试一次并重新训练。
+- 每个模型输出 `P(next_week_return > 0)`。
+- 策略默认 long/flat：`P(up) >= 0.55` 时持有，否则空仓。
+- 回测扣除 `transaction_cost_bps`，并输出累计收益、Sharpe、最大回撤和 turnover。
 
 评估：
 
-- chronological split，默认训练到 `2022-12-31`
-- metrics: accuracy, balanced accuracy, F1, ROC-AUC, log loss, confusion matrix counts
+- walk-forward out-of-sample metrics
+- classification: accuracy, balanced accuracy, F1, ROC-AUC, log loss, confusion matrix counts
+- strategy: total return, annualized return, annualized volatility, Sharpe, max drawdown
 
 ## Tests
 
@@ -129,6 +146,7 @@ uv run pytest
 - USDA listing parser 和周频文本对齐
 - ERA5/CFSv2/GEFS adapter URL/request shape
 - price/weather/text feature join
+- walk-forward split 和交易成本逻辑
 - `all --demo` smoke test
 
 ## Team Workflow

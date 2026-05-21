@@ -17,7 +17,13 @@ def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--symbol", default="CORN", help="Yahoo Finance symbol to model.")
     parser.add_argument("--start", default="2011-01-01", help="Start date for data collection.")
     parser.add_argument("--end", default=None, help="End date for data collection.")
-    parser.add_argument("--split-date", default="2022-12-31", help="Last training week for chronological split.")
+    parser.add_argument("--split-date", default="2022-12-31", help="Last week before the first walk-forward test fold.")
+    parser.add_argument("--test-window-weeks", type=int, default=13, help="Weeks in each out-of-sample test fold.")
+    parser.add_argument("--retrain-step-weeks", type=int, default=13, help="Weeks between expanding-window retrains.")
+    parser.add_argument("--long-threshold", type=float, default=0.55, help="P(up) needed to hold a long position.")
+    parser.add_argument("--short-threshold", type=float, default=0.45, help="P(up) below which shorts are allowed.")
+    parser.add_argument("--allow-short", action="store_true", help="Use long/short positions instead of long/flat.")
+    parser.add_argument("--transaction-cost-bps", type=float, default=5.0, help="One-way turnover cost in basis points.")
     parser.add_argument("--demo", action="store_true", help="Use deterministic offline demo data.")
 
 
@@ -77,7 +83,16 @@ def build_features(config: ProjectConfig) -> Path:
 
 def train_and_evaluate(config: ProjectConfig) -> None:
     panel = read_table(config.panel_path)
-    metrics, predictions = train_evaluate(panel=panel, split_date=config.split_date)
+    metrics, predictions = train_evaluate(
+        panel=panel,
+        split_date=config.split_date,
+        test_window_weeks=config.test_window_weeks,
+        retrain_step_weeks=config.retrain_step_weeks,
+        long_threshold=config.long_threshold,
+        short_threshold=config.short_threshold,
+        allow_short=config.allow_short,
+        transaction_cost_bps=config.transaction_cost_bps,
+    )
     save_metrics(metrics, config.metrics_path)
     save_predictions(predictions, config.predictions_path)
     print(f"Wrote metrics: {config.metrics_path}")

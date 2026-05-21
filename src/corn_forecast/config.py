@@ -10,11 +10,19 @@ CornBeltBbox = Tuple[float, float, float, float]
 
 @dataclass(frozen=True)
 class ProjectConfig:
+    """Central research defaults for the weekly CORN forecasting pipeline."""
+
     root: Path = PROJECT_ROOT
     symbol: str = "CORN"
     start: str = "2011-01-01"
     end: Optional[str] = None
     split_date: str = "2022-12-31"
+    test_window_weeks: int = 13
+    retrain_step_weeks: int = 13
+    long_threshold: float = 0.55
+    short_threshold: float = 0.45
+    allow_short: bool = False
+    transaction_cost_bps: float = 5.0
     corn_belt_bbox: CornBeltBbox = (49.0, -104.0, 37.0, -80.0)
 
     @classmethod
@@ -25,6 +33,12 @@ class ProjectConfig:
             start=getattr(args, "start", "2011-01-01"),
             end=getattr(args, "end", None),
             split_date=getattr(args, "split_date", "2022-12-31"),
+            test_window_weeks=getattr(args, "test_window_weeks", 13),
+            retrain_step_weeks=getattr(args, "retrain_step_weeks", 13),
+            long_threshold=getattr(args, "long_threshold", 0.55),
+            short_threshold=getattr(args, "short_threshold", 0.45),
+            allow_short=getattr(args, "allow_short", False),
+            transaction_cost_bps=getattr(args, "transaction_cost_bps", 5.0),
         )
 
     @property

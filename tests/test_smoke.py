@@ -25,6 +25,9 @@ def test_demo_pipeline_writes_core_outputs(tmp_path: Path):
     assert (tmp_path / "reports" / "metrics.json").exists()
     assert (tmp_path / "reports" / "predictions.csv").exists()
     assert (tmp_path / "reports" / "figures" / "predicted_probabilities.png").exists()
+    assert (tmp_path / "reports" / "figures" / "cumulative_returns.png").exists()
 
     predictions = pd.read_csv(tmp_path / "reports" / "predictions.csv")
-    assert set(predictions["model"]) == {"A_price", "B_price_weather", "C_price_weather_text"}
+    assert set(predictions["estimator"]) == {"logit", "hgb"}
+    assert set(predictions["feature_set"]) == {"A_price", "B_price_weather", "C_price_weather_text"}
+    assert {"fold", "position", "strategy_log_return", "cum_strategy_return"}.issubset(predictions.columns)

@@ -1,0 +1,38 @@
+# CORN ETF forecasting research defaults.
+# This file documents the intended quant workflow; the CLI exposes the same
+# knobs so teammates can run experiments without changing source code.
+
+[target]
+# The production target is next-week log return direction.
+# Keep the continuous return too, because it is used to score the trading signal.
+symbol = "CORN"
+horizon_weeks = 1
+classification_target = "target_up_next"
+return_target = "target_log_return_next"
+
+[validation]
+# Expanding walk-forward validation approximates how a strategy would have
+# been retrained through time. The first out-of-sample fold starts after
+# split_date; each fold tests one quarter and then retrains.
+split_date = "2022-12-31"
+test_window_weeks = 13
+retrain_step_weeks = 13
+
+[models]
+# Logistic regression remains the sanity-check baseline.
+# Gradient boosting is the main tabular model for price + weather + text features.
+baseline = "logit"
+main = "hgb"
+
+[strategy]
+# Long/flat by default. Enable shorts only after checking borrow/ETF constraints.
+long_threshold = 0.55
+short_threshold = 0.45
+allow_short = false
+transaction_cost_bps = 5.0
+
+[weather]
+# North, west, south, east bounds around the US Corn Belt.
+corn_belt_bbox = [49.0, -104.0, 37.0, -80.0]
+history_source = "ERA5 daily statistics"
+forecast_sources = ["CFSv2", "GEFSv12"]

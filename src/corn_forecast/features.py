@@ -7,6 +7,7 @@ from corn_forecast.data.usda import build_weekly_text_features
 
 
 def build_weekly_price_features(prices: pd.DataFrame) -> pd.DataFrame:
+    """Create point-in-time weekly price features and the next-week label."""
     frame = prices.copy()
     frame["date"] = pd.to_datetime(frame["date"])
     frame = frame.sort_values("date").set_index("date")
@@ -27,6 +28,7 @@ def build_weekly_price_features(prices: pd.DataFrame) -> pd.DataFrame:
     weekly["price_momentum_4w"] = weekly["price_log_close"] - weekly["price_log_close"].shift(4)
     weekly["price_momentum_12w"] = weekly["price_log_close"] - weekly["price_log_close"].shift(12)
     weekly["price_volume_change_4w"] = np.log(weekly["volume"] / weekly["volume"].shift(4))
+    # The next-week return is a label only. It is never included in feature sets.
     weekly["target_log_return_next"] = weekly["price_log_return"].shift(-1)
     weekly["target_up_next"] = np.where(
         weekly["target_log_return_next"].isna(),
