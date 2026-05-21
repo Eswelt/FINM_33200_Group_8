@@ -39,12 +39,32 @@ def build_weekly_price_features(prices: pd.DataFrame) -> pd.DataFrame:
     return weekly.reset_index(drop=True)
 
 
+def add_calendar_features(panel: pd.DataFrame) -> pd.DataFrame:
+    """Add deterministic Corn Belt seasonality features from the weekly date."""
+    frame = panel.copy()
+    week = pd.to_datetime(frame["week"])
+    week_of_year = week.dt.isocalendar().week.astype(int)
+    month = week.dt.month
+
+    frame["calendar_month"] = month
+    frame["calendar_quarter"] = week.dt.quarter
+    frame["calendar_week_of_year"] = week_of_year
+    frame["calendar_week_sin"] = np.sin(2 * np.pi * week_of_year / 52.0)
+    frame["calendar_week_cos"] = np.cos(2 * np.pi * week_of_year / 52.0)
+    frame["calendar_is_planting_season"] = month.isin([4, 5]).astype(int)
+    frame["calendar_is_pollination_weather_season"] = month.isin([6, 7, 8]).astype(int)
+    frame["calendar_is_harvest_season"] = month.isin([9, 10, 11]).astype(int)
+    frame["calendar_is_winter_storage_season"] = month.isin([12, 1, 2]).astype(int)
+    return frame
+
+
 def build_feature_panel(
     prices: pd.DataFrame,
     weather: Optional[pd.DataFrame] = None,
     usda_releases: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     panel = build_weekly_price_features(prices)
+    panel = add_calendar_features(panel)
 
     if weather is not None and not weather.empty:
         weather_frame = weather.copy()
@@ -82,6 +102,10 @@ def weather_feature_columns(panel: pd.DataFrame) -> list:
     return [column for column in panel.columns if column.startswith("weather_")]
 
 
+def calendar_feature_columns(panel: pd.DataFrame) -> list:
+    return [column for column in panel.columns if column.startswith("calendar_")]
+
+
 def text_numeric_feature_columns(panel: pd.DataFrame) -> list:
     columns = [column for column in panel.columns if column.startswith("text_kw_")]
     if "report_count" in panel.columns:
@@ -93,6 +117,8 @@ def feature_set_columns(panel: pd.DataFrame, feature_set: str) -> tuple:
     price_columns = price_feature_columns(panel)
     if feature_set == "A_price":
         return price_columns, None
+    if feature_set == "A_price_calendar":
+        return price_columns + calendar_feature_columns(panel), None
     if feature_set == "B_price_weather":
         return price_columns + weather_feature_columns(panel), None
     if feature_set == "C_price_weather_text":

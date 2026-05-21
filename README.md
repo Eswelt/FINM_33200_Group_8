@@ -55,7 +55,10 @@ uv run python -m corn_forecast.cli make-report
 uv run python -m corn_forecast.cli test-price-targets --demo
 ```
 
-该命令先只构造价格滞后特征，然后比较两个下一周目标：
+该命令比较两组历史可得特征：
+
+- `price_only`：价格滞后、波动率、momentum、volume change
+- `price_calendar`：`price_only` + month、week-of-year sin/cos、种植季、生长期、收获季、冬季库存期
 
 - 连续目标：预测 `target_log_return_next`
 - 三分类目标：`return <= -5%`、`-5% < return < 5%`、`return >= 5%`

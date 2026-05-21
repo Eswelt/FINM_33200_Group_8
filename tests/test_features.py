@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from corn_forecast.features import build_feature_panel, feature_set_columns
+from corn_forecast.features import build_feature_panel, calendar_feature_columns, feature_set_columns
 
 
 def test_feature_panel_joins_weather_and_text_on_week_end():
@@ -33,9 +33,14 @@ def test_feature_panel_joins_weather_and_text_on_week_end():
     panel = build_feature_panel(prices=prices, weather=weather, usda_releases=usda)
     matched = panel.loc[panel["week"] == pd.Timestamp("2024-01-12")].iloc[0]
 
+    assert matched["calendar_month"] == 1
+    assert matched["calendar_is_winter_storage_season"] == 1
     assert matched["weather_temp_mean_f"] == 1
     assert matched["text_kw_rain"] == 1
     numeric_columns, text_column = feature_set_columns(panel, "C_price_weather_text")
     assert "weather_temp_mean_f" in numeric_columns
     assert "text_kw_yield" in numeric_columns
     assert text_column == "report_text"
+    price_calendar_columns, _ = feature_set_columns(panel, "A_price_calendar")
+    assert "calendar_week_sin" in price_calendar_columns
+    assert "calendar_is_harvest_season" in calendar_feature_columns(panel)

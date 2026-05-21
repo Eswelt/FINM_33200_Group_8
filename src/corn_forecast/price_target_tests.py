@@ -18,10 +18,11 @@ from sklearn.metrics import (
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from corn_forecast.features import price_feature_columns
+from corn_forecast.features import calendar_feature_columns, price_feature_columns
 
 
 THREE_CLASS_LABELS = (-1, 0, 1)
+PRICE_TARGET_FEATURE_SETS = ("price_only", "price_calendar")
 
 
 def add_three_class_return_target(panel: pd.DataFrame, threshold: float = 0.05) -> pd.DataFrame:
@@ -84,7 +85,16 @@ def _price_three_class_pipeline(y_train: pd.Series) -> Pipeline:
     )
 
 
-def _regression_metrics(predictions: pd.DataFrame) -> Dict[str, float]:
+def _feature_columns(data: pd.DataFrame, feature_set: str) -> List[str]:
+    price_columns = price_feature_columns(data)
+    if feature_set == "price_only":
+        return price_columns
+    if feature_set == "price_calendar":
+        return price_columns + calendar_feature_columns(data)
+    raise ValueError(f"Unknown price target feature set: {feature_set}")
+
+
+def _regression_metrics(predictions: pd.DataFrame, feature_set: str) -> Dict[str, float]:
     y_true = predictions["y_true_return"]
     y_pred = predictions["y_pred_return"]
     rmse = float(np.sqrt(mean_squared_error(y_true, y_pred)))
@@ -93,6 +103,7 @@ def _regression_metrics(predictions: pd.DataFrame) -> Dict[str, float]:
     return {
         "target": "next_week_log_return",
         "model": "price_only_ridge",
+        "feature_set": feature_set,
         "n_test": int(len(predictions)),
         "n_folds": int(predictions["fold"].nunique()),
         "mae": float(mean_absolute_error(y_true, y_pred)),
@@ -104,7 +115,7 @@ def _regression_metrics(predictions: pd.DataFrame) -> Dict[str, float]:
     }
 
 
-def _three_class_metrics(predictions: pd.DataFrame, threshold: float) -> Dict[str, float]:
+def _three_class_metrics(predictions: pd.DataFrame, threshold: float, feature_set: str) -> Dict[str, float]:
     y_true = predictions["y_true_3class"].astype(int)
     y_pred = predictions["y_pred_3class"].astype(int)
     matrix = confusion_matrix(y_true, y_pred, labels=list(THREE_CLASS_LABELS))
@@ -120,6 +131,7 @@ def _three_class_metrics(predictions: pd.DataFrame, threshold: float) -> Dict[st
     return {
         "target": f"next_week_log_return_3class_{threshold:.1%}_bands",
         "model": "price_only_logit",
+        "feature_set": feature_set,
         "threshold": float(threshold),
         "n_test": int(len(predictions)),
         "n_folds": int(predictions["fold"].nunique()),
@@ -143,15 +155,14 @@ def run_price_only_target_tests(
     retrain_step_weeks: int = 13,
     three_class_threshold: float = 0.05,
 ) -> Tuple[Dict[str, Dict[str, float]], pd.DataFrame]:
-    """Run two price-only tests: continuous return regression and 5% three-class classification."""
+    """Run return regression and 5% three-class tests with price and price+calendar features."""
     data = add_three_class_return_target(panel, threshold=three_class_threshold)
     data["week"] = pd.to_datetime(data["week"])
     data = data.replace([np.inf, -np.inf], np.nan)
     data = data.dropna(subset=["target_log_return_next", "target_return_3class"]).copy()
     data["target_return_3class"] = data["target_return_3class"].astype(int)
 
-    numeric_columns: List[str] = price_feature_columns(data)
-    if not numeric_columns:
+    if not price_feature_columns(data):
         raise ValueError("No price feature columns found for price-only target tests.")
 
     regression_frames = []
@@ -160,52 +171,62 @@ def run_price_only_target_tests(
     if not splits:
         raise ValueError("Walk-forward split produced no out-of-sample folds.")
 
-    for fold, train, test in splits:
-        reg_model = _price_regression_pipeline()
-        reg_model.fit(train[numeric_columns], train["target_log_return_next"])
-        y_pred_return = reg_model.predict(test[numeric_columns])
-        regression_frames.append(
-            pd.DataFrame(
-                {
-                    "week": test["week"].to_numpy(),
-                    "fold": fold,
-                    "experiment": "return_regression",
-                    "model": "price_only_ridge",
-                    "y_true_return": test["target_log_return_next"].to_numpy(),
-                    "y_pred_return": y_pred_return,
-                    "train_start": train["week"].min(),
-                    "train_end": train["week"].max(),
-                    "n_train": len(train),
-                }
+    for feature_set in PRICE_TARGET_FEATURE_SETS:
+        numeric_columns = _feature_columns(data, feature_set)
+        for fold, train, test in splits:
+            reg_model = _price_regression_pipeline()
+            reg_model.fit(train[numeric_columns], train["target_log_return_next"])
+            y_pred_return = reg_model.predict(test[numeric_columns])
+            regression_frames.append(
+                pd.DataFrame(
+                    {
+                        "week": test["week"].to_numpy(),
+                        "fold": fold,
+                        "experiment": "return_regression",
+                        "feature_set": feature_set,
+                        "model": "price_only_ridge",
+                        "y_true_return": test["target_log_return_next"].to_numpy(),
+                        "y_pred_return": y_pred_return,
+                        "train_start": train["week"].min(),
+                        "train_end": train["week"].max(),
+                        "n_train": len(train),
+                    }
+                )
             )
-        )
 
-        class_model = _price_three_class_pipeline(train["target_return_3class"])
-        class_model.fit(train[numeric_columns], train["target_return_3class"])
-        y_pred_class = class_model.predict(test[numeric_columns])
-        class_frames.append(
-            pd.DataFrame(
-                {
-                    "week": test["week"].to_numpy(),
-                    "fold": fold,
-                    "experiment": "three_class_5pct",
-                    "model": "price_only_logit",
-                    "y_true_3class": test["target_return_3class"].to_numpy(),
-                    "y_pred_3class": y_pred_class,
-                    "target_log_return_next": test["target_log_return_next"].to_numpy(),
-                    "train_start": train["week"].min(),
-                    "train_end": train["week"].max(),
-                    "n_train": len(train),
-                }
+            class_model = _price_three_class_pipeline(train["target_return_3class"])
+            class_model.fit(train[numeric_columns], train["target_return_3class"])
+            y_pred_class = class_model.predict(test[numeric_columns])
+            class_frames.append(
+                pd.DataFrame(
+                    {
+                        "week": test["week"].to_numpy(),
+                        "fold": fold,
+                        "experiment": "three_class_5pct",
+                        "feature_set": feature_set,
+                        "model": "price_only_logit",
+                        "y_true_3class": test["target_return_3class"].to_numpy(),
+                        "y_pred_3class": y_pred_class,
+                        "target_log_return_next": test["target_log_return_next"].to_numpy(),
+                        "train_start": train["week"].min(),
+                        "train_end": train["week"].max(),
+                        "n_train": len(train),
+                    }
+                )
             )
-        )
 
     regression_predictions = pd.concat(regression_frames, ignore_index=True)
     class_predictions = pd.concat(class_frames, ignore_index=True)
-    metrics = {
-        "return_regression": _regression_metrics(regression_predictions),
-        "three_class_5pct": _three_class_metrics(class_predictions, threshold=three_class_threshold),
-    }
+    metrics = {}
+    for feature_set in PRICE_TARGET_FEATURE_SETS:
+        reg_group = regression_predictions[regression_predictions["feature_set"] == feature_set]
+        class_group = class_predictions[class_predictions["feature_set"] == feature_set]
+        metrics[f"{feature_set}_return_regression"] = _regression_metrics(reg_group, feature_set=feature_set)
+        metrics[f"{feature_set}_three_class_5pct"] = _three_class_metrics(
+            class_group,
+            threshold=three_class_threshold,
+            feature_set=feature_set,
+        )
 
     predictions = pd.concat([regression_predictions, class_predictions], ignore_index=True, sort=False)
-    return metrics, predictions.sort_values(["experiment", "week"]).reset_index(drop=True)
+    return metrics, predictions.sort_values(["feature_set", "experiment", "week"]).reset_index(drop=True)
