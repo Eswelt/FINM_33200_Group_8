@@ -71,13 +71,15 @@ uv run python -m corn_forecast.cli test-price-targets --demo
 选择 volatility-adjusted 三分类阈值：
 
 ```bash
-uv run python -m corn_forecast.cli select-threshold --threshold-grid 0.25,0.5,0.75,1.0
+uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0
 ```
 
 输出：
 
 - `reports/threshold_selection.json`
 - `reports/threshold_selection_predictions.csv`
+
+当前阶段固定使用 `k=1.0`，并且只比较 `price_only` 和 `price_calendar` 两组特征。
 
 完整研究步骤见 `step_by_step.md`。
 

@@ -29,7 +29,7 @@ def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--demo", action="store_true", help="Use deterministic offline demo data.")
     parser.add_argument(
         "--threshold-grid",
-        default="0.25,0.5,0.75,1.0",
+        default="1.0",
         help="Comma-separated k values for volatility-adjusted target selection.",
     )
 

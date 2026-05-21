@@ -65,9 +65,9 @@ Used by:
 - Price baseline features.
 - Strategy backtest realized returns.
 
-## Step 2: Construct Candidate Y Thresholds
+## Step 2: Construct Y With Fixed Threshold
 
-Today's task is to decide the volatility-adjusted three-class threshold.
+Current decision: use `k = 1.0` for the volatility-adjusted three-class threshold.
 
 For each week `t`:
 
@@ -76,28 +76,23 @@ r_{t+1} = log(close_{t+1} / close_t)
 vol_t   = rolling 12-week standard deviation of weekly returns
 ```
 
-Candidate target:
+Target:
 
 ```text
-Y_t =  1 if r_{t+1} >  +k * vol_t
-Y_t =  0 if -k * vol_t <= r_{t+1} <= +k * vol_t
-Y_t = -1 if r_{t+1} <  -k * vol_t
+Y_t =  1 if r_{t+1} >  +1.0 * vol_t
+Y_t =  0 if -1.0 * vol_t <= r_{t+1} <= +1.0 * vol_t
+Y_t = -1 if r_{t+1} <  -1.0 * vol_t
 ```
 
-Threshold grid:
-
-```text
-k = 0.25, 0.50, 0.75, 1.00
-```
-
-Command:
+Command to reproduce the current threshold run:
 
 ```bash
 uv run python -m corn_forecast.cli select-threshold \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
-  --threshold-grid 0.25,0.5,0.75,1.0
+  --threshold-grid 1.0 \
+  --long-threshold 0.45
 ```
 
 Output:
@@ -107,19 +102,12 @@ reports/threshold_selection.json
 reports/threshold_selection_predictions.csv
 ```
 
-Decision criteria:
+Why `k = 1.0`:
 
-- Event rate should not be too sparse.
-- Up/down/flat should all appear in out-of-sample tests.
-- Macro F1 and balanced recall should not collapse.
-- Trading performance after 5 bps cost should be reasonable.
-- Trade frequency should be plausible for a weekly ETF strategy.
-
-Recommended starting point if results are similar:
-
-```text
-k = 0.50
-```
+- It defines a meaningful move as larger than one trailing weekly volatility.
+- It creates a clearer no-trade zone than lower thresholds.
+- It is more conservative and closer to an ETF investor's trading problem.
+- Robustness checks can still compare `k = 0.25, 0.50, 0.75`.
 
 ## Step 3: Build Price Baseline X
 
@@ -189,86 +177,7 @@ Used by:
 Experiment B: price_calendar
 ```
 
-## Step 5: Build USDA Weekly Text X
-
-Input:
-
-```text
-data/raw/usda_releases.csv
-```
-
-Sources:
-
-```text
-USDA Crop Progress
-USDA Weekly Weather and Crop Bulletin
-```
-
-Operation:
-
-- Align release dates to the Friday week.
-- Only use reports available by week `t`.
-- Build keyword counts and TF-IDF text features.
-- Later add AI-extracted structured scores.
-
-Output:
-
-```text
-X_usda_text:
-report_text
-report_count
-text_kw_drought
-text_kw_rain
-text_kw_heat
-text_kw_planting
-text_kw_harvest
-text_kw_yield
-...
-```
-
-Used by:
-
-```text
-Experiment C: price_calendar_usda
-```
-
-## Step 6: Build Weather X
-
-Input:
-
-```text
-ERA5 historical weather
-CFSv2 or GEFS reforecast / forecast data
-```
-
-Operation:
-
-- Aggregate to Corn Belt weekly level.
-- Compute weather anomalies against seasonal norms.
-- Add week-1 and week-2 forecast variables when available.
-
-Output:
-
-```text
-X_weather:
-weather_temp_mean_f
-weather_precip_mm
-weather_gdd
-weather_temp_anomaly_f
-weather_precip_anomaly_mm
-weather_forecast_temp_week1_f
-weather_forecast_precip_week1_mm
-weather_forecast_temp_week2_f
-weather_forecast_precip_week2_mm
-```
-
-Used by:
-
-```text
-Experiment D: price_calendar_usda_weather
-```
-
-## Step 7: Build Feature Panel
+## Step 5: Build Feature Panel
 
 Input:
 
@@ -276,8 +185,6 @@ Input:
 Y
 X_price
 X_calendar
-X_usda_text
-X_weather
 ```
 
 Command:
@@ -308,25 +215,22 @@ Y_t
 next_week_return
 ```
 
-## Step 8: Define Model Experiments
+## Step 6: Define Model Experiments
 
-Run all experiments under the same target, split, and trading rule.
+Current scope: run only price and price + calendar baselines under the same target, split, and trading rule.
 
 ```text
 A = price_only
 B = price_calendar
-C = price_calendar_usda
-D = price_calendar_usda_weather
-E = price_calendar_ai_text_weather
 ```
 
 The purpose is to test incremental value:
 
 ```text
-Does USDA / weather / AI text extraction improve trading signals beyond price and seasonality?
+Does calendar seasonality improve trading signals beyond historical price alone?
 ```
 
-## Step 9: Train Models With Walk-Forward Validation
+## Step 7: Train Models With Walk-Forward Validation
 
 Input:
 
@@ -369,7 +273,7 @@ true_class
 next_week_return
 ```
 
-## Step 10: Convert Predictions To Trading Signals
+## Step 8: Convert Predictions To Trading Signals
 
 Main strategy:
 
@@ -406,7 +310,7 @@ turnover
 transaction_cost
 ```
 
-## Step 11: Evaluate
+## Step 9: Evaluate
 
 Classification metrics:
 
@@ -440,7 +344,7 @@ reports/model_report.md
 reports/figures/
 ```
 
-## Step 12: Final Deliverables
+## Step 10: Final Deliverables
 
 Final project outputs:
 
@@ -458,5 +362,5 @@ reports/figures/feature_importance.png
 Final research question:
 
 ```text
-Can AI-assisted agricultural text and weather information improve volatility-adjusted weekly CORN ETF trading signals beyond historical price and calendar baselines?
+Can calendar seasonality improve volatility-adjusted weekly CORN ETF trading signals beyond historical price baselines?
 ```
