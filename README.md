@@ -68,6 +68,19 @@ uv run python -m corn_forecast.cli test-price-targets --demo
 - `reports/price_target_tests.json`
 - `reports/price_target_predictions.csv`
 
+选择 volatility-adjusted 三分类阈值：
+
+```bash
+uv run python -m corn_forecast.cli select-threshold --threshold-grid 0.25,0.5,0.75,1.0
+```
+
+输出：
+
+- `reports/threshold_selection.json`
+- `reports/threshold_selection_predictions.csv`
+
+完整研究步骤见 `step_by_step.md`。
+
 常用参数：
 
 - `--symbol CORN`：Yahoo Finance 标的，默认 `CORN`

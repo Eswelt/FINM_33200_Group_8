@@ -11,6 +11,7 @@ from corn_forecast.paths import PROJECT_ROOT, ensure_project_dirs
 from corn_forecast.price_target_tests import run_price_only_target_tests
 from corn_forecast.reports import make_report_artifacts, save_metrics, save_predictions
 from corn_forecast.storage import read_table, write_table
+from corn_forecast.threshold_selection import evaluate_volatility_thresholds
 
 
 def add_common_options(parser: argparse.ArgumentParser) -> None:
@@ -26,6 +27,11 @@ def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--allow-short", action="store_true", help="Use long/short positions instead of long/flat.")
     parser.add_argument("--transaction-cost-bps", type=float, default=5.0, help="One-way turnover cost in basis points.")
     parser.add_argument("--demo", action="store_true", help="Use deterministic offline demo data.")
+    parser.add_argument(
+        "--threshold-grid",
+        default="0.25,0.5,0.75,1.0",
+        help="Comma-separated k values for volatility-adjusted target selection.",
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -38,6 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
         "build-features",
         "train-evaluate",
         "test-price-targets",
+        "select-threshold",
         "make-report",
         "all",
     ):
@@ -117,6 +124,27 @@ def test_price_targets(config: ProjectConfig, demo: bool) -> None:
     print(f"Wrote price target predictions: {config.price_target_predictions_path}")
 
 
+def select_threshold(config: ProjectConfig, demo: bool, threshold_grid: str) -> None:
+    prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
+    panel = build_feature_panel(prices=prices)
+    k_values = [float(value.strip()) for value in threshold_grid.split(",") if value.strip()]
+    metrics, predictions = evaluate_volatility_thresholds(
+        panel=panel,
+        k_values=k_values,
+        split_date=config.split_date,
+        test_window_weeks=config.test_window_weeks,
+        retrain_step_weeks=config.retrain_step_weeks,
+        long_probability_threshold=config.long_threshold,
+        short_probability_threshold=config.short_threshold,
+        allow_short=config.allow_short,
+        transaction_cost_bps=config.transaction_cost_bps,
+    )
+    save_metrics(metrics, config.threshold_metrics_path)
+    save_predictions(predictions, config.threshold_predictions_path)
+    print(f"Wrote threshold selection metrics: {config.threshold_metrics_path}")
+    print(f"Wrote threshold selection predictions: {config.threshold_predictions_path}")
+
+
 def make_report(config: ProjectConfig) -> None:
     make_report_artifacts(
         metrics_path=config.metrics_path,
@@ -143,6 +171,8 @@ def run(args: argparse.Namespace) -> int:
         train_and_evaluate(config)
     elif args.command == "test-price-targets":
         test_price_targets(config, demo=args.demo)
+    elif args.command == "select-threshold":
+        select_threshold(config, demo=args.demo, threshold_grid=args.threshold_grid)
     elif args.command == "make-report":
         make_report(config)
     elif args.command == "all":

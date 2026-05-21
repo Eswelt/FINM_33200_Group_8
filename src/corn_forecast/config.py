@@ -80,3 +80,11 @@ class ProjectConfig:
     @property
     def price_target_predictions_path(self) -> Path:
         return self.root / "reports" / "price_target_predictions.csv"
+
+    @property
+    def threshold_metrics_path(self) -> Path:
+        return self.root / "reports" / "threshold_selection.json"
+
+    @property
+    def threshold_predictions_path(self) -> Path:
+        return self.root / "reports" / "threshold_selection_predictions.csv"

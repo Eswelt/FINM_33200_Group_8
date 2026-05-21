@@ -11,12 +11,16 @@ __pycache__/
 data/raw/*
 data/interim/*
 data/processed/*
+data/external/*
 !data/raw/.gitkeep
 !data/interim/.gitkeep
 !data/processed/.gitkeep
+!data/external/.gitkeep
 
 reports/*.csv
 reports/*.json
 reports/*.md
 reports/figures/*
+reports/tables/*
 !reports/figures/.gitkeep
+!reports/tables/.gitkeep
