@@ -86,50 +86,62 @@ Used by:
 - Price baseline features.
 - Strategy backtest realized returns.
 
-## Step 2: Construct Y With Fixed Threshold
+## Step 2: Construct Y As Next-Week Return
 
-Current decision: use `k = 1.0` for the volatility-adjusted three-class threshold.
+Current decision: the main target is continuous next-week log return. The strategy decides whether the predicted return is large enough to trade.
 
 For each week `t`:
 
 ```text
 r_{t+1} = log(close_{t+1} / close_t)
-vol_t   = rolling 12-week standard deviation of weekly returns
 ```
 
 Target:
 
 ```text
-Y_t =  1 if r_{t+1} >  +1.0 * vol_t
-Y_t =  0 if -1.0 * vol_t <= r_{t+1} <= +1.0 * vol_t
-Y_t = -1 if r_{t+1} <  -1.0 * vol_t
+Y_t = r_{t+1}
 ```
 
-Command to reproduce the current threshold run:
+Main command:
 
 ```bash
-uv run python -m corn_forecast.cli select-threshold \
+uv run python -m corn_forecast.cli return-strategy \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
   --validation-scheme expanding \
-  --threshold-grid 1.0 \
-  --long-threshold 0.45
+  --transaction-cost-bps 5 \
+  --buffer-bps 25
 ```
 
 Output:
 
 ```text
-reports/threshold_selection.json
-reports/threshold_selection_predictions.csv
+reports/expected_return_metrics.json
+reports/expected_return_predictions.csv
 ```
 
-Why `k = 1.0`:
+Trading threshold:
 
-- It defines a meaningful move as larger than one trailing weekly volatility.
-- It creates a clearer no-trade zone than lower thresholds.
-- It is more conservative and closer to an ETF investor's trading problem.
-- Robustness checks can still compare `k = 0.25, 0.50, 0.75`.
+```text
+trade_threshold = transaction_cost_bps + buffer_bps
+                = 5 bps + 25 bps
+                = 30 bps = 0.30%
+```
+
+Main long/flat rule:
+
+```text
+long CORN if predicted_next_week_return > 0.30%
+flat otherwise
+```
+
+Why this target:
+
+- It avoids defining labels from rolling volatility.
+- It lets the model forecast expected return directly.
+- The trading decision is made only after checking whether expected return clears costs plus a conservative buffer.
+- The old volatility-adjusted `k=1.0` target remains available as a robustness experiment, not the main target.
 
 ## Step 3: Build Price Baseline X
 
@@ -263,8 +275,8 @@ data/processed/feature_panel.parquet
 Models:
 
 ```text
-Multinomial Logistic Regression
-HistGradientBoostingClassifier
+Ridge regression
+HistGradientBoostingRegressor
 ```
 
 Training protocol:
@@ -296,11 +308,8 @@ Prediction columns:
 week
 experiment
 model
-P(down)
-P(flat)
-P(up)
-predicted_class
-true_class
+predicted_return
+actual_next_week_return
 next_week_return
 ```
 
@@ -309,7 +318,7 @@ next_week_return
 Main strategy:
 
 ```text
-if P(up) >= 0.45:
+if predicted_return > transaction_cost + buffer:
     position = 1
 else:
     position = 0
@@ -318,9 +327,9 @@ else:
 Optional long/short strategy:
 
 ```text
-if P(up) >= 0.45:
+if predicted_return > transaction_cost + buffer:
     position = 1
-elif P(down) >= 0.45:
+elif predicted_return < -(transaction_cost + buffer):
     position = -1
 else:
     position = 0
@@ -346,11 +355,10 @@ transaction_cost
 Classification metrics:
 
 ```text
-accuracy
-balanced accuracy
-macro F1
-confusion matrix
-event rate
+MAE
+RMSE
+R2
+direction accuracy
 ```
 
 Trading metrics:

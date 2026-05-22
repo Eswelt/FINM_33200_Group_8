@@ -89,6 +89,19 @@ uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0 --valid
 
 完整研究步骤见 `step_by_step.md`。
 
+当前主策略改为 expected-return trading：
+
+```bash
+uv run python -m corn_forecast.cli return-strategy --transaction-cost-bps 5 --buffer-bps 25
+```
+
+该命令预测下一周 log return，只有当预测收益超过交易成本加安全垫时才持有 CORN。默认交易门槛为 `5 bps + 25 bps = 30 bps`。
+
+输出：
+
+- `reports/expected_return_metrics.json`
+- `reports/expected_return_predictions.csv`
+
 常用参数：
 
 - `--symbol CORN`：Yahoo Finance 标的，默认 `CORN`
@@ -99,6 +112,7 @@ uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0 --valid
 - `--retrain-step-weeks 13`：每隔多少周重新扩展训练集并训练
 - `--long-threshold 0.55`：预测上涨概率达到该阈值时持有 CORN
 - `--transaction-cost-bps 5`：每次仓位变化的单边交易成本
+- `--buffer-bps 25`：预测收益必须额外超过的安全垫
 - `--root PATH`：指定输出目录，测试或临时运行时很有用
 - `--demo`：使用确定性离线样本，不访问外部 API
 

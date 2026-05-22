@@ -25,6 +25,7 @@ class ProjectConfig:
     short_threshold: float = 0.45
     allow_short: bool = False
     transaction_cost_bps: float = 5.0
+    buffer_bps: float = 25.0
     corn_belt_bbox: CornBeltBbox = (49.0, -104.0, 37.0, -80.0)
 
     @classmethod
@@ -43,6 +44,7 @@ class ProjectConfig:
             short_threshold=getattr(args, "short_threshold", 0.45),
             allow_short=getattr(args, "allow_short", False),
             transaction_cost_bps=getattr(args, "transaction_cost_bps", 5.0),
+            buffer_bps=getattr(args, "buffer_bps", 25.0),
         )
 
     @property
@@ -92,3 +94,11 @@ class ProjectConfig:
     @property
     def threshold_predictions_path(self) -> Path:
         return self.root / "reports" / "threshold_selection_predictions.csv"
+
+    @property
+    def expected_return_metrics_path(self) -> Path:
+        return self.root / "reports" / "expected_return_metrics.json"
+
+    @property
+    def expected_return_predictions_path(self) -> Path:
+        return self.root / "reports" / "expected_return_predictions.csv"
