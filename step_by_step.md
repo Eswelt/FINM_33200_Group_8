@@ -13,10 +13,33 @@ Use a frozen sample while we develop so everyone compares the same rows.
 - Out-of-sample test window: `2023-01-06` through `2026-05-15`
 - Walk-forward fold size: 13 weeks
 - Retrain step: 13 weeks
-- Current validation scheme: rolling 5-year training window
-- Rolling train window: 260 weeks
+- Main validation scheme: expanding training window
+- Robustness validation scheme: rolling 5-year training window, 260 weeks
 
-The current split is:
+Main split:
+
+```text
+Fold 1:
+  train = all weeks <= 2022-12-30
+  test  = 2023-01-06 through 2023-03-31
+
+Fold 2:
+  train = all weeks <= 2023-03-31
+  test  = 2023-04-07 through 2023-06-30
+
+Continue expanding the training window until 2026-05-15.
+```
+
+Do not use random train/test splits.
+
+Why expanding window is the main specification:
+
+- Weekly CORN ETF data are limited, and the `k=1.0` target creates relatively sparse tradeable up/down events.
+- Expanding windows give the model more examples of rare commodity moves.
+- Corn returns are strongly tied to weather, crop progress, planting, pollination, harvest, inventories, and seasonal supply/demand mechanisms. These economic mechanisms persist over time even though individual market regimes differ.
+- A rolling 5-year window is still useful as a robustness check for regime sensitivity, but it is not the main specification because it discards scarce historical crop-cycle examples.
+
+Rolling 5-year robustness split:
 
 ```text
 Fold 1:
@@ -26,11 +49,7 @@ Fold 1:
 Fold 2:
   train = latest 260 weeks ending before 2023-04-07
   test  = 2023-04-07 through 2023-06-30
-
-Continue sliding the 260-week training window until 2026-05-15.
 ```
-
-Do not use random train/test splits.
 
 ## Step 1: Build Weekly Price Data
 
@@ -93,8 +112,7 @@ uv run python -m corn_forecast.cli select-threshold \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
-  --validation-scheme rolling \
-  --train-window-weeks 260 \
+  --validation-scheme expanding \
   --threshold-grid 1.0 \
   --long-threshold 0.45
 ```
@@ -250,6 +268,14 @@ HistGradientBoostingClassifier
 ```
 
 Training protocol:
+
+```text
+expanding walk-forward
+13-week test windows
+13-week retrain step
+```
+
+Robustness protocol:
 
 ```text
 rolling walk-forward

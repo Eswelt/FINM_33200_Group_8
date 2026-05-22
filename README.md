@@ -80,9 +80,10 @@ uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0
 - `reports/threshold_selection_predictions.csv`
 
 当前阶段固定使用 `k=1.0`，并且只比较 `price_only` 和 `price_calendar` 两组特征。
-当前主验证方式使用最近 5 年 rolling window 训练、下一季度测试：
+当前主验证方式使用 expanding window；最近 5 年 rolling window 作为 robustness check：
 
 ```bash
+uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0 --validation-scheme expanding
 uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0 --validation-scheme rolling --train-window-weeks 260
 ```
 
