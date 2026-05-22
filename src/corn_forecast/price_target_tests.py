@@ -25,7 +25,7 @@ THREE_CLASS_LABELS = (-1, 0, 1)
 PRICE_TARGET_FEATURE_SETS = ("price_only", "price_calendar")
 
 
-def add_three_class_return_target(panel: pd.DataFrame, threshold: float = 0.05) -> pd.DataFrame:
+def add_three_class_return_target(panel: pd.DataFrame, threshold: float = 0.02) -> pd.DataFrame:
     """Add -1/0/1 classes for next-week returns below/inside/above a threshold."""
     frame = panel.copy()
     returns = frame["target_log_return_next"]
@@ -153,9 +153,9 @@ def run_price_only_target_tests(
     split_date: str = "2022-12-31",
     test_window_weeks: int = 13,
     retrain_step_weeks: int = 13,
-    three_class_threshold: float = 0.05,
+    three_class_threshold: float = 0.02,
 ) -> Tuple[Dict[str, Dict[str, float]], pd.DataFrame]:
-    """Run return regression and 5% three-class tests with price and price+calendar features."""
+    """Run return regression and fixed-threshold three-class tests with price and price+calendar features."""
     data = add_three_class_return_target(panel, threshold=three_class_threshold)
     data["week"] = pd.to_datetime(data["week"])
     data = data.replace([np.inf, -np.inf], np.nan)
@@ -202,7 +202,7 @@ def run_price_only_target_tests(
                     {
                         "week": test["week"].to_numpy(),
                         "fold": fold,
-                        "experiment": "three_class_5pct",
+                        "experiment": "three_class_fixed",
                         "feature_set": feature_set,
                         "model": "price_only_logit",
                         "y_true_3class": test["target_return_3class"].to_numpy(),
@@ -222,7 +222,7 @@ def run_price_only_target_tests(
         reg_group = regression_predictions[regression_predictions["feature_set"] == feature_set]
         class_group = class_predictions[class_predictions["feature_set"] == feature_set]
         metrics[f"{feature_set}_return_regression"] = _regression_metrics(reg_group, feature_set=feature_set)
-        metrics[f"{feature_set}_three_class_5pct"] = _three_class_metrics(
+        metrics[f"{feature_set}_three_class_fixed"] = _three_class_metrics(
             class_group,
             threshold=three_class_threshold,
             feature_set=feature_set,

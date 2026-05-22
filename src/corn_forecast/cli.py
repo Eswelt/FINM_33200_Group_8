@@ -35,6 +35,7 @@ def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--allow-short", action="store_true", help="Use long/short positions instead of long/flat.")
     parser.add_argument("--transaction-cost-bps", type=float, default=5.0, help="One-way turnover cost in basis points.")
     parser.add_argument("--buffer-bps", type=float, default=25.0, help="Minimum expected-return buffer above costs.")
+    parser.add_argument("--fixed-return-threshold", type=float, default=0.02, help="Fixed return band for 3-class target tests.")
     parser.add_argument("--demo", action="store_true", help="Use deterministic offline demo data.")
     parser.add_argument(
         "--threshold-grid",
@@ -126,7 +127,7 @@ def test_price_targets(config: ProjectConfig, demo: bool) -> None:
         split_date=config.split_date,
         test_window_weeks=config.test_window_weeks,
         retrain_step_weeks=config.retrain_step_weeks,
-        three_class_threshold=0.05,
+        three_class_threshold=getattr(config, "fixed_return_threshold", 0.02),
     )
     save_metrics(metrics, config.price_target_metrics_path)
     save_predictions(predictions, config.price_target_predictions_path)

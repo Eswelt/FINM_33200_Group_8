@@ -61,14 +61,20 @@ uv run python -m corn_forecast.cli test-price-targets --demo
 - `price_calendar`：`price_only` + month、week-of-year sin/cos、种植季、生长期、收获季、冬季库存期
 
 - 连续目标：预测 `target_log_return_next`
-- 三分类目标：`return <= -5%`、`-5% < return < 5%`、`return >= 5%`
+- 三分类目标：`return <= -2%`、`-2% < return < 2%`、`return >= 2%`
 
 输出：
 
 - `reports/price_target_tests.json`
 - `reports/price_target_predictions.csv`
 
-选择 volatility-adjusted 三分类阈值：
+当前主实验使用固定 2% 三分类：
+
+```bash
+uv run python -m corn_forecast.cli test-price-targets --fixed-return-threshold 0.02
+```
+
+选择 volatility-adjusted 三分类阈值的旧实验仍可运行：
 
 ```bash
 uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0
@@ -79,7 +85,7 @@ uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0
 - `reports/threshold_selection.json`
 - `reports/threshold_selection_predictions.csv`
 
-当前阶段固定使用 `k=1.0`，并且只比较 `price_only` 和 `price_calendar` 两组特征。
+当前阶段固定使用 `2%`，并且只比较 `price_only` 和 `price_calendar` 两组特征。
 当前主验证方式使用 expanding window；最近 5 年 rolling window 作为 robustness check：
 
 ```bash

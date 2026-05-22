@@ -48,13 +48,13 @@ def test_price_only_target_tests_return_both_experiments():
 
     assert set(metrics) == {
         "price_only_return_regression",
-        "price_only_three_class_5pct",
+        "price_only_three_class_fixed",
         "price_calendar_return_regression",
-        "price_calendar_three_class_5pct",
+        "price_calendar_three_class_fixed",
     }
     assert metrics["price_only_return_regression"]["n_folds"] > 1
     assert metrics["price_calendar_return_regression"]["feature_set"] == "price_calendar"
-    assert metrics["price_only_three_class_5pct"]["n_up"] > 0
-    assert metrics["price_only_three_class_5pct"]["n_down"] > 0
-    assert {"return_regression", "three_class_5pct"} == set(predictions["experiment"])
+    assert metrics["price_only_three_class_fixed"]["n_up"] > 0
+    assert metrics["price_only_three_class_fixed"]["n_down"] > 0
+    assert {"return_regression", "three_class_fixed"} == set(predictions["experiment"])
     assert {"price_only", "price_calendar"} == set(predictions["feature_set"])

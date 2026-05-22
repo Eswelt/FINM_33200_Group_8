@@ -86,9 +86,9 @@ Used by:
 - Price baseline features.
 - Strategy backtest realized returns.
 
-## Step 2: Construct Y As Next-Week Return
+## Step 2: Construct Y As Fixed 2% Three-Class Return
 
-Current decision: the main target is continuous next-week log return. The strategy decides whether the predicted return is large enough to trade.
+Current decision: the main target is a fixed-threshold three-class next-week return label.
 
 For each week `t`:
 
@@ -99,49 +99,35 @@ r_{t+1} = log(close_{t+1} / close_t)
 Target:
 
 ```text
-Y_t = r_{t+1}
+Y_t =  1 if r_{t+1} >= +2%
+Y_t =  0 if -2% < r_{t+1} < +2%
+Y_t = -1 if r_{t+1} <= -2%
 ```
 
 Main command:
 
 ```bash
-uv run python -m corn_forecast.cli return-strategy \
+uv run python -m corn_forecast.cli test-price-targets \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
-  --validation-scheme expanding \
-  --transaction-cost-bps 5 \
-  --buffer-bps 25
+  --fixed-return-threshold 0.02
 ```
 
 Output:
 
 ```text
-reports/expected_return_metrics.json
-reports/expected_return_predictions.csv
+reports/price_target_tests.json
+reports/price_target_predictions.csv
 ```
 
-Trading threshold:
+Why `2%`:
 
-```text
-trade_threshold = transaction_cost_bps + buffer_bps
-                = 5 bps + 25 bps
-                = 30 bps = 0.30%
-```
-
-Main long/flat rule:
-
-```text
-long CORN if predicted_next_week_return > 0.30%
-flat otherwise
-```
-
-Why this target:
-
-- It avoids defining labels from rolling volatility.
-- It lets the model forecast expected return directly.
-- The trading decision is made only after checking whether expected return clears costs plus a conservative buffer.
-- The old volatility-adjusted `k=1.0` target remains available as a robustness experiment, not the main target.
+- It is large enough to be economically meaningful for a weekly ETF trade.
+- It avoids noisy labels from tiny weekly moves.
+- It is not as sparse as a 5% weekly threshold.
+- In the 2023-2026 OOS window, it gives 32 down weeks, 119 flat weeks, and 24 up weeks.
+- The expected-return strategy remains available as an auxiliary experiment, not the current main target.
 
 ## Step 3: Build Price Baseline X
 

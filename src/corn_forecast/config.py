@@ -26,6 +26,7 @@ class ProjectConfig:
     allow_short: bool = False
     transaction_cost_bps: float = 5.0
     buffer_bps: float = 25.0
+    fixed_return_threshold: float = 0.02
     corn_belt_bbox: CornBeltBbox = (49.0, -104.0, 37.0, -80.0)
 
     @classmethod
@@ -45,6 +46,7 @@ class ProjectConfig:
             allow_short=getattr(args, "allow_short", False),
             transaction_cost_bps=getattr(args, "transaction_cost_bps", 5.0),
             buffer_bps=getattr(args, "buffer_bps", 25.0),
+            fixed_return_threshold=getattr(args, "fixed_return_threshold", 0.02),
         )
 
     @property
