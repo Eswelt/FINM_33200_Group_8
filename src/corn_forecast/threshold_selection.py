@@ -42,7 +42,12 @@ def _walk_forward_splits(
     split_date: str,
     test_window_weeks: int,
     retrain_step_weeks: int,
+    validation_scheme: str = "expanding",
+    train_window_weeks: int = 260,
 ) -> Iterable[Tuple[int, pd.DataFrame, pd.DataFrame]]:
+    if validation_scheme not in {"expanding", "rolling"}:
+        raise ValueError(f"Unknown validation scheme: {validation_scheme}")
+
     split = pd.Timestamp(split_date)
     test_start = data.loc[data["week"] > split, "week"].min()
     if pd.isna(test_start):
@@ -52,7 +57,11 @@ def _walk_forward_splits(
     max_week = data["week"].max()
     while test_start <= max_week:
         test_end = test_start + pd.Timedelta(weeks=test_window_weeks - 1)
-        train = data[data["week"] < test_start].copy()
+        if validation_scheme == "rolling":
+            train_start = test_start - pd.Timedelta(weeks=train_window_weeks)
+            train = data[(data["week"] >= train_start) & (data["week"] < test_start)].copy()
+        else:
+            train = data[data["week"] < test_start].copy()
         test = data[(data["week"] >= test_start) & (data["week"] <= test_end)].copy()
         if not train.empty and not test.empty:
             yield fold, train, test
@@ -154,6 +163,8 @@ def evaluate_volatility_thresholds(
     short_probability_threshold: float = 0.45,
     allow_short: bool = False,
     transaction_cost_bps: float = 5.0,
+    validation_scheme: str = "expanding",
+    train_window_weeks: int = 260,
 ) -> Tuple[Dict[str, Dict[str, float]], pd.DataFrame]:
     """Evaluate candidate volatility thresholds under the same walk-forward protocol."""
     prediction_frames = []
@@ -165,7 +176,16 @@ def evaluate_volatility_thresholds(
         data = data.replace([np.inf, -np.inf], np.nan)
         data = data.dropna(subset=["target_log_return_next", "target_vol_adj_3class"]).copy()
         data["target_vol_adj_3class"] = data["target_vol_adj_3class"].astype(int)
-        splits = list(_walk_forward_splits(data, split_date, test_window_weeks, retrain_step_weeks))
+        splits = list(
+            _walk_forward_splits(
+                data,
+                split_date,
+                test_window_weeks,
+                retrain_step_weeks,
+                validation_scheme=validation_scheme,
+                train_window_weeks=train_window_weeks,
+            )
+        )
         if not splits:
             raise ValueError("Walk-forward split produced no out-of-sample folds.")
 
@@ -214,6 +234,8 @@ def evaluate_volatility_thresholds(
             "feature_set": feature_set,
             "n_test": int(len(group)),
             "n_folds": int(group["fold"].nunique()),
+            "validation_scheme": validation_scheme,
+            "train_window_weeks": int(train_window_weeks) if validation_scheme == "rolling" else None,
             "long_probability_threshold": float(long_probability_threshold),
             "short_probability_threshold": float(short_probability_threshold),
             "allow_short": bool(allow_short),

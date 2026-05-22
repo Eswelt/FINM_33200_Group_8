@@ -22,6 +22,13 @@ def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--split-date", default="2022-12-31", help="Last week before the first walk-forward test fold.")
     parser.add_argument("--test-window-weeks", type=int, default=13, help="Weeks in each out-of-sample test fold.")
     parser.add_argument("--retrain-step-weeks", type=int, default=13, help="Weeks between expanding-window retrains.")
+    parser.add_argument(
+        "--validation-scheme",
+        choices=("expanding", "rolling"),
+        default="expanding",
+        help="Use all past data or a fixed-length rolling training window.",
+    )
+    parser.add_argument("--train-window-weeks", type=int, default=260, help="Training weeks for rolling validation.")
     parser.add_argument("--long-threshold", type=float, default=0.55, help="P(up) needed to hold a long position.")
     parser.add_argument("--short-threshold", type=float, default=0.45, help="P(up) below which shorts are allowed.")
     parser.add_argument("--allow-short", action="store_true", help="Use long/short positions instead of long/flat.")
@@ -138,6 +145,8 @@ def select_threshold(config: ProjectConfig, demo: bool, threshold_grid: str) -> 
         short_probability_threshold=config.short_threshold,
         allow_short=config.allow_short,
         transaction_cost_bps=config.transaction_cost_bps,
+        validation_scheme=getattr(config, "validation_scheme", "expanding"),
+        train_window_weeks=getattr(config, "train_window_weeks", 260),
     )
     save_metrics(metrics, config.threshold_metrics_path)
     save_predictions(predictions, config.threshold_predictions_path)

@@ -13,19 +13,21 @@ Use a frozen sample while we develop so everyone compares the same rows.
 - Out-of-sample test window: `2023-01-06` through `2026-05-15`
 - Walk-forward fold size: 13 weeks
 - Retrain step: 13 weeks
+- Current validation scheme: rolling 5-year training window
+- Rolling train window: 260 weeks
 
-The default split is:
+The current split is:
 
 ```text
 Fold 1:
-  train = all weeks <= 2022-12-30
+  train = latest 260 weeks ending before 2023-01-06
   test  = 2023-01-06 through 2023-03-31
 
 Fold 2:
-  train = all weeks <= 2023-03-31
+  train = latest 260 weeks ending before 2023-04-07
   test  = 2023-04-07 through 2023-06-30
 
-Continue expanding the training window until 2026-05-15.
+Continue sliding the 260-week training window until 2026-05-15.
 ```
 
 Do not use random train/test splits.
@@ -91,6 +93,8 @@ uv run python -m corn_forecast.cli select-threshold \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
+  --validation-scheme rolling \
+  --train-window-weeks 260 \
   --threshold-grid 1.0 \
   --long-threshold 0.45
 ```
@@ -248,7 +252,8 @@ HistGradientBoostingClassifier
 Training protocol:
 
 ```text
-expanding walk-forward
+rolling walk-forward
+260-week training window
 13-week test windows
 13-week retrain step
 ```

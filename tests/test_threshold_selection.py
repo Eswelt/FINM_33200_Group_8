@@ -56,3 +56,22 @@ def test_evaluate_volatility_thresholds_compares_k_and_feature_sets():
     assert set(predictions["k"]) == {0.25, 0.5}
     assert set(predictions["feature_set"]) == {"price_only", "price_calendar"}
     assert {"prob_down", "prob_flat", "prob_up", "strategy_log_return"}.issubset(predictions.columns)
+
+
+def test_rolling_validation_uses_fixed_length_training_window():
+    panel = _sample_panel(periods=240)
+
+    metrics, predictions = evaluate_volatility_thresholds(
+        panel,
+        k_values=(1.0,),
+        feature_sets=("price_only",),
+        split_date="2022-01-01",
+        test_window_weeks=8,
+        retrain_step_weeks=8,
+        validation_scheme="rolling",
+        train_window_weeks=104,
+    )
+
+    assert metrics["k_1_price_only"]["validation_scheme"] == "rolling"
+    assert metrics["k_1_price_only"]["train_window_weeks"] == 104
+    assert predictions["n_train"].max() <= 104

@@ -19,6 +19,8 @@ class ProjectConfig:
     split_date: str = "2022-12-31"
     test_window_weeks: int = 13
     retrain_step_weeks: int = 13
+    validation_scheme: str = "expanding"
+    train_window_weeks: int = 260
     long_threshold: float = 0.55
     short_threshold: float = 0.45
     allow_short: bool = False
@@ -35,6 +37,8 @@ class ProjectConfig:
             split_date=getattr(args, "split_date", "2022-12-31"),
             test_window_weeks=getattr(args, "test_window_weeks", 13),
             retrain_step_weeks=getattr(args, "retrain_step_weeks", 13),
+            validation_scheme=getattr(args, "validation_scheme", "expanding"),
+            train_window_weeks=getattr(args, "train_window_weeks", 260),
             long_threshold=getattr(args, "long_threshold", 0.55),
             short_threshold=getattr(args, "short_threshold", 0.45),
             allow_short=getattr(args, "allow_short", False),
