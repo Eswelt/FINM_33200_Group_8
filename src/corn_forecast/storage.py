@@ -32,6 +32,12 @@ def read_table(path: Path) -> pd.DataFrame:
     return coerce_date_columns(pd.read_csv(actual_path))
 
 
+def table_exists(path: Path) -> bool:
+    if path.exists():
+        return True
+    return path.suffix == ".parquet" and _csv_fallback(path).exists()
+
+
 def write_table(df: pd.DataFrame, path: Path, index: bool = False) -> Path:
     """Write parquet when possible and transparently fall back to CSV."""
     path.parent.mkdir(parents=True, exist_ok=True)

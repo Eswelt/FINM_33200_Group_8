@@ -107,10 +107,45 @@ def calendar_feature_columns(panel: pd.DataFrame) -> list:
 
 
 def text_numeric_feature_columns(panel: pd.DataFrame) -> list:
-    columns = [column for column in panel.columns if column.startswith("text_kw_")]
+    columns = [
+        column
+        for column in panel.columns
+        if column.startswith("text_") and column != "report_text"
+    ]
     if "report_count" in panel.columns:
         columns.append("report_count")
-    return columns
+    return sorted(set(columns))
+
+
+def ai_feature_columns(panel: pd.DataFrame) -> list:
+    return [column for column in panel.columns if column.startswith("ai_")]
+
+
+def pipeline_feature_columns(panel: pd.DataFrame, feature_set: str) -> tuple:
+    """Return numeric and optional free-text columns for modular prediction pipelines."""
+    price_columns = price_feature_columns(panel)
+    calendar_columns = calendar_feature_columns(panel)
+    weather_columns = weather_feature_columns(panel)
+    text_columns = text_numeric_feature_columns(panel)
+    ai_columns = ai_feature_columns(panel)
+
+    if feature_set == "price_only":
+        return price_columns, None
+    if feature_set == "price_calendar":
+        return price_columns + calendar_columns, None
+    if feature_set == "price_calendar_weather":
+        return price_columns + calendar_columns + weather_columns, None
+    if feature_set == "price_calendar_text":
+        return price_columns + calendar_columns + text_columns, "report_text"
+    if feature_set == "price_calendar_weather_text":
+        return price_columns + calendar_columns + weather_columns + text_columns, "report_text"
+    if feature_set == "price_calendar_ai":
+        return price_columns + calendar_columns + ai_columns, None
+    if feature_set == "price_calendar_weather_ai":
+        return price_columns + calendar_columns + weather_columns + ai_columns, None
+    if feature_set == "price_calendar_weather_text_ai":
+        return price_columns + calendar_columns + weather_columns + text_columns + ai_columns, "report_text"
+    raise ValueError(f"Unknown pipeline feature set: {feature_set}")
 
 
 def feature_set_columns(panel: pd.DataFrame, feature_set: str) -> tuple:

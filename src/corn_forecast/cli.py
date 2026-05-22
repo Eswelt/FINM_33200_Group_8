@@ -11,7 +11,7 @@ from corn_forecast.models import train_evaluate
 from corn_forecast.paths import PROJECT_ROOT, ensure_project_dirs
 from corn_forecast.price_target_tests import run_price_only_target_tests
 from corn_forecast.reports import make_report_artifacts, save_metrics, save_predictions
-from corn_forecast.storage import read_table, write_table
+from corn_forecast.storage import read_table, table_exists, write_table
 from corn_forecast.threshold_selection import evaluate_volatility_thresholds
 
 
@@ -36,6 +36,11 @@ def add_common_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--transaction-cost-bps", type=float, default=5.0, help="One-way turnover cost in basis points.")
     parser.add_argument("--buffer-bps", type=float, default=25.0, help="Minimum expected-return buffer above costs.")
     parser.add_argument("--fixed-return-threshold", type=float, default=0.02, help="Fixed return band for 3-class target tests.")
+    parser.add_argument(
+        "--feature-sets",
+        default="price_only,price_calendar",
+        help="Comma-separated feature sets for modular prediction pipelines.",
+    )
     parser.add_argument("--demo", action="store_true", help="Use deterministic offline demo data.")
     parser.add_argument(
         "--threshold-grid",
@@ -54,6 +59,7 @@ def build_parser() -> argparse.ArgumentParser:
         "build-features",
         "train-evaluate",
         "test-price-targets",
+        "classify-move",
         "select-threshold",
         "return-strategy",
         "make-report",
@@ -93,9 +99,17 @@ def fetch_weather(config: ProjectConfig, demo: bool) -> Path:
 
 def build_features(config: ProjectConfig) -> Path:
     prices = read_table(config.raw_prices_path)
-    weather = read_table(config.weather_path)
-    usda = read_table(config.raw_usda_path)
+    weather = read_table(config.weather_path) if table_exists(config.weather_path) else None
+    usda = read_table(config.raw_usda_path) if table_exists(config.raw_usda_path) else None
     panel = build_feature_panel(prices=prices, weather=weather, usda_releases=usda)
+    for extra_path in (config.text_features_path, config.ai_features_path):
+        if table_exists(extra_path):
+            extra = read_table(extra_path)
+            if "week" not in extra.columns:
+                raise ValueError(f"Weekly feature table must include a week column: {extra_path}")
+            extra = extra.copy()
+            extra["week"] = extra["week"].dt.normalize()
+            panel = panel.merge(extra, on="week", how="left")
     path = write_table(panel, config.panel_path)
     print(f"Wrote feature panel: {path}")
     return path
@@ -122,8 +136,10 @@ def train_and_evaluate(config: ProjectConfig) -> None:
 def test_price_targets(config: ProjectConfig, demo: bool) -> None:
     prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
     panel = build_feature_panel(prices=prices)
+    feature_sets = [value.strip() for value in config.feature_sets.split(",") if value.strip()]
     metrics, predictions = run_price_only_target_tests(
         panel=panel,
+        feature_sets=feature_sets,
         split_date=config.split_date,
         test_window_weeks=config.test_window_weeks,
         retrain_step_weeks=config.retrain_step_weeks,
@@ -161,8 +177,10 @@ def select_threshold(config: ProjectConfig, demo: bool, threshold_grid: str) -> 
 def run_return_strategy(config: ProjectConfig, demo: bool) -> None:
     prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
     panel = build_feature_panel(prices=prices)
+    feature_sets = [value.strip() for value in config.feature_sets.split(",") if value.strip()]
     metrics, predictions = evaluate_expected_return_strategy(
         panel=panel,
+        feature_sets=feature_sets,
         split_date=config.split_date,
         test_window_weeks=config.test_window_weeks,
         retrain_step_weeks=config.retrain_step_weeks,
@@ -203,6 +221,8 @@ def run(args: argparse.Namespace) -> int:
     elif args.command == "train-evaluate":
         train_and_evaluate(config)
     elif args.command == "test-price-targets":
+        test_price_targets(config, demo=args.demo)
+    elif args.command == "classify-move":
         test_price_targets(config, demo=args.demo)
     elif args.command == "select-threshold":
         select_threshold(config, demo=args.demo, threshold_grid=args.threshold_grid)

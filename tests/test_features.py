@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from corn_forecast.features import build_feature_panel, calendar_feature_columns, feature_set_columns
+from corn_forecast.features import build_feature_panel, calendar_feature_columns, feature_set_columns, pipeline_feature_columns
 
 
 def test_feature_panel_joins_weather_and_text_on_week_end():
@@ -44,3 +44,25 @@ def test_feature_panel_joins_weather_and_text_on_week_end():
     price_calendar_columns, _ = feature_set_columns(panel, "A_price_calendar")
     assert "calendar_week_sin" in price_calendar_columns
     assert "calendar_is_harvest_season" in calendar_feature_columns(panel)
+
+
+def test_pipeline_feature_sets_pick_up_weather_text_and_ai_columns():
+    panel = pd.DataFrame(
+        {
+            "price_lag_return_1w": [0.01],
+            "calendar_week_sin": [0.1],
+            "weather_temp_anomaly_f": [2.0],
+            "text_drought_score": [1.0],
+            "report_text": ["dry weather"],
+            "ai_bullish_score": [0.4],
+        }
+    )
+
+    numeric, text_column = pipeline_feature_columns(panel, "price_calendar_weather_text_ai")
+
+    assert "price_lag_return_1w" in numeric
+    assert "calendar_week_sin" in numeric
+    assert "weather_temp_anomaly_f" in numeric
+    assert "text_drought_score" in numeric
+    assert "ai_bullish_score" in numeric
+    assert text_column == "report_text"

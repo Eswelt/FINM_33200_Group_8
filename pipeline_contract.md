@@ -1,0 +1,221 @@
+# Modular Prediction Pipelines
+
+This repository now has two prediction pipelines that share the same weekly feature panel.
+
+## Shared Input Contract
+
+All teammate-produced feature files should be weekly and point-in-time:
+
+```text
+week = Friday timestamp for the prediction week
+features = information known by that week
+```
+
+Place optional teammate outputs here:
+
+```text
+data/interim/weather_weekly.parquet
+data/interim/text_weekly.parquet
+data/interim/ai_weekly.parquet
+```
+
+CSV fallback with the same stem is also accepted, for example:
+
+```text
+data/interim/weather_weekly.csv
+```
+
+Required column:
+
+```text
+week
+```
+
+Column naming contract:
+
+```text
+weather_*   weather features, anomalies, forecasts, reforecast summaries
+text_*      numeric text features such as keyword counts or sentiment scores
+ai_*        LLM-extracted structured scores
+report_text optional free-text report field for TF-IDF
+```
+
+Examples:
+
+```text
+weather_temp_anomaly_f
+weather_precip_anomaly_mm
+weather_forecast_temp_week1_f
+text_drought_count
+text_yield_risk_score
+ai_crop_stress_score
+ai_bullish_score
+report_text
+```
+
+After teammates drop these files into `data/interim/`, build the shared panel:
+
+```bash
+uv run python -m corn_forecast.cli build-features
+```
+
+Output:
+
+```text
+data/processed/feature_panel.parquet
+```
+
+## Feature Sets
+
+Both pipelines use the same `--feature-sets` names:
+
+```text
+price_only
+price_calendar
+price_calendar_weather
+price_calendar_text
+price_calendar_weather_text
+price_calendar_ai
+price_calendar_weather_ai
+price_calendar_weather_text_ai
+```
+
+Current baseline:
+
+```bash
+--feature-sets price_only,price_calendar
+```
+
+When weather and text are ready:
+
+```bash
+--feature-sets price_only,price_calendar,price_calendar_weather,price_calendar_weather_text_ai
+```
+
+## Pipeline 1: Fixed 2% Classification
+
+Goal:
+
+```text
+Predict whether next-week CORN ETF return is down, flat, or up.
+```
+
+Target:
+
+```text
+Y =  1 if next_week_return >= +2%
+Y =  0 if -2% < next_week_return < +2%
+Y = -1 if next_week_return <= -2%
+```
+
+Command:
+
+```bash
+uv run python -m corn_forecast.cli classify-move \
+  --start 2011-01-01 \
+  --end 2026-05-15 \
+  --split-date 2022-12-31 \
+  --fixed-return-threshold 0.02 \
+  --feature-sets price_only,price_calendar
+```
+
+Output:
+
+```text
+reports/price_target_tests.json
+reports/price_target_predictions.csv
+```
+
+Primary metrics:
+
+```text
+accuracy
+balanced_accuracy_present_classes
+macro_f1
+confusion_matrix
+n_down / n_flat / n_up
+```
+
+## Pipeline 2: Expected Return
+
+Goal:
+
+```text
+Predict next-week CORN ETF log return directly.
+```
+
+Target:
+
+```text
+Y = next_week_log_return
+```
+
+Trading rule:
+
+```text
+long if predicted_return > transaction_cost_bps + buffer_bps
+flat otherwise
+```
+
+Default:
+
+```text
+transaction_cost_bps = 5
+buffer_bps = 25
+trade_threshold = 30 bps = 0.30%
+```
+
+Command:
+
+```bash
+uv run python -m corn_forecast.cli return-strategy \
+  --start 2011-01-01 \
+  --end 2026-05-15 \
+  --split-date 2022-12-31 \
+  --transaction-cost-bps 5 \
+  --buffer-bps 25 \
+  --feature-sets price_only,price_calendar
+```
+
+Output:
+
+```text
+reports/expected_return_metrics.json
+reports/expected_return_predictions.csv
+```
+
+Primary forecast diagnostics:
+
+```text
+MAE
+RMSE
+R2
+direction_accuracy
+```
+
+Trading diagnostics:
+
+```text
+strategy_total_return
+strategy_sharpe
+max_drawdown
+trade_frequency
+hit_rate_traded_weeks
+average_return_traded_weeks
+```
+
+## Validation
+
+Main validation:
+
+```bash
+--validation-scheme expanding
+```
+
+Robustness:
+
+```bash
+--validation-scheme rolling --train-window-weeks 260
+```
+
+All pipelines use walk-forward validation with 13-week test windows by default.

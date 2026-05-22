@@ -4,7 +4,9 @@ from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
 import pandas as pd
+from sklearn.compose import ColumnTransformer
 from sklearn.dummy import DummyClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression, Ridge
 from sklearn.metrics import (
@@ -18,7 +20,7 @@ from sklearn.metrics import (
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from corn_forecast.features import calendar_feature_columns, price_feature_columns
+from corn_forecast.features import pipeline_feature_columns, price_feature_columns
 
 
 THREE_CLASS_LABELS = (-1, 0, 1)
@@ -71,27 +73,35 @@ def _price_regression_pipeline() -> Pipeline:
     )
 
 
-def _price_three_class_pipeline(y_train: pd.Series) -> Pipeline:
+def _price_three_class_pipeline(y_train: pd.Series, numeric_columns: List[str], text_column: str = None) -> Pipeline:
+    transformers = []
+    if numeric_columns:
+        transformers.append(
+            (
+                "numeric",
+                Pipeline([("imputer", SimpleImputer(strategy="median")), ("scaler", StandardScaler())]),
+                numeric_columns,
+            )
+        )
+    if text_column:
+        transformers.append(
+            (
+                "text",
+                TfidfVectorizer(max_features=50, ngram_range=(1, 2), stop_words="english"),
+                text_column,
+            )
+        )
+    preprocessor = ColumnTransformer(transformers=transformers, remainder="drop", sparse_threshold=0.0)
     if y_train.nunique() < 2:
         model = DummyClassifier(strategy="most_frequent")
     else:
         model = LogisticRegression(max_iter=1000, class_weight="balanced", solver="lbfgs")
-    return Pipeline(
-        [
-            ("imputer", SimpleImputer(strategy="median")),
-            ("scaler", StandardScaler()),
-            ("model", model),
-        ]
-    )
+    return Pipeline([("preprocess", preprocessor), ("model", model)])
 
 
 def _feature_columns(data: pd.DataFrame, feature_set: str) -> List[str]:
-    price_columns = price_feature_columns(data)
-    if feature_set == "price_only":
-        return price_columns
-    if feature_set == "price_calendar":
-        return price_columns + calendar_feature_columns(data)
-    raise ValueError(f"Unknown price target feature set: {feature_set}")
+    numeric_columns, text_column = pipeline_feature_columns(data, feature_set)
+    return numeric_columns + ([text_column] if text_column else [])
 
 
 def _regression_metrics(predictions: pd.DataFrame, feature_set: str) -> Dict[str, float]:
@@ -150,6 +160,7 @@ def _three_class_metrics(predictions: pd.DataFrame, threshold: float, feature_se
 
 def run_price_only_target_tests(
     panel: pd.DataFrame,
+    feature_sets: Iterable[str] = PRICE_TARGET_FEATURE_SETS,
     split_date: str = "2022-12-31",
     test_window_weeks: int = 13,
     retrain_step_weeks: int = 13,
@@ -164,6 +175,8 @@ def run_price_only_target_tests(
 
     if not price_feature_columns(data):
         raise ValueError("No price feature columns found for price-only target tests.")
+    if "report_text" in data.columns:
+        data["report_text"] = data["report_text"].fillna("")
 
     regression_frames = []
     class_frames = []
@@ -171,8 +184,9 @@ def run_price_only_target_tests(
     if not splits:
         raise ValueError("Walk-forward split produced no out-of-sample folds.")
 
-    for feature_set in PRICE_TARGET_FEATURE_SETS:
-        numeric_columns = _feature_columns(data, feature_set)
+    for feature_set in feature_sets:
+        numeric_columns, text_column = pipeline_feature_columns(data, feature_set)
+        fit_columns = numeric_columns + ([text_column] if text_column else [])
         for fold, train, test in splits:
             reg_model = _price_regression_pipeline()
             reg_model.fit(train[numeric_columns], train["target_log_return_next"])
@@ -194,9 +208,13 @@ def run_price_only_target_tests(
                 )
             )
 
-            class_model = _price_three_class_pipeline(train["target_return_3class"])
-            class_model.fit(train[numeric_columns], train["target_return_3class"])
-            y_pred_class = class_model.predict(test[numeric_columns])
+            class_model = _price_three_class_pipeline(
+                train["target_return_3class"],
+                numeric_columns=numeric_columns,
+                text_column=text_column,
+            )
+            class_model.fit(train[fit_columns], train["target_return_3class"])
+            y_pred_class = class_model.predict(test[fit_columns])
             class_frames.append(
                 pd.DataFrame(
                     {
@@ -218,7 +236,7 @@ def run_price_only_target_tests(
     regression_predictions = pd.concat(regression_frames, ignore_index=True)
     class_predictions = pd.concat(class_frames, ignore_index=True)
     metrics = {}
-    for feature_set in PRICE_TARGET_FEATURE_SETS:
+    for feature_set in feature_sets:
         reg_group = regression_predictions[regression_predictions["feature_set"] == feature_set]
         class_group = class_predictions[class_predictions["feature_set"] == feature_set]
         metrics[f"{feature_set}_return_regression"] = _regression_metrics(reg_group, feature_set=feature_set)

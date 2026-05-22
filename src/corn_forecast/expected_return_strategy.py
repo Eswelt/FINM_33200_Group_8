@@ -5,13 +5,15 @@ from typing import Dict, Iterable, List, Tuple
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.compose import ColumnTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from corn_forecast.features import calendar_feature_columns, price_feature_columns
+from corn_forecast.features import pipeline_feature_columns
 from corn_forecast.strategy import summarize_backtest
 
 
@@ -51,35 +53,36 @@ def _walk_forward_splits(
         test_start = test_start + pd.Timedelta(weeks=retrain_step_weeks)
 
 
-def _feature_columns(data: pd.DataFrame, feature_set: str) -> List[str]:
-    price_columns = price_feature_columns(data)
-    if feature_set == "price_only":
-        return price_columns
-    if feature_set == "price_calendar":
-        return price_columns + calendar_feature_columns(data)
-    raise ValueError(f"Unknown expected-return feature set: {feature_set}")
-
-
-def _regressor(estimator: str) -> Pipeline:
-    steps = [("imputer", SimpleImputer(strategy="median"))]
+def _regressor(estimator: str, numeric_columns: List[str], text_column: str = None) -> Pipeline:
+    transformers = []
+    numeric_steps = [("imputer", SimpleImputer(strategy="median"))]
     if estimator == "ridge":
-        steps.extend([("scaler", StandardScaler()), ("model", Ridge(alpha=1.0))])
-    elif estimator == "hgb":
-        steps.append(
+        numeric_steps.append(("scaler", StandardScaler()))
+    if numeric_columns:
+        transformers.append(("numeric", Pipeline(numeric_steps), numeric_columns))
+    if text_column:
+        transformers.append(
             (
-                "model",
-                HistGradientBoostingRegressor(
-                    learning_rate=0.04,
-                    max_iter=150,
-                    max_leaf_nodes=15,
-                    l2_regularization=0.05,
-                    random_state=33200,
-                ),
+                "text",
+                TfidfVectorizer(max_features=50, ngram_range=(1, 2), stop_words="english"),
+                text_column,
             )
         )
+
+    preprocessor = ColumnTransformer(transformers=transformers, remainder="drop", sparse_threshold=0.0)
+    if estimator == "ridge":
+        model = Ridge(alpha=1.0)
+    elif estimator == "hgb":
+        model = HistGradientBoostingRegressor(
+            learning_rate=0.04,
+            max_iter=150,
+            max_leaf_nodes=15,
+            l2_regularization=0.05,
+            random_state=33200,
+            )
     else:
         raise ValueError(f"Unknown estimator: {estimator}")
-    return Pipeline(steps)
+    return Pipeline([("preprocess", preprocessor), ("model", model)])
 
 
 def _attach_strategy_returns(
@@ -142,6 +145,8 @@ def evaluate_expected_return_strategy(
     data["week"] = pd.to_datetime(data["week"])
     data = data.replace([np.inf, -np.inf], np.nan)
     data = data.dropna(subset=["target_log_return_next"]).copy()
+    if "report_text" in data.columns:
+        data["report_text"] = data["report_text"].fillna("")
     splits = list(
         _walk_forward_splits(
             data,
@@ -157,10 +162,13 @@ def evaluate_expected_return_strategy(
 
     prediction_frames = []
     for feature_set in feature_sets:
-        columns = _feature_columns(data, feature_set)
+        numeric_columns, text_column = pipeline_feature_columns(data, feature_set)
+        columns = numeric_columns + ([text_column] if text_column else [])
+        if not columns:
+            raise ValueError(f"No usable columns found for {feature_set}.")
         for estimator in estimators:
             for fold, train, test in splits:
-                model = _regressor(estimator)
+                model = _regressor(estimator, numeric_columns=numeric_columns, text_column=text_column)
                 model.fit(train[columns], train["target_log_return_next"])
                 predicted_return = model.predict(test[columns])
                 prediction_frames.append(

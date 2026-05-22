@@ -94,6 +94,7 @@ uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0 --valid
 ```
 
 完整研究步骤见 `step_by_step.md`。
+模块化数据接口和两条预测 pipeline 见 `pipeline_contract.md`。
 
 当前主策略改为 expected-return trading：
 
