@@ -4,6 +4,7 @@ import pandas as pd
 
 from corn_forecast.text.wwcb import (
     align_report_week,
+    build_report_text,
     extract_corn_section_from_text,
     extract_report_date,
     extract_week_ending,
@@ -57,6 +58,21 @@ Soybeans: Sixty-seven percent of the soybean crop had been planted.
     assert "rice acreage" not in corn_section
     assert "Small Grains" not in corn_section
     assert "Soybeans" not in corn_section
+
+
+def test_report_text_excludes_full_national_ag_summary():
+    report_text = build_report_text(
+        weather_highlights="Dryness expanded across the Corn Belt.",
+        national_ag_summary="Soybeans: this full paragraph should remain out of the LLM input.",
+        corn_section="Corn: Planting was ahead of average.",
+        corn_table_text="Corn Percent Planted table.",
+    )
+
+    assert "[WEATHER HIGHLIGHTS]" in report_text
+    assert "[CORN SECTION]" in report_text
+    assert "[CORN PROGRESS TABLE]" in report_text
+    assert "[NATIONAL AGRICULTURAL SUMMARY]" not in report_text
+    assert "Soybeans:" not in report_text
 
 
 def test_find_pdf_paths_accepts_file_and_folder(tmp_path: Path):

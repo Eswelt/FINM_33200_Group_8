@@ -197,11 +197,11 @@ def build_report_text(
     corn_section: str,
     corn_table_text: str,
 ) -> str:
+    _ = national_ag_summary
     return clean_text(
         "\n\n".join(
             [
                 "[WEATHER HIGHLIGHTS]\n" + weather_highlights,
-                "[NATIONAL AGRICULTURAL SUMMARY]\n" + national_ag_summary,
                 "[CORN SECTION]\n" + corn_section,
                 "[CORN PROGRESS TABLE]\n" + corn_table_text,
             ]

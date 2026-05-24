@@ -266,6 +266,14 @@ corn_table_text
 report_text
 ```
 
+`national_ag_summary` is retained as a debug column. The default `report_text` used for LLM feature extraction excludes the full national summary and only includes:
+
+```text
+weather_highlights
+corn_section
+corn_table_text
+```
+
 The intended next step is to pass `report_text` or the section columns to an LLM and produce:
 
 ```text
