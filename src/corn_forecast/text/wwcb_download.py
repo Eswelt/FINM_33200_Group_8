@@ -51,7 +51,7 @@ def parse_release_links(html: str, base_url: str = BASE_URL) -> List[WWCBRelease
     for link in soup.find_all("a", href=True):
         label = " ".join(link.get_text(" ", strip=True).split())
         href = link["href"]
-        if ".pdf" not in href.lower() or "wwcb" not in href.lower():
+        if ".pdf" not in href.lower():
             continue
         release_date = parse_release_date(label)
         if release_date is None or pd.isna(release_date):

@@ -20,6 +20,19 @@ def test_parse_release_links_dedupes_latest_release():
     assert releases[0].pdf_url == "https://esmis.nal.usda.gov/sites/default/release-files/795911/wwcb2026.pdf"
 
 
+def test_parse_release_links_accepts_older_weather_weekly_filenames():
+    html = """
+    <a href="/sites/default/release-files/cj82k728n/123/weather_weekly-05-31-2007.pdf">May 31 2007 - pdf</a>
+    <a href="/publication/weekly-weather-and-crop-bulletin/2007-05-31">View</a>
+    """
+
+    releases = parse_release_links(html)
+
+    assert len(releases) == 1
+    assert releases[0].release_date == "2007-05-31"
+    assert releases[0].pdf_filename == "weather_weekly-05-31-2007.pdf"
+
+
 def test_parse_last_page_reads_pagination_links():
     html = '<a href="?page=1">2</a><a href="?page=289">Last</a>'
 
