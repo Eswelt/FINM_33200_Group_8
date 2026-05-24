@@ -74,6 +74,12 @@ uv run python -m corn_forecast.cli test-price-targets --demo
 uv run python -m corn_forecast.cli test-price-targets --fixed-return-threshold 0.02
 ```
 
+也可以直接运行一键脚本：
+
+```bash
+uv run python run_classification_baseline.py
+```
+
 选择 volatility-adjusted 三分类阈值的旧实验仍可运行：
 
 ```bash
