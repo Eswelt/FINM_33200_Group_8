@@ -292,3 +292,42 @@ Save those features to:
 ```text
 data/interim/ai_weekly.parquet
 ```
+
+## GLM AI Feature Extraction
+
+The USDA text pipeline uses GLM as a structured feature extractor, not as the price forecaster. GLM reads each parsed `report_text` and returns seven numeric fields:
+
+```text
+ai_moisture_stress        0 none to 3 severe
+ai_heat_stress            0 none to 3 severe
+ai_excess_rain_risk       0 none to 3 severe
+ai_planting_delay_risk    0 none to 3 severe
+ai_harvest_delay_risk     0 none to 3 severe
+ai_yield_risk             0 none to 3 severe
+ai_crop_condition_trend  -2 clearly worse to 2 clearly better
+```
+
+Small local mock run, no API key required:
+
+```bash
+uv run python scripts/extract_wwcb_ai_features.py \
+  --input data/interim/wwcb_core_text.parquet \
+  --output data/interim/ai_weekly.parquet \
+  --raw-output data/interim/ai_wwcb_raw.parquet \
+  --limit 3 \
+  --mock
+```
+
+GLM run:
+
+```bash
+export BIGMODEL_API_KEY=your_key_here
+
+uv run python scripts/extract_wwcb_ai_features.py \
+  --input data/interim/wwcb_core_text.parquet \
+  --output data/interim/ai_weekly.parquet \
+  --raw-output data/interim/ai_wwcb_raw.parquet \
+  --model glm-4.5-flash
+```
+
+`ai_weekly.parquet` is the file consumed by the forecasting pipelines. `ai_wwcb_raw.parquet` keeps report-level metadata and token usage for auditing.
