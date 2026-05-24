@@ -63,29 +63,40 @@ class GLMClient:
     model: str = DEFAULT_GLM_MODEL
     base_url: str = DEFAULT_GLM_BASE_URL
     timeout: int = 60
+    max_retries: int = 6
+    retry_sleep_seconds: float = 10.0
 
     def extract_json(self, prompt: str) -> Dict[str, Any]:
         url = self.base_url.rstrip("/") + "/chat/completions"
-        response = requests.post(
-            url,
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": self.model,
-                "messages": [
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": prompt},
-                ],
-                "temperature": 0,
-                "do_sample": False,
-                "stream": False,
-                "response_format": {"type": "json_object"},
-                "thinking": {"type": "disabled"},
-            },
-            timeout=self.timeout,
-        )
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ],
+            "temperature": 0,
+            "do_sample": False,
+            "stream": False,
+            "response_format": {"type": "json_object"},
+            "thinking": {"type": "disabled"},
+        }
+        for attempt in range(self.max_retries + 1):
+            response = requests.post(
+                url,
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=self.timeout,
+            )
+            if response.status_code not in {429, 500, 502, 503, 504}:
+                break
+            if attempt >= self.max_retries:
+                break
+            retry_after = response.headers.get("Retry-After")
+            delay = float(retry_after) if retry_after else self.retry_sleep_seconds * (2**attempt)
+            time.sleep(delay)
         response.raise_for_status()
         payload = response.json()
         content = payload["choices"][0]["message"]["content"]

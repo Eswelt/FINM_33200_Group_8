@@ -1,6 +1,7 @@
 import pandas as pd
 
 from corn_forecast.text.ai_features import (
+    GLMClient,
     aggregate_weekly_ai_features,
     build_user_prompt,
     extract_ai_feature_rows,
@@ -86,3 +87,10 @@ def test_build_user_prompt_contains_fixed_schema():
     assert "ai_moisture_stress" in prompt
     assert "Output exactly these seven keys" in prompt
     assert "Corn text." in prompt
+
+
+def test_glm_client_has_retry_defaults():
+    client = GLMClient(api_key="test")
+
+    assert client.max_retries >= 1
+    assert client.retry_sleep_seconds > 0
