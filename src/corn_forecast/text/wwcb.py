@@ -84,6 +84,15 @@ def extract_week_ending(text: str, report_date: Optional[pd.Timestamp]) -> Optio
     return None
 
 
+def align_report_week(report_date: Optional[pd.Timestamp], week_ending: Optional[pd.Timestamp]) -> Optional[pd.Timestamp]:
+    """Align a bulletin to the Friday decision week when it is available to investors."""
+    if report_date is not None and not pd.isna(report_date):
+        return report_date.to_period("W-FRI").end_time.normalize()
+    if week_ending is not None and not pd.isna(week_ending):
+        return week_ending.to_period("W-FRI").end_time.normalize()
+    return None
+
+
 def _slice_between(text: str, start_pattern: str, end_patterns: Iterable[str]) -> str:
     start = re.search(start_pattern, text, flags=re.IGNORECASE)
     if not start:
@@ -204,6 +213,7 @@ def parse_wwcb_pdf(path: Path) -> WWCBCoreText:
     raw_text = pdf_to_text(path)
     report_date = extract_report_date(raw_text)
     week_ending = extract_week_ending(raw_text, report_date)
+    week = align_report_week(report_date, week_ending)
     weather_highlights = extract_weather_highlights(raw_text)
     national_ag_summary = extract_national_ag_summary(raw_text)
     corn_section = extract_corn_section_from_text(raw_text) or extract_corn_section(national_ag_summary)
@@ -213,7 +223,7 @@ def parse_wwcb_pdf(path: Path) -> WWCBCoreText:
         source_file=str(path),
         report_date=None if report_date is None or pd.isna(report_date) else report_date.strftime("%Y-%m-%d"),
         week_ending=None if week_ending is None or pd.isna(week_ending) else week_ending.strftime("%Y-%m-%d"),
-        week=None if week_ending is None or pd.isna(week_ending) else week_ending.to_period("W-FRI").end_time.normalize().strftime("%Y-%m-%d"),
+        week=None if week is None or pd.isna(week) else week.strftime("%Y-%m-%d"),
         weather_highlights=weather_highlights,
         national_ag_summary=national_ag_summary,
         corn_section=corn_section,

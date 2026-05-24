@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 from corn_forecast.text.wwcb import (
+    align_report_week,
     extract_corn_section_from_text,
     extract_report_date,
     extract_week_ending,
@@ -27,6 +28,13 @@ Week Ending May 17, 2026
 
     assert report_date == pd.Timestamp("2026-05-19")
     assert week_ending == pd.Timestamp("2026-05-17")
+
+
+def test_report_week_aligns_to_report_release_week():
+    report_date = pd.Timestamp("2026-05-19")
+    week_ending = pd.Timestamp("2026-05-17")
+
+    assert align_report_week(report_date, week_ending) == pd.Timestamp("2026-05-22")
 
 
 def test_extract_corn_section_uses_left_column_only():

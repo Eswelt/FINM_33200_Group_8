@@ -224,6 +224,24 @@ All pipelines use walk-forward validation with 13-week test windows by default.
 
 USDA Weekly Weather and Crop Bulletin PDFs can be reduced to core CORN-relevant text before LLM feature extraction:
 
+First, batch download the raw PDFs from USDA ESMIS:
+
+```bash
+uv run python scripts/download_wwcb.py \
+  --start 2011-01-01 \
+  --end 2026-05-15 \
+  --output-dir data/external/wwcb_pdfs \
+  --manifest data/interim/wwcb_manifest.csv
+```
+
+For a small test run:
+
+```bash
+uv run python scripts/download_wwcb.py --start 2026-05-01 --end 2026-05-31 --limit 2 --dry-run
+```
+
+Then parse downloaded PDFs:
+
 ```bash
 uv run python scripts/parse_wwcb.py path/to/wwcb.pdf --output data/interim/wwcb_core_text.parquet
 ```
