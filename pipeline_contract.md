@@ -219,3 +219,50 @@ Robustness:
 ```
 
 All pipelines use walk-forward validation with 13-week test windows by default.
+
+## USDA WWCB Core Text Parser
+
+USDA Weekly Weather and Crop Bulletin PDFs can be reduced to core CORN-relevant text before LLM feature extraction:
+
+```bash
+uv run python scripts/parse_wwcb.py path/to/wwcb.pdf --output data/interim/wwcb_core_text.parquet
+```
+
+The input can also be a folder of PDFs:
+
+```bash
+uv run python scripts/parse_wwcb.py data/external/wwcb_pdfs --output data/interim/wwcb_core_text.parquet
+```
+
+Output columns:
+
+```text
+source_file
+report_date
+week_ending
+week
+weather_highlights
+national_ag_summary
+corn_section
+corn_table_text
+report_text
+```
+
+The intended next step is to pass `report_text` or the section columns to an LLM and produce:
+
+```text
+week
+ai_moisture_stress
+ai_heat_stress
+ai_excess_rain_risk
+ai_planting_delay_risk
+ai_harvest_delay_risk
+ai_yield_risk
+ai_crop_condition_trend
+```
+
+Save those features to:
+
+```text
+data/interim/ai_weekly.parquet
+```
