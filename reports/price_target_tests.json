@@ -1,0 +1,104 @@
+{
+  "price_calendar_return_regression": {
+    "target": "next_week_log_return",
+    "model": "price_only_ridge",
+    "feature_set": "price_calendar",
+    "n_test": 175,
+    "n_folds": 14,
+    "mae": 0.017275853779333668,
+    "rmse": 0.024303129800526412,
+    "r2": -0.021997997690553106,
+    "direction_accuracy": 0.5314285714285715,
+    "mean_actual_return": -0.001920054479809364,
+    "mean_predicted_return": -0.0018025927108615365
+  },
+  "price_calendar_three_class_fixed": {
+    "target": "next_week_log_return_3class_2.0%_bands",
+    "model": "price_only_logit",
+    "feature_set": "price_calendar",
+    "threshold": 0.02,
+    "n_test": 175,
+    "n_folds": 14,
+    "accuracy": 0.4228571428571429,
+    "balanced_accuracy_present_classes": 0.3090861344537815,
+    "macro_f1": 0.3041501238589704,
+    "n_down": 32,
+    "n_flat": 119,
+    "n_up": 24,
+    "extreme_event_rate": 0.32,
+    "has_both_extreme_classes": true,
+    "confusion_matrix_labels": [
+      -1,
+      0,
+      1
+    ],
+    "confusion_matrix": [
+      [
+        9,
+        16,
+        7
+      ],
+      [
+        44,
+        62,
+        13
+      ],
+      [
+        9,
+        12,
+        3
+      ]
+    ]
+  },
+  "price_calendar_ai_return_regression": {
+    "target": "next_week_log_return",
+    "model": "price_only_ridge",
+    "feature_set": "price_calendar_ai",
+    "n_test": 175,
+    "n_folds": 14,
+    "mae": 0.018011077816578812,
+    "rmse": 0.025234137868249514,
+    "r2": -0.10179951060529069,
+    "direction_accuracy": 0.5371428571428571,
+    "mean_actual_return": -0.001920054479809364,
+    "mean_predicted_return": -0.0007792251525244783
+  },
+  "price_calendar_ai_three_class_fixed": {
+    "target": "next_week_log_return_3class_2.0%_bands",
+    "model": "price_only_logit",
+    "feature_set": "price_calendar_ai",
+    "threshold": 0.02,
+    "n_test": 175,
+    "n_folds": 14,
+    "accuracy": 0.42857142857142855,
+    "balanced_accuracy_present_classes": 0.3001283846872082,
+    "macro_f1": 0.2997084077797294,
+    "n_down": 32,
+    "n_flat": 119,
+    "n_up": 24,
+    "extreme_event_rate": 0.32,
+    "has_both_extreme_classes": true,
+    "confusion_matrix_labels": [
+      -1,
+      0,
+      1
+    ],
+    "confusion_matrix": [
+      [
+        6,
+        18,
+        8
+      ],
+      [
+        36,
+        65,
+        18
+      ],
+      [
+        5,
+        15,
+        4
+      ]
+    ]
+  }
+}
