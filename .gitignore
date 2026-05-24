@@ -6,6 +6,8 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 *.egg-info/
+.env
+.env.*
 
 # Keep source-controlled placeholders, but do not commit downloaded data or model output.
 data/raw/*

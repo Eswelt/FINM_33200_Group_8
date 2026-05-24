@@ -7,6 +7,7 @@ import os
 import re
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Dict, Iterable, Optional
 
 import pandas as pd
@@ -15,6 +16,7 @@ import requests
 
 DEFAULT_GLM_BASE_URL = "https://open.bigmodel.cn/api/paas/v4"
 DEFAULT_GLM_MODEL = "glm-4.5-flash"
+DEFAULT_MAX_REPORT_CHARS = 8000
 AI_FEATURE_COLUMNS = [
     "ai_moisture_stress",
     "ai_heat_stress",
@@ -80,23 +82,35 @@ class GLMClient:
             "response_format": {"type": "json_object"},
             "thinking": {"type": "disabled"},
         }
+        response = None
+        last_error = None
         for attempt in range(self.max_retries + 1):
-            response = requests.post(
-                url,
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
-                timeout=self.timeout,
-            )
-            if response.status_code not in {429, 500, 502, 503, 504}:
-                break
+            try:
+                response = requests.post(
+                    url,
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json=payload,
+                    timeout=self.timeout,
+                )
+                if response.status_code not in {429, 500, 502, 503, 504}:
+                    break
+                last_error = requests.HTTPError(f"Retryable HTTP status {response.status_code}", response=response)
+                retry_after = response.headers.get("Retry-After")
+                delay = float(retry_after) if retry_after else self.retry_sleep_seconds * (2**attempt)
+            except (requests.Timeout, requests.ConnectionError) as error:
+                last_error = error
+                delay = self.retry_sleep_seconds * (2**attempt)
+
             if attempt >= self.max_retries:
-                break
-            retry_after = response.headers.get("Retry-After")
-            delay = float(retry_after) if retry_after else self.retry_sleep_seconds * (2**attempt)
+                if response is not None:
+                    break
+                raise last_error
             time.sleep(delay)
+        if response is None:
+            raise last_error
         response.raise_for_status()
         payload = response.json()
         content = payload["choices"][0]["message"]["content"]
@@ -113,11 +127,30 @@ def api_key_from_env() -> Optional[str]:
     return os.getenv("BIGMODEL_API_KEY") or os.getenv("ZHIPUAI_API_KEY") or os.getenv("GLM_API_KEY")
 
 
-def build_user_prompt(row: pd.Series) -> str:
+def api_key_from_env_file(path: Path) -> Optional[str]:
+    if not path.exists():
+        return None
+    for raw_line in path.read_text().splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        if key.strip() in {"BIGMODEL_API_KEY", "ZHIPUAI_API_KEY", "GLM_API_KEY"}:
+            return value.strip().strip('"').strip("'")
+    return None
+
+
+def truncate_report_text(text: str, max_chars: int = DEFAULT_MAX_REPORT_CHARS) -> str:
+    if max_chars <= 0 or len(text) <= max_chars:
+        return text
+    return text[:max_chars].rstrip() + "\n\n[TRUNCATED]"
+
+
+def build_user_prompt(row: pd.Series, max_report_chars: int = DEFAULT_MAX_REPORT_CHARS) -> str:
     return USER_PROMPT_TEMPLATE.format(
         report_date=row.get("report_date", ""),
         week=row.get("week", ""),
-        report_text=row.get("report_text", ""),
+        report_text=truncate_report_text(str(row.get("report_text", "")), max_chars=max_report_chars),
     )
 
 
@@ -191,6 +224,7 @@ def extract_ai_feature_rows(
     mock: bool = False,
     limit: Optional[int] = None,
     sleep_seconds: float = 0.2,
+    max_report_chars: int = DEFAULT_MAX_REPORT_CHARS,
 ) -> pd.DataFrame:
     frame = core_text.copy()
     frame["week"] = pd.to_datetime(frame["week"]).dt.normalize()
@@ -205,7 +239,7 @@ def extract_ai_feature_rows(
         else:
             if client is None:
                 raise ValueError("A GLMClient is required unless mock=True.")
-            raw = client.extract_json(build_user_prompt(row))
+            raw = client.extract_json(build_user_prompt(row, max_report_chars=max_report_chars))
             raw_features = raw
             metadata = {
                 "glm_model": raw.get("_glm_model", client.model),

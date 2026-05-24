@@ -9,9 +9,11 @@ from corn_forecast.storage import read_table, write_table
 from corn_forecast.text.ai_features import (
     AI_FEATURE_COLUMNS,
     DEFAULT_GLM_BASE_URL,
+    DEFAULT_MAX_REPORT_CHARS,
     DEFAULT_GLM_MODEL,
     GLMClient,
     aggregate_weekly_ai_features,
+    api_key_from_env_file,
     api_key_from_env,
     extract_ai_feature_rows,
 )
@@ -25,11 +27,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--model", default=DEFAULT_GLM_MODEL)
     parser.add_argument("--base-url", default=DEFAULT_GLM_BASE_URL)
     parser.add_argument("--api-key-env", default=None, help="Optional env var name for the GLM API key.")
+    parser.add_argument("--api-key-file", type=Path, default=Path(".env.local"), help="Local env file containing BIGMODEL_API_KEY.")
     parser.add_argument("--limit", type=int, default=None, help="Optional row limit for small test runs.")
     parser.add_argument("--mock", action="store_true", help="Run deterministic local extraction without calling GLM.")
     parser.add_argument("--sleep", type=float, default=1.0, help="Seconds to wait between GLM API calls.")
     parser.add_argument("--max-retries", type=int, default=6, help="Retries for 429 or transient GLM server errors.")
     parser.add_argument("--retry-sleep", type=float, default=10.0, help="Base seconds for exponential retry backoff.")
+    parser.add_argument("--timeout", type=int, default=180, help="HTTP read timeout for each GLM request.")
+    parser.add_argument(
+        "--max-report-chars",
+        type=int,
+        default=DEFAULT_MAX_REPORT_CHARS,
+        help="Maximum report_text characters sent to GLM per report.",
+    )
     return parser
 
 
@@ -65,6 +75,7 @@ def _extract_with_checkpoints(core_text, client, args) -> pd.DataFrame:
             client=client,
             mock=args.mock,
             sleep_seconds=args.sleep,
+            max_report_chars=args.max_report_chars,
         )
         records.extend(new_row.to_dict("records"))
         raw_rows = pd.DataFrame.from_records(records)
@@ -86,11 +97,17 @@ def main(argv=None) -> int:
 
         api_key = os.getenv(args.api_key_env) if args.api_key_env else api_key_from_env()
         if not api_key:
-            raise RuntimeError("Missing GLM API key. Set BIGMODEL_API_KEY, ZHIPUAI_API_KEY, or GLM_API_KEY.")
+            api_key = api_key_from_env_file(args.api_key_file)
+        if not api_key:
+            raise RuntimeError(
+                "Missing GLM API key. Set BIGMODEL_API_KEY, ZHIPUAI_API_KEY, GLM_API_KEY, "
+                "or save BIGMODEL_API_KEY=... in .env.local."
+            )
         client = GLMClient(
             api_key=api_key,
             model=args.model,
             base_url=args.base_url,
+            timeout=args.timeout,
             max_retries=args.max_retries,
             retry_sleep_seconds=args.retry_sleep,
         )

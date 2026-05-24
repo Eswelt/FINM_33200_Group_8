@@ -3,9 +3,11 @@ import pandas as pd
 from corn_forecast.text.ai_features import (
     GLMClient,
     aggregate_weekly_ai_features,
+    api_key_from_env_file,
     build_user_prompt,
     extract_ai_feature_rows,
     parse_json_object,
+    truncate_report_text,
     validate_ai_features,
 )
 
@@ -89,8 +91,29 @@ def test_build_user_prompt_contains_fixed_schema():
     assert "Corn text." in prompt
 
 
+def test_build_user_prompt_truncates_long_report_text():
+    row = pd.Series({"report_date": "2026-05-05", "week": "2026-05-08", "report_text": "a" * 100})
+
+    prompt = build_user_prompt(row, max_report_chars=10)
+
+    assert "a" * 10 in prompt
+    assert "[TRUNCATED]" in prompt
+    assert "a" * 20 not in prompt
+
+
+def test_truncate_report_text_keeps_short_text():
+    assert truncate_report_text("short", max_chars=10) == "short"
+
+
 def test_glm_client_has_retry_defaults():
     client = GLMClient(api_key="test")
 
     assert client.max_retries >= 1
     assert client.retry_sleep_seconds > 0
+
+
+def test_api_key_from_env_file_reads_bigmodel_key(tmp_path):
+    env_file = tmp_path / ".env.local"
+    env_file.write_text("OTHER=value\nBIGMODEL_API_KEY='abc.def'\n")
+
+    assert api_key_from_env_file(env_file) == "abc.def"
