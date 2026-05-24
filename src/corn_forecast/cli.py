@@ -99,6 +99,13 @@ def fetch_weather(config: ProjectConfig, demo: bool) -> Path:
 
 def build_features(config: ProjectConfig) -> Path:
     prices = read_table(config.raw_prices_path)
+    panel = build_model_panel(config, prices)
+    path = write_table(panel, config.panel_path)
+    print(f"Wrote feature panel: {path}")
+    return path
+
+
+def build_model_panel(config: ProjectConfig, prices):
     weather = read_table(config.weather_path) if table_exists(config.weather_path) else None
     usda = read_table(config.raw_usda_path) if table_exists(config.raw_usda_path) else None
     panel = build_feature_panel(prices=prices, weather=weather, usda_releases=usda)
@@ -110,9 +117,7 @@ def build_features(config: ProjectConfig) -> Path:
             extra = extra.copy()
             extra["week"] = extra["week"].dt.normalize()
             panel = panel.merge(extra, on="week", how="left")
-    path = write_table(panel, config.panel_path)
-    print(f"Wrote feature panel: {path}")
-    return path
+    return panel
 
 
 def train_and_evaluate(config: ProjectConfig) -> None:
@@ -135,7 +140,7 @@ def train_and_evaluate(config: ProjectConfig) -> None:
 
 def test_price_targets(config: ProjectConfig, demo: bool) -> None:
     prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
-    panel = build_feature_panel(prices=prices)
+    panel = build_model_panel(config, prices)
     feature_sets = [value.strip() for value in config.feature_sets.split(",") if value.strip()]
     metrics, predictions = run_price_only_target_tests(
         panel=panel,
@@ -176,7 +181,7 @@ def select_threshold(config: ProjectConfig, demo: bool, threshold_grid: str) -> 
 
 def run_return_strategy(config: ProjectConfig, demo: bool) -> None:
     prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
-    panel = build_feature_panel(prices=prices)
+    panel = build_model_panel(config, prices)
     feature_sets = [value.strip() for value in config.feature_sets.split(",") if value.strip()]
     metrics, predictions = evaluate_expected_return_strategy(
         panel=panel,
