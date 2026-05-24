@@ -1,3 +1,11 @@
+"""Optional weather adapter and request-shape reference.
+
+The main forecasting pipelines do not download or engineer weather data.
+Teammates should provide weekly weather features under `data/interim/` following
+`pipeline_contract.md`; this module remains as a reference for source request
+formats and offline demo data.
+"""
+
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Sequence, Tuple

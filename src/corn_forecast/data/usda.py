@@ -1,3 +1,10 @@
+"""Optional USDA text adapter.
+
+The main forecasting pipelines do not require this module. Teammates can
+instead provide weekly text/AI feature tables under `data/interim/` following
+`pipeline_contract.md`.
+"""
+
 import re
 from typing import Iterable, List, Optional
 from urllib.parse import urljoin

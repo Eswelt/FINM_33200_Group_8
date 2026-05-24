@@ -1,58 +1,57 @@
-# FINM 33200 Group 8: CORN ETF Direction Forecast MVP
+# FINM 33200 Group 8: CORN ETF Trading Signal Pipeline
 
-本项目实现一个可跑通的初版 pipeline，用来预测 `CORN` ETF 下一周 log return 是否为正，并比较三组信息集：
+本项目实现一个模块化 weekly pipeline，用来预测 `CORN` ETF 下一周是否出现有交易意义的 move，并比较不同信息集的增量价值。
 
-- 方案 A：历史价格
-- 方案 B：历史价格 + 玉米带天气
-- 方案 C：历史价格 + 玉米带天气 + USDA 文本
+当前主线是固定 2% 三分类：
 
-初版优先保证端到端可复现。天气模块提供 ERA5/CFSv2/GEFS 的 adapter 和缓存入口，但默认 demo 不下载多年 GRIB 数据。
+```text
+Y =  1 if next_week_return >= +2%
+Y =  0 if -2% < next_week_return < +2%
+Y = -1 if next_week_return <= -2%
+```
+
+当前 baseline 信息集：
+
+- `price_only`：历史价格特征
+- `price_calendar`：历史价格 + 玉米农业季节特征
+
+天气、文本、AI 特征由队友处理成 weekly tables 后接入；接口见 `pipeline_contract.md`。`src/corn_forecast/data/usda.py` 和 `src/corn_forecast/data/weather.py` 只是 optional adapter / demo reference，不是当前主线分工要求。
 
 ## Quick Start
 
 ```bash
 uv sync --extra dev
-uv run python -m corn_forecast.cli all --demo
+uv run python run_classification_baseline.py
 ```
 
 运行后会生成：
 
-- `data/raw/prices_CORN.csv`
-- `data/raw/usda_releases.csv`
-- `data/interim/weather_weekly.parquet`
-- `data/processed/feature_panel.parquet`
-- `reports/metrics.json`
-- `reports/predictions.csv`
-- `reports/model_report.md`
-- `reports/figures/predicted_probabilities.png`
-- `reports/figures/roc_curves.png`
-- `reports/figures/cumulative_returns.png`
+- `reports/price_target_tests.json`
+- `reports/price_target_predictions.csv`
 
 这些数据和报告输出默认被 `.gitignore` 忽略，避免把大文件或本地结果提交进仓库。
 
 ## CLI
 
-一键 demo：
+一键 baseline：
 
 ```bash
-uv run python -m corn_forecast.cli all --demo
+uv run python run_classification_baseline.py
 ```
 
-分步运行：
+等队友放入 weekly weather/text/AI tables 后，先构建 feature panel：
 
 ```bash
 uv run python -m corn_forecast.cli fetch-prices --demo
-uv run python -m corn_forecast.cli fetch-usda --demo
-uv run python -m corn_forecast.cli fetch-weather --demo
 uv run python -m corn_forecast.cli build-features
-uv run python -m corn_forecast.cli train-evaluate
-uv run python -m corn_forecast.cli make-report
 ```
 
-只用历史价格测试预测目标：
+当前主分类 pipeline：
 
 ```bash
-uv run python -m corn_forecast.cli test-price-targets --demo
+uv run python -m corn_forecast.cli classify-move \
+  --fixed-return-threshold 0.02 \
+  --feature-sets price_only,price_calendar
 ```
 
 该命令比较两组历史可得特征：
@@ -80,7 +79,7 @@ uv run python -m corn_forecast.cli test-price-targets --fixed-return-threshold 0
 uv run python run_classification_baseline.py
 ```
 
-选择 volatility-adjusted 三分类阈值的旧实验仍可运行：
+选择 volatility-adjusted 三分类阈值的旧实验仍可运行，但不是当前主线：
 
 ```bash
 uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0
@@ -102,13 +101,13 @@ uv run python -m corn_forecast.cli select-threshold --threshold-grid 1.0 --valid
 完整研究步骤见 `step_by_step.md`。
 模块化数据接口和两条预测 pipeline 见 `pipeline_contract.md`。
 
-当前主策略改为 expected-return trading：
+辅助 expected-return pipeline：
 
 ```bash
 uv run python -m corn_forecast.cli return-strategy --transaction-cost-bps 5 --buffer-bps 25
 ```
 
-该命令预测下一周 log return，只有当预测收益超过交易成本加安全垫时才持有 CORN。默认交易门槛为 `5 bps + 25 bps = 30 bps`。
+该命令预测下一周 log return，只有当预测收益超过交易成本加安全垫时才持有 CORN。默认交易门槛为 `5 bps + 25 bps = 30 bps`。这是辅助实验，不是当前主分类目标。
 
 输出：
 
@@ -123,7 +122,7 @@ uv run python -m corn_forecast.cli return-strategy --transaction-cost-bps 5 --bu
 - `--split-date 2022-12-31`：训练集最后一周，之后为测试集
 - `--test-window-weeks 13`：每个 walk-forward 测试窗口长度
 - `--retrain-step-weeks 13`：每隔多少周重新扩展训练集并训练
-- `--long-threshold 0.55`：预测上涨概率达到该阈值时持有 CORN
+- `--long-threshold 0.55`：旧概率策略使用的 long 阈值
 - `--transaction-cost-bps 5`：每次仓位变化的单边交易成本
 - `--buffer-bps 25`：预测收益必须额外超过的安全垫
 - `--root PATH`：指定输出目录，测试或临时运行时很有用
@@ -137,28 +136,29 @@ uv run python -m corn_forecast.cli return-strategy --transaction-cost-bps 5 --bu
 
 - Yahoo Finance through `yfinance`
 
-天气数据：
+天气数据接口：
 
-- ERA5 daily statistics: `derived-era5-single-levels-daily-statistics`
-- NOAA CFSv2 operational 9-month forecast
-- NOAA GEFSv12 retrospective S3 reforecast
-- 玉米带 bbox 固定为 `[49, -104, 37, -80]`
+- 队友交付 `data/interim/weather_weekly.parquet` 或 `.csv`
+- 必须包含 `week`
+- 天气列统一命名为 `weather_*`
 
-真实天气数据的完整 GRIB 下载和聚合通常较重。当前 MVP 的 `fetch-weather` 在非 demo 且没有缓存时，会写出 `data/interim/weather_request_catalog.csv`，说明 ERA5/CFSv2/GEFS 的请求形状；之后可把处理好的周频天气表放到 `data/interim/weather_weekly.parquet`。
+`src/corn_forecast/data/weather.py` 只保留 optional adapter 和 request-shape reference。
 
-文本数据：
+文本/AI 数据接口：
 
-- USDA Crop Progress
-- USDA Weekly Weather and Crop Bulletin
+- 队友交付 `data/interim/text_weekly.parquet`、`data/interim/ai_weekly.parquet` 或同名 `.csv`
+- 必须包含 `week`
+- 文本数值列命名为 `text_*`
+- AI 结构化分数命名为 `ai_*`
+- 可选自由文本列为 `report_text`
 
-文本特征按报告发布日期对齐到周五周频。TF-IDF 在模型 pipeline 内只用训练集拟合，避免测试期文本信息泄漏。
+具体接口见 `pipeline_contract.md`。
 
 ## Modeling Design
 
-预测目标：
+主预测目标：
 
-- `target_log_return_next = log(close_t+1 / close_t)`
-- `target_up_next = 1[target_log_return_next > 0]`
+- fixed 2% three-class next-week return label
 
 价格特征：
 
@@ -167,38 +167,24 @@ uv run python -m corn_forecast.cli return-strategy --transaction-cost-bps 5 --bu
 - 4/12 周 momentum
 - 4 周 volume change
 
-天气特征：
-
-- weekly mean temperature
-- precipitation
-- growing degree days
-- temperature/precipitation anomaly
-- week-1/week-2 forecast-style demo features
-
-文本特征：
-
-- USDA report text
-- small TF-IDF representation inside the model pipeline
-- keyword counts for drought, rain, heat, planting, harvest, yield, export, ethanol
-
 模型：
 
-- Baseline: `StandardScaler` + `LogisticRegression(class_weight="balanced")`
-- Main model: `HistGradientBoostingClassifier`
-- 文本方案额外使用 `TfidfVectorizer(max_features=30)`，并与数值特征一起进入模型
+- Classification baseline: `LogisticRegression(class_weight="balanced")`
+- Return auxiliary models: `Ridge` and `HistGradientBoostingRegressor`
+- `report_text` 如存在，会在 pipeline 内用 TF-IDF，只在训练集拟合，避免文本泄漏。
 
 行业化验证与交易层：
 
 - 使用 expanding walk-forward，而不是随机切分。
 - 默认从 `2023-01-01` 后开始 out-of-sample，每 13 周测试一次并重新训练。
-- 每个模型输出 `P(next_week_return > 0)`。
-- 策略默认 long/flat：`P(up) >= 0.55` 时持有，否则空仓。
+- 分类模型输出 down / flat / up。
+- 简单策略解释：预测 up 时 long，否则 flat。
 - 回测扣除 `transaction_cost_bps`，并输出累计收益、Sharpe、最大回撤和 turnover。
 
 评估：
 
 - walk-forward out-of-sample metrics
-- classification: accuracy, balanced accuracy, F1, ROC-AUC, log loss, confusion matrix counts
+- classification: accuracy, balanced accuracy, macro F1, confusion matrix counts
 - strategy: total return, annualized return, annualized volatility, Sharpe, max drawdown
 
 ## Tests
@@ -210,8 +196,8 @@ uv run pytest
 测试覆盖：
 
 - target shift 是否只把下一周收益作为标签
-- USDA listing parser 和周频文本对齐
-- ERA5/CFSv2/GEFS adapter URL/request shape
+- optional USDA adapter 和周频文本对齐
+- optional ERA5/CFSv2/GEFS adapter URL/request shape
 - price/weather/text feature join
 - walk-forward split 和交易成本逻辑
-- `all --demo` smoke test
+- CLI smoke test
