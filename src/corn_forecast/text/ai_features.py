@@ -125,6 +125,11 @@ def parse_json_object(content: str) -> Dict[str, Any]:
 
 
 def validate_ai_features(raw: Dict[str, Any]) -> Dict[str, float]:
+    if isinstance(raw.get("answer"), dict):
+        raw = raw["answer"]
+    elif isinstance(raw.get("features"), dict):
+        raw = raw["features"]
+
     missing = [column for column in AI_FEATURE_COLUMNS if column not in raw]
     extra = [key for key in raw if key.startswith("ai_") and key not in AI_FEATURE_COLUMNS]
     if missing:

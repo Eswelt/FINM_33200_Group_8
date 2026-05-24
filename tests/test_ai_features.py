@@ -37,6 +37,25 @@ def test_validate_ai_features_rejects_missing_columns():
         raise AssertionError("Expected missing-column validation error.")
 
 
+def test_validate_ai_features_accepts_answer_wrapper():
+    raw = {
+        "answer": {
+            "ai_moisture_stress": 1,
+            "ai_heat_stress": 0,
+            "ai_excess_rain_risk": 0,
+            "ai_planting_delay_risk": 0,
+            "ai_harvest_delay_risk": 0,
+            "ai_yield_risk": 1,
+            "ai_crop_condition_trend": -1,
+        }
+    }
+
+    features = validate_ai_features(raw)
+
+    assert features["ai_moisture_stress"] == 1
+    assert features["ai_crop_condition_trend"] == -1
+
+
 def test_mock_extraction_and_weekly_aggregation():
     core_text = pd.DataFrame(
         {
