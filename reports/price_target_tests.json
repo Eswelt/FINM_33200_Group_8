@@ -1,31 +1,31 @@
 {
-  "price_calendar_return_regression": {
+  "price_only_return_regression": {
     "target": "next_week_log_return",
     "model": "price_only_ridge",
-    "feature_set": "price_calendar",
+    "feature_set": "price_only",
     "n_test": 175,
     "n_folds": 14,
-    "mae": 0.017275853779333668,
-    "rmse": 0.024303129800526412,
-    "r2": -0.021997997690553106,
-    "direction_accuracy": 0.5314285714285715,
-    "mean_actual_return": -0.001920054479809364,
-    "mean_predicted_return": -0.0018025927108615365
+    "mae": 0.01382521930211133,
+    "rmse": 0.016793159874110477,
+    "r2": -0.03159323796213087,
+    "direction_accuracy": 0.4228571428571429,
+    "mean_actual_return": 0.0005986508623413376,
+    "mean_predicted_return": -0.0007768317232778824
   },
-  "price_calendar_three_class_fixed": {
+  "price_only_three_class_fixed": {
     "target": "next_week_log_return_3class_2.0%_bands",
     "model": "price_only_logit",
-    "feature_set": "price_calendar",
+    "feature_set": "price_only",
     "threshold": 0.02,
     "n_test": 175,
     "n_folds": 14,
-    "accuracy": 0.4228571428571429,
-    "balanced_accuracy_present_classes": 0.3090861344537815,
-    "macro_f1": 0.3041501238589704,
-    "n_down": 32,
-    "n_flat": 119,
+    "accuracy": 0.32571428571428573,
+    "balanced_accuracy_present_classes": 0.3686810856658185,
+    "macro_f1": 0.2850615773591061,
+    "n_down": 20,
+    "n_flat": 131,
     "n_up": 24,
-    "extreme_event_rate": 0.32,
+    "extreme_event_rate": 0.25142857142857145,
     "has_both_extreme_classes": true,
     "confusion_matrix_labels": [
       -1,
@@ -34,49 +34,49 @@
     ],
     "confusion_matrix": [
       [
-        9,
-        16,
-        7
+        7,
+        7,
+        6
       ],
       [
-        44,
-        62,
-        13
+        33,
+        39,
+        59
       ],
       [
-        9,
-        12,
-        3
+        7,
+        6,
+        11
       ]
     ]
   },
-  "price_calendar_ai_return_regression": {
+  "price_calendar_return_regression": {
     "target": "next_week_log_return",
     "model": "price_only_ridge",
-    "feature_set": "price_calendar_ai",
+    "feature_set": "price_calendar",
     "n_test": 175,
     "n_folds": 14,
-    "mae": 0.018011077816578812,
-    "rmse": 0.025234137868249514,
-    "r2": -0.10179951060529069,
-    "direction_accuracy": 0.5371428571428571,
-    "mean_actual_return": -0.001920054479809364,
-    "mean_predicted_return": -0.0007792251525244783
+    "mae": 0.014072227871536998,
+    "rmse": 0.016966114902057843,
+    "r2": -0.05295169826277357,
+    "direction_accuracy": 0.44,
+    "mean_actual_return": 0.0005986508623413376,
+    "mean_predicted_return": -0.0006813902763993197
   },
-  "price_calendar_ai_three_class_fixed": {
+  "price_calendar_three_class_fixed": {
     "target": "next_week_log_return_3class_2.0%_bands",
     "model": "price_only_logit",
-    "feature_set": "price_calendar_ai",
+    "feature_set": "price_calendar",
     "threshold": 0.02,
     "n_test": 175,
     "n_folds": 14,
-    "accuracy": 0.42857142857142855,
-    "balanced_accuracy_present_classes": 0.3001283846872082,
-    "macro_f1": 0.2997084077797294,
-    "n_down": 32,
-    "n_flat": 119,
+    "accuracy": 0.30857142857142855,
+    "balanced_accuracy_present_classes": 0.3015479219677693,
+    "macro_f1": 0.2524744280063429,
+    "n_down": 20,
+    "n_flat": 131,
     "n_up": 24,
-    "extreme_event_rate": 0.32,
+    "extreme_event_rate": 0.25142857142857145,
     "has_both_extreme_classes": true,
     "confusion_matrix_labels": [
       -1,
@@ -86,18 +86,18 @@
     "confusion_matrix": [
       [
         6,
-        18,
-        8
-      ],
-      [
-        36,
-        65,
-        18
-      ],
-      [
-        5,
-        15,
+        10,
         4
+      ],
+      [
+        37,
+        41,
+        53
+      ],
+      [
+        11,
+        6,
+        7
       ]
     ]
   }

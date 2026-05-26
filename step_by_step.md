@@ -62,7 +62,7 @@ data/raw/prices_CORN.csv
 Source:
 
 ```bash
-uv run python -m corn_forecast.cli fetch-prices --start 2011-01-01 --end 2026-05-15
+uv run --extra dev doit fetch_prices
 ```
 
 Operation:
@@ -107,11 +107,7 @@ Y_t = -1 if r_{t+1} <= -2%
 Main command:
 
 ```bash
-uv run python -m corn_forecast.cli test-price-targets \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --fixed-return-threshold 0.02
+uv run --extra dev doit classify_move
 ```
 
 Output:
@@ -210,7 +206,7 @@ X_calendar
 Command:
 
 ```bash
-uv run python -m corn_forecast.cli build-features
+uv run --extra dev doit build_features
 ```
 
 Operation:
@@ -286,6 +282,12 @@ Output:
 
 ```text
 reports/predictions.csv
+```
+
+Command:
+
+```bash
+uv run --extra dev doit train_evaluate
 ```
 
 Prediction columns:
@@ -369,6 +371,12 @@ reports/model_report.md
 reports/figures/
 ```
 
+Command:
+
+```bash
+uv run --extra dev doit model_report
+```
+
 ## Step 10: Final Deliverables
 
 Final project outputs:
@@ -389,3 +397,34 @@ Final research question:
 ```text
 Can calendar seasonality improve volatility-adjusted weekly CORN ETF trading signals beyond historical price baselines?
 ```
+
+## Unified Run Commands
+
+All recurring commands are collected in `dodo.py`.
+
+```bash
+uv sync --python 3.12 --extra dev --extra docs
+uv run --extra dev doit list
+uv run --extra dev doit baseline
+uv run --extra dev doit research
+uv run --extra dev doit refresh_data
+uv run --extra dev --extra docs doit docs
+uv run --extra dev --extra docs doit all
+```
+
+Generated documentation:
+
+```text
+reports/notebooks/corn_forecast_workflow.ipynb
+reports/html/corn_forecast_workflow.html
+reports/chartbook/index.html
+```
+
+Open the HTML outputs on macOS:
+
+```bash
+open reports/chartbook/index.html
+open reports/html/corn_forecast_workflow.html
+```
+
+`chartbook` requires Python 3.10 or newer.

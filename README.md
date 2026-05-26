@@ -20,8 +20,8 @@ The pipeline is designed so that weekly weather, text, and AI-extracted features
 ## Quick Start
 
 ```bash
-uv sync --extra dev
-uv run python run_classification_baseline.py
+uv sync --python 3.12 --extra dev --extra docs
+uv run --extra dev doit baseline
 ```
 
 This writes:
@@ -31,7 +31,64 @@ This writes:
 
 Generated data and report outputs are ignored by git.
 
-## Main Commands
+## pydoit Workflow
+
+All recurring run commands are collected in `dodo.py`.
+
+List tasks:
+
+```bash
+uv run --extra dev doit list
+```
+
+Run the current classification baseline:
+
+```bash
+uv run --extra dev doit baseline
+```
+
+Run the main research experiments and regenerate the notebook/HTML report:
+
+```bash
+uv run --extra dev doit research
+```
+
+Refresh external data sources explicitly:
+
+```bash
+uv run --extra dev doit refresh_data
+```
+
+Build the ChartBook documentation site:
+
+```bash
+uv run --extra dev --extra docs doit docs
+```
+
+Open the generated HTML files on macOS:
+
+```bash
+open reports/chartbook/index.html
+open reports/html/corn_forecast_workflow.html
+```
+
+Run the full local workflow:
+
+```bash
+uv run --extra dev --extra docs doit all
+```
+
+Run tests:
+
+```bash
+uv run --extra dev doit tests
+```
+
+`chartbook` requires Python 3.10 or newer. The existing local Python 3.9 environment can still run the forecasting code and generated notebook script, but the ChartBook site build should be run from Python 3.10+.
+
+The default `baseline`, `research`, and `docs` tasks use the cached frozen data already under `data/`. Run `refresh_data` only when you intentionally want to contact Yahoo Finance, USDA, and weather sources.
+
+## Underlying CLI Commands
 
 Run the current classification baseline:
 
@@ -75,6 +132,9 @@ The expected-return pipeline predicts next-week log return directly and trades o
 
 - `step_by_step.md`: research design, target definition, time split, and validation logic
 - `pipeline_contract.md`: feature-table contract and modular pipeline interface
+- `docs_src/project_workflow.md`: consolidated ChartBook workflow documentation
+- `chartbook.toml`: ChartBook pipeline metadata, dataframes, notes, and notebook registry
+- `dodo.py`: pydoit task graph for all routine commands
 - `run_classification_baseline.py`: one-command baseline runner
 
 ## Data Interface
@@ -180,7 +240,7 @@ Evaluation:
 ## Tests
 
 ```bash
-uv run pytest
+uv run --extra dev doit tests
 ```
 
 The tests cover target construction, feature joins, pipeline feature-set selection, walk-forward splits, backtest accounting, and CLI smoke tests.

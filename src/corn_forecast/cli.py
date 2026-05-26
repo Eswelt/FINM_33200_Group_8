@@ -1,6 +1,8 @@
 import argparse
 from pathlib import Path
 
+import pandas as pd
+
 from corn_forecast.config import ProjectConfig
 from corn_forecast.data.prices import load_prices
 from corn_forecast.data.usda import load_usda_releases
@@ -97,12 +99,31 @@ def fetch_weather(config: ProjectConfig, demo: bool) -> Path:
     return path
 
 
+def load_prices_for_config(config: ProjectConfig, demo: bool):
+    if not demo and table_exists(config.raw_prices_path):
+        return filter_prices_for_config(read_table(config.raw_prices_path), config)
+    prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
+    return filter_prices_for_config(prices, config)
+
+
 def build_features(config: ProjectConfig) -> Path:
     prices = read_table(config.raw_prices_path)
+    prices = filter_prices_for_config(prices, config)
     panel = build_model_panel(config, prices)
     path = write_table(panel, config.panel_path)
     print(f"Wrote feature panel: {path}")
     return path
+
+
+def filter_prices_for_config(prices: pd.DataFrame, config: ProjectConfig) -> pd.DataFrame:
+    """Apply the configured research window to cached raw prices."""
+    frame = prices.copy()
+    frame["date"] = pd.to_datetime(frame["date"]).dt.tz_localize(None)
+    if config.start:
+        frame = frame[frame["date"] >= pd.Timestamp(config.start)]
+    if config.end:
+        frame = frame[frame["date"] <= pd.Timestamp(config.end)]
+    return frame.sort_values("date").reset_index(drop=True)
 
 
 def build_model_panel(config: ProjectConfig, prices):
@@ -139,7 +160,7 @@ def train_and_evaluate(config: ProjectConfig) -> None:
 
 
 def test_price_targets(config: ProjectConfig, demo: bool) -> None:
-    prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
+    prices = load_prices_for_config(config, demo=demo)
     panel = build_model_panel(config, prices)
     feature_sets = [value.strip() for value in config.feature_sets.split(",") if value.strip()]
     metrics, predictions = run_price_only_target_tests(
@@ -157,7 +178,7 @@ def test_price_targets(config: ProjectConfig, demo: bool) -> None:
 
 
 def select_threshold(config: ProjectConfig, demo: bool, threshold_grid: str) -> None:
-    prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
+    prices = load_prices_for_config(config, demo=demo)
     panel = build_feature_panel(prices=prices)
     k_values = [float(value.strip()) for value in threshold_grid.split(",") if value.strip()]
     metrics, predictions = evaluate_volatility_thresholds(
@@ -180,7 +201,7 @@ def select_threshold(config: ProjectConfig, demo: bool, threshold_grid: str) -> 
 
 
 def run_return_strategy(config: ProjectConfig, demo: bool) -> None:
-    prices = load_prices(symbol=config.symbol, start=config.start, end=config.end, demo=demo)
+    prices = load_prices_for_config(config, demo=demo)
     panel = build_model_panel(config, prices)
     feature_sets = [value.strip() for value in config.feature_sets.split(",") if value.strip()]
     metrics, predictions = evaluate_expected_return_strategy(

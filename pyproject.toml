@@ -21,7 +21,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+  "doit>=0.36",
   "pytest>=8",
+]
+docs = [
+  "chartbook[all]>=0.0.21; python_version >= '3.10'",
+  "nbconvert>=7.16",
+  "nbformat>=5.10",
 ]
 
 [project.scripts]

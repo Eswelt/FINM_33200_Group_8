@@ -5,6 +5,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.doit.db
 *.egg-info/
 .env
 .env.*
@@ -24,5 +25,10 @@ reports/*.json
 reports/*.md
 reports/figures/*
 reports/tables/*
+reports/notebooks/*
+reports/html/*
+reports/chartbook/*
 !reports/figures/.gitkeep
 !reports/tables/.gitkeep
+
+docs_src/figures/*

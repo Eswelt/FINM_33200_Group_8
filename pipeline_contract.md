@@ -56,7 +56,7 @@ report_text
 After teammates drop these files into `data/interim/`, build the shared panel:
 
 ```bash
-uv run python -m corn_forecast.cli build-features
+uv run --extra dev doit build_features
 ```
 
 Output:
@@ -111,12 +111,7 @@ Y = -1 if next_week_return <= -2%
 Command:
 
 ```bash
-uv run python -m corn_forecast.cli classify-move \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --fixed-return-threshold 0.02 \
-  --feature-sets price_only,price_calendar
+uv run --extra dev doit classify_move
 ```
 
 Output:
@@ -168,13 +163,7 @@ trade_threshold = 30 bps = 0.30%
 Command:
 
 ```bash
-uv run python -m corn_forecast.cli return-strategy \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --transaction-cost-bps 5 \
-  --buffer-bps 25 \
-  --feature-sets price_only,price_calendar
+uv run --extra dev doit return_strategy
 ```
 
 Output:
@@ -215,7 +204,7 @@ Main validation:
 Robustness:
 
 ```bash
---validation-scheme rolling --train-window-weeks 260
+uv run --extra dev doit select_threshold_rolling
 ```
 
 All pipelines use walk-forward validation with 13-week test windows by default.
