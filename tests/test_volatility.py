@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from corn_forecast.features import build_feature_panel
-from corn_forecast.volatility import evaluate_volatility_forecast
+from corn_forecast.volatility import add_horizon_targets, evaluate_volatility_forecast
 
 
 def _sample_panel(periods: int = 220) -> pd.DataFrame:
@@ -62,3 +62,19 @@ def test_volatility_forecast_supports_rolling_window():
     assert metrics["price_only_ridge"]["validation_scheme"] == "rolling"
     assert metrics["price_only_ridge"]["train_window_weeks"] == 104
     assert predictions["n_train"].max() <= 104
+
+
+def test_add_horizon_targets_uses_forward_returns():
+    panel = pd.DataFrame(
+        {
+            "week": pd.date_range("2024-01-05", periods=5, freq="W-FRI"),
+            "price_log_return": [0.0, 0.01, -0.02, 0.03, 0.04],
+            "target_log_return_next": [0.01, -0.02, 0.03, 0.04, np.nan],
+        }
+    )
+
+    result = add_horizon_targets(panel, horizon_weeks=2)
+
+    assert np.isclose(result.loc[0, "target_log_return_next"], -0.01)
+    assert np.isclose(result.loc[0, "target_realized_vol_next"], np.sqrt(0.01**2 + (-0.02) ** 2))
+    assert np.isnan(result.loc[4, "target_log_return_next"])

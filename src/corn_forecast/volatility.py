@@ -20,6 +20,27 @@ def add_next_week_volatility_target(panel: pd.DataFrame) -> pd.DataFrame:
     return frame
 
 
+def add_horizon_targets(panel: pd.DataFrame, horizon_weeks: int) -> pd.DataFrame:
+    """Add cumulative-return and realized-volatility targets for a forward horizon."""
+    if horizon_weeks < 1:
+        raise ValueError("horizon_weeks must be positive.")
+
+    frame = panel.copy()
+    future_returns = pd.concat(
+        [
+            frame["price_log_return"].shift(-offset).rename(f"future_return_{offset}w")
+            for offset in range(1, horizon_weeks + 1)
+        ],
+        axis=1,
+    )
+    frame["target_log_return_next"] = future_returns.sum(axis=1, min_count=horizon_weeks)
+    if horizon_weeks == 1:
+        frame["target_realized_vol_next"] = frame["target_log_return_next"].abs()
+    else:
+        frame["target_realized_vol_next"] = np.sqrt((future_returns.pow(2)).sum(axis=1, min_count=horizon_weeks))
+    return frame
+
+
 def _volatility_metrics(group: pd.DataFrame) -> Dict[str, float]:
     y_true = group["target_abs_return_next"]
     y_pred = group["predicted_abs_return_next"]
@@ -49,15 +70,19 @@ def evaluate_volatility_forecast(
     validation_scheme: str = "expanding",
     train_window_weeks: int = 260,
     high_vol_quantile: float = HIGH_VOL_QUANTILE,
+    target_column: str = "target_abs_return_next",
+    target_name: str = "next_week_abs_log_return",
 ) -> Tuple[Dict[str, Dict[str, float]], pd.DataFrame]:
     """Forecast next-week absolute return and classify high-volatility weeks."""
     if not 0 < high_vol_quantile < 1:
         raise ValueError("high_vol_quantile must be between 0 and 1.")
 
-    data = add_next_week_volatility_target(panel)
+    data = panel.copy()
+    if target_column == "target_abs_return_next" and target_column not in data.columns:
+        data = add_next_week_volatility_target(data)
     data["week"] = pd.to_datetime(data["week"])
     data = data.replace([np.inf, -np.inf], np.nan)
-    data = data.dropna(subset=["target_log_return_next", "target_abs_return_next"]).copy()
+    data = data.dropna(subset=["target_log_return_next", target_column]).copy()
     if "report_text" in data.columns:
         data["report_text"] = data["report_text"].fillna("")
 
@@ -83,9 +108,9 @@ def evaluate_volatility_forecast(
         for estimator in estimators:
             for fold, train, test in splits:
                 model = _regressor(estimator, numeric_columns=numeric_columns, text_column=text_column)
-                model.fit(train[columns], train["target_abs_return_next"])
+                model.fit(train[columns], train[target_column])
                 predicted = np.maximum(model.predict(test[columns]), 0.0)
-                threshold = float(train["target_abs_return_next"].quantile(high_vol_quantile))
+                threshold = float(train[target_column].quantile(high_vol_quantile))
                 prediction_frames.append(
                     pd.DataFrame(
                         {
@@ -95,10 +120,10 @@ def evaluate_volatility_forecast(
                             "estimator": estimator,
                             "model": f"{feature_set}_{estimator}",
                             "target_log_return_next": test["target_log_return_next"].to_numpy(),
-                            "target_abs_return_next": test["target_abs_return_next"].to_numpy(),
+                            "target_abs_return_next": test[target_column].to_numpy(),
                             "predicted_abs_return_next": predicted,
                             "high_vol_threshold": threshold,
-                            "y_true_high_vol": (test["target_abs_return_next"].to_numpy() >= threshold).astype(int),
+                            "y_true_high_vol": (test[target_column].to_numpy() >= threshold).astype(int),
                             "y_pred_high_vol": (predicted >= threshold).astype(int),
                             "train_start": train["week"].min(),
                             "train_end": train["week"].max(),
@@ -111,7 +136,7 @@ def evaluate_volatility_forecast(
     metrics: Dict[str, Dict[str, float]] = {}
     for model, group in predictions.groupby("model"):
         values = {
-            "target": "next_week_abs_log_return",
+            "target": target_name,
             "feature_set": group["feature_set"].iloc[0],
             "estimator": group["estimator"].iloc[0],
             "validation_scheme": validation_scheme,
