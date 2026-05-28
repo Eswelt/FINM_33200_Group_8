@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Current Write-up: CORN ETF Trading Signal Pipeline &#8212; CORN ETF Trading Signal Pipeline</title>
+    <title>Final Write-up: CORN ETF Volatility Forecasting &#8212; CORN ETF Volatility Forecasting Pipeline</title>
   
   
   
@@ -190,8 +190,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="CORN ETF Trading Signal Pipeline - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="CORN ETF Trading Signal Pipeline - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="CORN ETF Volatility Forecasting Pipeline - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="CORN ETF Volatility Forecasting Pipeline - Home"/>
   
   
 </a></div>
@@ -208,7 +208,7 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../index.html">
-                    CORN ETF Trading Signal Pipeline
+                    CORN ETF Volatility Forecasting Pipeline
                 </a>
             </li>
         </ul>
@@ -219,11 +219,12 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="workflow.html">CORN ETF Trading Signal Workflow</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Current Write-up: CORN ETF Trading Signal Pipeline</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Final Write-up: CORN ETF Volatility Forecasting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_glimpses.html">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gdelt_integration.html">GDELT Integration Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="seasonality_volatility_benchmark.html">Seasonality Volatility Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="volatility_results.html">Volatility Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="horizon_robustness.html">Horizon Robustness Results</a></li>
 </ul>
@@ -389,7 +390,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Current Write-up: CORN ETF Trading Signal Pipeline</h1>
+    <h1>Final Write-up: CORN ETF Volatility Forecasting</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -400,22 +401,15 @@
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary">Executive Summary</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-question">Research Question</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-design">Validation Design</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-1-direction-classification">Pipeline 1: Direction Classification</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-week-direction-results">One-week direction results</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#horizon-robustness-for-direction">Horizon robustness for direction</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-2-expected-return">Pipeline 2: Expected Return</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-3-volatility-forecasting">Pipeline 3: Volatility Forecasting</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-results-by-horizon">Volatility results by horizon</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-input-comparison">Volatility input comparison</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-volatility-is-more-predictable-than-return">Why Volatility Is More Predictable Than Return</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-limitations">Current Limitations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-target">Prediction Target</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-and-features">Data And Features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-volatility-results">Main Volatility Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonality-benchmark">Seasonality Benchmark</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-high-volatility-always-in-the-same-season">Is High Volatility Always In The Same Season?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-ai-and-news-features-may-underperform">Why AI And News Features May Underperform</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#direction-and-return-experiments">Direction And Return Experiments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#investment-interpretation">Investment Interpretation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-usage">AI Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
 </ul>
             </nav>
@@ -427,226 +421,66 @@
                 
 <div id="searchbox"></div>
                 <article class="bd-article">
-                   <section class="tex2jax_ignore mathjax_ignore" id="current-write-up-corn-etf-trading-signal-pipeline">
-<h1>Current Write-up: CORN ETF Trading Signal Pipeline<a class="headerlink" href="#current-write-up-corn-etf-trading-signal-pipeline" title="Link to this heading">#</a></h1>
+                   <section class="tex2jax_ignore mathjax_ignore" id="final-write-up-corn-etf-volatility-forecasting">
+<h1>Final Write-up: CORN ETF Volatility Forecasting<a class="headerlink" href="#final-write-up-corn-etf-volatility-forecasting" title="Link to this heading">#</a></h1>
 <p>Updated: <code class="docutils literal notranslate"><span class="pre">2026-05-28</span></code>.</p>
 <section id="executive-summary">
 <h2>Executive Summary<a class="headerlink" href="#executive-summary" title="Link to this heading">#</a></h2>
-<p>This project studies whether structured agricultural information can improve CORN ETF trading-signal research. The current model results use four completed data blocks:</p>
+<p>This project studies whether agricultural information can help forecast the risk environment of <code class="docutils literal notranslate"><span class="pre">CORN</span></code>, the Teucrium Corn ETF. After testing direction classification, expected-return forecasting, and volatility forecasting, we choose <strong>future realized volatility</strong> as the final prediction target.</p>
+<p>The empirical result is clear:</p>
 <ul class="simple">
-<li><p>Historical CORN ETF prices from Yahoo Finance.</p></li>
-<li><p>Deterministic corn-season calendar features.</p></li>
-<li><p>USDA Weekly Weather and Crop Bulletin text parsed from PDFs and scored with GLM into seven crop-risk features.</p></li>
-<li><p>GDELT weekly corn-market news scores.</p></li>
+<li><p>Return direction and expected return are difficult to predict reliably.</p></li>
+<li><p>Volatility becomes more predictable as the forecast horizon lengthens.</p></li>
+<li><p>Seasonality is the dominant source of predictability.</p></li>
+<li><p>AI-read USDA report scores and GDELT news scores do not consistently improve on a clean calendar-only volatility benchmark.</p></li>
 </ul>
-<p>One planned data block is still pending from teammates:</p>
-<ul class="simple">
-<li><p>Weather features.</p></li>
-</ul>
-<p>The main finding so far is that USDA, GDELT, and seasonal information are more useful for risk and horizon-regime analysis than for precise one-week return prediction. One-week return forecasts remain weak statistically, but GDELT improves the best one-week trading result and improves several volatility/risk-regime tests. The next model iteration should add weather as the remaining explicit input block.</p>
+<p>The main conclusion is that for an asset strongly tied to an agricultural production cycle, <strong>knowing the crop-season window is more important than adding noisy text or news features</strong>. AI/NLP features can still be useful for qualitative interpretation, but in our current out-of-sample tests they do not beat the simpler seasonal signal.</p>
 </section>
-<section id="research-question">
-<h2>Research Question<a class="headerlink" href="#research-question" title="Link to this heading">#</a></h2>
-<p>The project asks whether agricultural information can improve trading decisions for <code class="docutils literal notranslate"><span class="pre">CORN</span></code>, the Teucrium Corn ETF. We frame this as a trading-signal problem rather than a raw price-level prediction problem.</p>
-<p>The completed experiments compare eight input sets:</p>
+<section id="prediction-target">
+<h2>Prediction Target<a class="headerlink" href="#prediction-target" title="Link to this heading">#</a></h2>
+<p>The final target is forward realized volatility:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1-week volatility = abs(next weekly log return)
+4-week volatility = sqrt(sum of squared weekly returns over the next 4 weeks)
+13-week volatility = sqrt(sum of squared weekly returns over the next 13 weeks)
+</pre></div>
+</div>
+<p>The 13-week target represents the risk environment over the next quarter, not the return or volatility of only the 13th week.</p>
+</section>
+<section id="data-and-features">
+<h2>Data And Features<a class="headerlink" href="#data-and-features" title="Link to this heading">#</a></h2>
+<p>The model panel uses weekly observations from 2011-01-01 to 2026-05-15. The out-of-sample window starts after 2022-12-31 and uses expanding walk-forward validation with 13-week test windows.</p>
+<p>We tested these feature groups:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>input set</p></th>
+<tr class="row-odd"><th class="head"><p>feature group</p></th>
 <th class="head"><p>description</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code></p></td>
-<td><p>Historical CORN ETF price features.</p></td>
+<tr class="row-even"><td><p>price</p></td>
+<td><p>Lagged CORN returns, rolling volatility, momentum, and volume change.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
-<td><p>Price features plus GLM-extracted USDA report scores.</p></td>
+<tr class="row-odd"><td><p>calendar</p></td>
+<td><p>Month, quarter, week-of-year cyclic terms, planting season, pollination risk season, harvest season, and winter storage season.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
-<td><p>Price features plus deterministic crop-season calendar controls.</p></td>
+<tr class="row-even"><td><p>USDA/GLM</p></td>
+<td><p>USDA Weekly Weather and Crop Bulletin text parsed from PDFs and scored by GLM into crop-risk variables.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_gdelt</span></code></p></td>
-<td><p>Price features plus GDELT weekly news scores.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai_gdelt</span></code></p></td>
-<td><p>Price features plus GLM USDA scores and GDELT news scores.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
-<td><p>Price, calendar, and GLM USDA scores.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code></p></td>
-<td><p>Price, calendar, and GDELT news scores.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
-<td><p>Price, calendar, GLM USDA scores, and GDELT news scores.</p></td>
+<tr class="row-odd"><td><p>GDELT</p></td>
+<td><p>Weekly corn-market news scores for relevance, supply risk, demand strength, ethanol/export signals, and trade policy risk.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The GLM scores are derived from parsed USDA Weekly Weather and Crop Bulletin text. They measure moisture stress, heat stress, excess rain risk, planting delay risk, harvest delay risk, yield risk, and crop condition trend. The GDELT scores summarize relevance, yield/supply risk, inventory tightness, demand strength, ethanol/export signals, and trade policy risk.</p>
+<p>The core tested combinations include <code class="docutils literal notranslate"><span class="pre">price_only</span></code>, <code class="docutils literal notranslate"><span class="pre">price_ai</span></code>, <code class="docutils literal notranslate"><span class="pre">price_gdelt</span></code>, <code class="docutils literal notranslate"><span class="pre">price_ai_gdelt</span></code>, <code class="docutils literal notranslate"><span class="pre">price_calendar</span></code>, <code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code>, <code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code>, and <code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code>. We also ran a clean seasonality benchmark comparing <code class="docutils literal notranslate"><span class="pre">calendar_only</span></code> against <code class="docutils literal notranslate"><span class="pre">calendar_ai_gdelt</span></code>.</p>
 </section>
-<section id="validation-design">
-<h2>Validation Design<a class="headerlink" href="#validation-design" title="Link to this heading">#</a></h2>
-<p>The sample is frozen at:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>2011-01-01 to 2026-05-15
-</pre></div>
-</div>
-<p>The out-of-sample window starts after:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>2022-12-31
-</pre></div>
-</div>
-<p>Validation uses expanding walk-forward splits:</p>
-<ul class="simple">
-<li><p>13-week test windows.</p></li>
-<li><p>13-week retrain step.</p></li>
-<li><p>No random train/test split.</p></li>
-<li><p>Features are point-in-time at the prediction week.</p></li>
-</ul>
-<p>The horizon robustness experiment keeps a weekly prediction cadence but changes the forward target horizon:</p>
-<ul class="simple">
-<li><p>1 week.</p></li>
-<li><p>4 weeks.</p></li>
-<li><p>13 weeks.</p></li>
-</ul>
-<p>For 4-week and 13-week targets, adjacent predictions overlap. Those results should be read as horizon-sensitivity evidence rather than independent quarterly observations.</p>
-</section>
-<section id="pipeline-1-direction-classification">
-<h2>Pipeline 1: Direction Classification<a class="headerlink" href="#pipeline-1-direction-classification" title="Link to this heading">#</a></h2>
-<p>The main direction target is a fixed-threshold three-class label:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Y =  1 if forward return &gt;= +2%
-Y =  0 if -2% &lt; forward return &lt; +2%
-Y = -1 if forward return &lt;= -2%
-</pre></div>
-</div>
-<section id="one-week-direction-results">
-<h3>One-week direction results<a class="headerlink" href="#one-week-direction-results" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>input set</p></th>
-<th class="head text-right"><p>accuracy</p></th>
-<th class="head text-right"><p>balanced accuracy</p></th>
-<th class="head text-right"><p>macro F1</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code></p></td>
-<td class="text-right"><p>46.9%</p></td>
-<td class="text-right"><p>31.9%</p></td>
-<td class="text-right"><p>31.4%</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
-<td class="text-right"><p>49.7%</p></td>
-<td class="text-right"><p>32.6%</p></td>
-<td class="text-right"><p>32.6%</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_gdelt</span></code></p></td>
-<td class="text-right"><p>45.1%</p></td>
-<td class="text-right"><p>32.2%</p></td>
-<td class="text-right"><p>31.9%</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai_gdelt</span></code></p></td>
-<td class="text-right"><p>46.3%</p></td>
-<td class="text-right"><p>32.1%</p></td>
-<td class="text-right"><p>32.0%</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
-<td class="text-right"><p>42.3%</p></td>
-<td class="text-right"><p>30.9%</p></td>
-<td class="text-right"><p>30.4%</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code></p></td>
-<td class="text-right"><p>38.9%</p></td>
-<td class="text-right"><p>30.8%</p></td>
-<td class="text-right"><p>29.3%</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
-<td class="text-right"><p>42.9%</p></td>
-<td class="text-right"><p>30.0%</p></td>
-<td class="text-right"><p>30.0%</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
-<td class="text-right"><p>40.0%</p></td>
-<td class="text-right"><p>29.8%</p></td>
-<td class="text-right"><p>29.1%</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>For the one-week direction task, <code class="docutils literal notranslate"><span class="pre">price_ai</span></code> is still the best of the tested inputs. GDELT alone is competitive with <code class="docutils literal notranslate"><span class="pre">price_only</span></code>, but adding GDELT does not improve the one-week fixed-band classifier once calendar and GLM features are included.</p>
-</section>
-<section id="horizon-robustness-for-direction">
-<h3>Horizon robustness for direction<a class="headerlink" href="#horizon-robustness-for-direction" title="Link to this heading">#</a></h3>
+<section id="main-volatility-results">
+<h2>Main Volatility Results<a class="headerlink" href="#main-volatility-results" title="Link to this heading">#</a></h2>
+<p>The best official volatility runs by horizon are:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>horizon</p></th>
-<th class="head"><p>best input set</p></th>
-<th class="head text-right"><p>balanced accuracy</p></th>
-<th class="head text-right"><p>macro F1</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1 week</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
-<td class="text-right"><p>32.6%</p></td>
-<td class="text-right"><p>32.6%</p></td>
-</tr>
-<tr class="row-odd"><td><p>4 weeks</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
-<td class="text-right"><p>46.0%</p></td>
-<td class="text-right"><p>44.8%</p></td>
-</tr>
-<tr class="row-even"><td><p>13 weeks</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
-<td class="text-right"><p>46.6%</p></td>
-<td class="text-right"><p>44.8%</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The direction task improves when the target horizon is extended. GDELT is most helpful at the 4-week horizon when combined with calendar and GLM features. This is economically plausible: crop reports, news, and seasonal risk windows may not move the ETF immediately in the next week, but they can matter over a multi-week horizon.</p>
-</section>
-</section>
-<section id="pipeline-2-expected-return">
-<h2>Pipeline 2: Expected Return<a class="headerlink" href="#pipeline-2-expected-return" title="Link to this heading">#</a></h2>
-<p>The expected-return pipeline directly forecasts forward cumulative log return and trades only when predicted return clears transaction cost plus a buffer.</p>
-<p>The one-week expected-return results are weak statistically:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>best one-week run</p></th>
-<th class="head text-right"><p>strategy return</p></th>
-<th class="head text-right"><p>Sharpe</p></th>
-<th class="head text-right"><p>R2</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code> + HGB</p></td>
-<td class="text-right"><p>18.3%</p></td>
-<td class="text-right"><p>0.481</p></td>
-<td class="text-right"><p>-0.028</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>GDELT improves the best one-week trading result, especially when combined with calendar and GLM features. However, the return forecast R2 remains negative. The 4-week and 13-week expected-return runs also have negative R2 and poor strategy Sharpe. We therefore do not treat expected-return forecasting as the main project result.</p>
-<p>Interpretation:</p>
-<blockquote>
-<div><p>The current features may help identify some risk regimes, but they do not reliably estimate return levels.</p>
-</div></blockquote>
-</section>
-<section id="pipeline-3-volatility-forecasting">
-<h2>Pipeline 3: Volatility Forecasting<a class="headerlink" href="#pipeline-3-volatility-forecasting" title="Link to this heading">#</a></h2>
-<p>The volatility pipeline predicts future realized volatility:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1-week volatility = abs(next 1-week return)
-4-week / 13-week volatility = sqrt(sum of squared forward weekly returns)
-</pre></div>
-</div>
-<p>It also classifies high-volatility periods using each training window’s 70th percentile volatility threshold.</p>
-<section id="volatility-results-by-horizon">
-<h3>Volatility results by horizon<a class="headerlink" href="#volatility-results-by-horizon" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>horizon</p></th>
-<th class="head"><p>best R2 run</p></th>
+<th class="head"><p>best run</p></th>
 <th class="head text-right"><p>R2</p></th>
 <th class="head text-right"><p>Spearman</p></th>
 <th class="head text-right"><p>high-vol balanced accuracy</p></th>
@@ -674,95 +508,211 @@ Y = -1 if forward return &lt;= -2%
 </tbody>
 </table>
 </div>
-<p>The volatility pipeline is the strongest current result. Forecast quality improves at 4-week and 13-week horizons, especially when crop-season calendar features are included.</p>
+<p>The result improves as the horizon moves from one week to multi-week windows. This supports the idea that agricultural information is more useful for forecasting the width of the return distribution over a crop-risk window than for predicting next week’s direction.</p>
 </section>
-<section id="volatility-input-comparison">
-<h3>Volatility input comparison<a class="headerlink" href="#volatility-input-comparison" title="Link to this heading">#</a></h3>
+<section id="seasonality-benchmark">
+<h2>Seasonality Benchmark<a class="headerlink" href="#seasonality-benchmark" title="Link to this heading">#</a></h2>
+<p>To test whether AI and news features add value beyond seasonality, we ran a clean benchmark with no price variables:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>input set</p></th>
+<tr class="row-odd"><th class="head"><p>horizon</p></th>
+<th class="head text-right"><p>best <code class="docutils literal notranslate"><span class="pre">calendar_only</span></code> R2</p></th>
+<th class="head text-right"><p>best <code class="docutils literal notranslate"><span class="pre">calendar_ai_gdelt</span></code> R2</p></th>
 <th class="head"><p>conclusion</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code></p></td>
-<td><p>Weak baseline; limited volatility predictability.</p></td>
+<tr class="row-even"><td><p>1 week</p></td>
+<td class="text-right"><p>0.072</p></td>
+<td class="text-right"><p>0.015</p></td>
+<td><p>Calendar is better.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
-<td><p>GLM scores alone do not materially improve volatility forecasting.</p></td>
+<tr class="row-odd"><td><p>4 weeks</p></td>
+<td class="text-right"><p>0.252</p></td>
+<td class="text-right"><p>0.088</p></td>
+<td><p>Calendar is much better.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_gdelt</span></code></p></td>
-<td><p>GDELT alone is weak, but it improves several combined feature sets.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
-<td><p>Most stable volatility signal; seasonality is the main driver.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
-<td><p>Competitive with calendar and sometimes better for high-volatility flags, but not consistently better than calendar alone.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code></p></td>
-<td><p>Best one-week volatility R2 after adding GDELT.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
-<td><p>Best 13-week volatility R2 and best 4-week direction classifier.</p></td>
+<tr class="row-even"><td><p>13 weeks</p></td>
+<td class="text-right"><p>0.205</p></td>
+<td class="text-right"><p>0.078</p></td>
+<td><p>Calendar is much better.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>This suggests that USDA/GLM and GDELT scores are best interpreted inside the crop calendar. A report about planting delay, heat stress, export demand, or trade policy has different meaning depending on the crop stage.</p>
+<p>High-volatility classification shows the same pattern:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>horizon</p></th>
+<th class="head text-right"><p>best <code class="docutils literal notranslate"><span class="pre">calendar_only</span></code> high-vol balanced accuracy</p></th>
+<th class="head text-right"><p>best <code class="docutils literal notranslate"><span class="pre">calendar_ai_gdelt</span></code> high-vol balanced accuracy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1 week</p></td>
+<td class="text-right"><p>58.7%</p></td>
+<td class="text-right"><p>59.5%</p></td>
+</tr>
+<tr class="row-odd"><td><p>4 weeks</p></td>
+<td class="text-right"><p>81.9%</p></td>
+<td class="text-right"><p>74.5%</p></td>
+</tr>
+<tr class="row-even"><td><p>13 weeks</p></td>
+<td class="text-right"><p>81.2%</p></td>
+<td class="text-right"><p>73.2%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The clean benchmark changes the interpretation of the project. AI-read USDA scores and GDELT news scores are not a stable improvement over the crop calendar. The dominant signal is the seasonal structure itself.</p>
 </section>
+<section id="is-high-volatility-always-in-the-same-season">
+<h2>Is High Volatility Always In The Same Season?<a class="headerlink" href="#is-high-volatility-always-in-the-same-season" title="Link to this heading">#</a></h2>
+<p>High volatility is strongly seasonal, but not identical every year.</p>
+<p>Average 13-week realized volatility by crop-season window:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>starting period</p></th>
+<th class="head text-right"><p>mean 13-week volatility</p></th>
+<th class="head text-right"><p>high-vol rate</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>planting</p></td>
+<td class="text-right"><p>0.137</p></td>
+<td class="text-right"><p>67.2%</p></td>
+</tr>
+<tr class="row-odd"><td><p>other</p></td>
+<td class="text-right"><p>0.109</p></td>
+<td class="text-right"><p>41.8%</p></td>
+</tr>
+<tr class="row-even"><td><p>pollination/weather-risk</p></td>
+<td class="text-right"><p>0.097</p></td>
+<td class="text-right"><p>32.0%</p></td>
+</tr>
+<tr class="row-odd"><td><p>winter storage</p></td>
+<td class="text-right"><p>0.087</p></td>
+<td class="text-right"><p>19.6%</p></td>
+</tr>
+<tr class="row-even"><td><p>harvest</p></td>
+<td class="text-right"><p>0.069</p></td>
+<td class="text-right"><p>9.7%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Average 13-week realized volatility by calendar quarter:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>starting quarter</p></th>
+<th class="head text-right"><p>mean 13-week volatility</p></th>
+<th class="head text-right"><p>high-vol rate</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Q1</p></td>
+<td class="text-right"><p>0.097</p></td>
+<td class="text-right"><p>28.5%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Q2</p></td>
+<td class="text-right"><p>0.133</p></td>
+<td class="text-right"><p>66.2%</p></td>
+</tr>
+<tr class="row-even"><td><p>Q3</p></td>
+<td class="text-right"><p>0.079</p></td>
+<td class="text-right"><p>13.6%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Q4</p></td>
+<td class="text-right"><p>0.072</p></td>
+<td class="text-right"><p>12.2%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Planting and Q2 are the most common high-volatility windows, but there are exceptions. For example, 2020 had stronger high-volatility concentration around harvest, while 2021 had more high-volatility weeks around winter storage. This means seasonality is not a perfect deterministic rule, but it is the strongest and most stable predictor in our tests.</p>
 </section>
-<section id="why-volatility-is-more-predictable-than-return">
-<h2>Why Volatility Is More Predictable Than Return<a class="headerlink" href="#why-volatility-is-more-predictable-than-return" title="Link to this heading">#</a></h2>
-<p>USDA reports and crop-season signals often change uncertainty before they give a clean directional edge. A drought, planting delay, or crop condition deterioration may widen the market’s risk distribution without saying exactly whether next week’s ETF return will be positive or negative.</p>
-<p>The project evidence matches that logic:</p>
-<ul class="simple">
-<li><p>One-week return and direction prediction remain noisy.</p></li>
-<li><p>Volatility prediction improves with longer horizons.</p></li>
-<li><p>Calendar features are especially important for risk prediction.</p></li>
-<li><p>GLM USDA scores provide some directional signal and may help high-volatility flagging, but they do not replace seasonality.</p></li>
-</ul>
-<p>For investors, the volatility model is useful as a risk overlay:</p>
-<ul class="simple">
-<li><p>Scale position size down when predicted volatility is high.</p></li>
-<li><p>Require a stronger return signal before trading in high-risk windows.</p></li>
-<li><p>Flag periods where options or hedging may be more relevant than directional ETF exposure.</p></li>
-</ul>
-</section>
-<section id="current-limitations">
-<h2>Current Limitations<a class="headerlink" href="#current-limitations" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Weather features are not yet included.</p></li>
-<li><p>Multi-week horizon results use overlapping targets, so they should not be treated as independent quarterly observations.</p></li>
-<li><p>Expected-return R2 remains negative across horizons.</p></li>
-<li><p>GLM scores are model-generated structured features, not ground-truth agronomic measurements.</p></li>
-<li><p>Current results should be presented as evidence about signal shape and risk regimes, not as a deployable trading strategy.</p></li>
-</ul>
-</section>
-<section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
-<p>The next iteration should add:</p>
+<section id="why-ai-and-news-features-may-underperform">
+<h2>Why AI And News Features May Underperform<a class="headerlink" href="#why-ai-and-news-features-may-underperform" title="Link to this heading">#</a></h2>
+<p>Several mechanisms could explain why GLM/GDELT features reduce performance relative to the calendar-only benchmark:</p>
 <ol class="arabic simple">
-<li><p>Weather features as a separate input block.</p></li>
-<li><p>A final comparison table:</p>
-<ul class="simple">
-<li><p>price only</p></li>
-<li><p>price + GLM</p></li>
-<li><p>price + calendar</p></li>
-<li><p>price + calendar + GLM</p></li>
-<li><p>price + calendar + GLM + GDELT</p></li>
-<li><p>price + calendar + GLM + weather</p></li>
-<li><p>full model</p></li>
-</ul>
-</li>
-<li><p>A concise final conclusion focused on whether new information improves:</p>
-<ul class="simple">
-<li><p>direction classification,</p></li>
-<li><p>expected-return trading,</p></li>
-<li><p>volatility/risk-regime forecasting.</p></li>
-</ul>
-</li>
+<li><p><strong>Seasonality already captures the main base rate.</strong> CORN volatility is heavily driven by the agricultural production cycle. Once the model knows the crop window, additional text signals may add limited incremental information.</p></li>
+<li><p><strong>Text features are noisy relative to the target.</strong> USDA reports and GDELT news can describe important conditions, but converting narrative text into weekly numeric scores introduces measurement error.</p></li>
+<li><p><strong>Small out-of-sample sample size.</strong> The post-2022 test window has limited crisis and crop-shock examples. Flexible models can overfit rare text/news patterns that do not repeat.</p></li>
+<li><p><strong>GDELT may measure attention as much as fundamentals.</strong> News intensity can rise after prices already move, or around broad market stories that are not specific enough to improve CORN volatility forecasts.</p></li>
+<li><p><strong>AI scores can be collinear with season.</strong> Planting delay, heat stress, harvest delay, and yield risk naturally occur in specific crop windows. If these features mostly restate the calendar with noise, the model can become less stable.</p></li>
+<li><p><strong>Timing alignment is difficult.</strong> Weekly aggregation may blur whether a report or news item was available before the market repriced the risk.</p></li>
 </ol>
+<p>These explanations do not mean AI is useless. They mean that in this project, the most robust quantitative signal is seasonal timing, while AI/NLP features are better treated as qualitative context or candidate features for future refinement.</p>
+</section>
+<section id="direction-and-return-experiments">
+<h2>Direction And Return Experiments<a class="headerlink" href="#direction-and-return-experiments" title="Link to this heading">#</a></h2>
+<p>We also tested direction classification and expected-return prediction. They are not the final target because performance is weaker and less stable.</p>
+<p>Best direction results:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>horizon</p></th>
+<th class="head"><p>best input set</p></th>
+<th class="head text-right"><p>balanced accuracy</p></th>
+<th class="head text-right"><p>macro F1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1 week</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
+<td class="text-right"><p>32.6%</p></td>
+<td class="text-right"><p>32.6%</p></td>
+</tr>
+<tr class="row-odd"><td><p>4 weeks</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
+<td class="text-right"><p>46.0%</p></td>
+<td class="text-right"><p>44.8%</p></td>
+</tr>
+<tr class="row-even"><td><p>13 weeks</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
+<td class="text-right"><p>46.6%</p></td>
+<td class="text-right"><p>44.8%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Best one-week expected-return trading result:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>best run</p></th>
+<th class="head text-right"><p>strategy return</p></th>
+<th class="head text-right"><p>Sharpe</p></th>
+<th class="head text-right"><p>R2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code> + HGB</p></td>
+<td class="text-right"><p>18.3%</p></td>
+<td class="text-right"><p>0.481</p></td>
+<td class="text-right"><p>-0.028</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The expected-return R2 remains negative, so we do not present return forecasting as the main empirical success.</p>
+</section>
+<section id="investment-interpretation">
+<h2>Investment Interpretation<a class="headerlink" href="#investment-interpretation" title="Link to this heading">#</a></h2>
+<p>Volatility prediction does not tell an investor whether to buy or sell CORN. Its value is as a risk overlay:</p>
+<ul class="simple">
+<li><p>Reduce position size when predicted volatility is high.</p></li>
+<li><p>Require stronger return signals before trading in high-risk seasonal windows.</p></li>
+<li><p>Use high-volatility forecasts to inform hedging or options-related decisions.</p></li>
+<li><p>Recognize that CORN risk is structurally higher in parts of the crop cycle.</p></li>
+</ul>
+<p>The final investment lesson is:</p>
+<blockquote>
+<div><p>For seasonally driven assets, the calendar itself can be more informative than complex AI-read news features. A simple seasonal risk model may be more robust than a larger model that adds noisy text signals.</p>
+</div></blockquote>
+</section>
+<section id="ai-usage">
+<h2>AI Usage<a class="headerlink" href="#ai-usage" title="Link to this heading">#</a></h2>
+<p>Human team members made the main research decisions, including choosing the prediction target, defining feature groups, interpreting the economic meaning of the results, and deciding which findings should be emphasized.</p>
+<p>Claude Code and Codex were used as coding assistants to batch-run experiments, integrate feature files, regenerate model outputs, update ChartBook pages, and draft reproducible write-ups from the experiment results.</p>
 </section>
 <section id="reproducibility">
 <h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
@@ -831,22 +781,15 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
   <nav class="bd-toc-nav page-toc">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary">Executive Summary</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-question">Research Question</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-design">Validation Design</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-1-direction-classification">Pipeline 1: Direction Classification</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-week-direction-results">One-week direction results</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#horizon-robustness-for-direction">Horizon robustness for direction</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-2-expected-return">Pipeline 2: Expected Return</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-3-volatility-forecasting">Pipeline 3: Volatility Forecasting</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-results-by-horizon">Volatility results by horizon</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-input-comparison">Volatility input comparison</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-volatility-is-more-predictable-than-return">Why Volatility Is More Predictable Than Return</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-limitations">Current Limitations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-target">Prediction Target</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-and-features">Data And Features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-volatility-results">Main Volatility Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonality-benchmark">Seasonality Benchmark</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-high-volatility-always-in-the-same-season">Is High Volatility Always In The Same Season?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-ai-and-news-features-may-underperform">Why AI And News Features May Underperform</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#direction-and-return-experiments">Direction And Return Experiments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#investment-interpretation">Investment Interpretation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-usage">AI Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
 </ul>
   </nav></div>

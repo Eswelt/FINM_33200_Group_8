@@ -1,8 +1,8 @@
 # FINM 33200 Group 8: CORN ETF Trading Signal Pipeline
 
-This repository contains a modular weekly forecasting pipeline for `CORN`, the Teucrium Corn ETF. The project frames CORN ETF forecasting as a trading-signal problem rather than a pure price-prediction task.
+This repository contains a modular weekly forecasting pipeline for `CORN`, the Teucrium Corn ETF. The final project emphasizes forward realized volatility because direction and expected-return forecasts are less stable out of sample.
 
-The main task is a fixed-threshold three-class classification problem:
+One auxiliary task is a fixed-threshold three-class classification problem:
 
 ```text
 Y =  1 if next_week_return >= +2%
@@ -18,7 +18,7 @@ The current experiments compare:
 - `price_calendar`: historical price features plus agricultural seasonality
 - combined calendar, USDA/GLM, and GDELT feature sets
 
-The pipeline is designed so that weekly weather and additional text features can be added through standard feature tables. See `pipeline_contract.md` for the data interface.
+The final write-up focuses on whether crop-season timing, USDA/GLM report scores, and GDELT news scores can forecast the future risk environment.
 
 ## Quick Start
 
@@ -89,7 +89,7 @@ uv run --extra dev doit tests
 
 `chartbook` requires Python 3.10 or newer. The existing local Python 3.9 environment can still run the forecasting code and generated notebook script, but the ChartBook site build should be run from Python 3.10+.
 
-The default `baseline`, `research`, and `docs` tasks use the cached frozen data already under `data/`. Run `refresh_data` only when you intentionally want to contact Yahoo Finance, USDA, and weather sources.
+The default `baseline`, `research`, and `docs` tasks use the cached frozen data already under `data/`. Run `refresh_data` only when you intentionally want to refresh external sources.
 
 ## Underlying CLI Commands
 
@@ -159,7 +159,6 @@ Price data are pulled from Yahoo Finance through `yfinance`.
 Weekly feature tables can be added under `data/interim/`:
 
 ```text
-data/interim/weather_weekly.parquet
 data/interim/text_weekly.parquet
 data/interim/ai_weekly.parquet
 data/interim/gdelt_weekly_scores.parquet
@@ -176,7 +175,6 @@ week
 Column naming convention:
 
 ```text
-weather_*   weather features
 text_*      numeric text features
 ai_*        AI-extracted structured features
 report_text optional free-text field for TF-IDF
@@ -187,17 +185,13 @@ Example feature sets:
 ```text
 price_only
 price_calendar
-price_calendar_weather
 price_calendar_text
-price_calendar_weather_text
 price_ai
 price_gdelt
 price_ai_gdelt
 price_calendar_ai
 price_calendar_gdelt
 price_calendar_ai_gdelt
-price_calendar_weather_ai
-price_calendar_weather_text_ai
 ```
 
 ## Modeling Design

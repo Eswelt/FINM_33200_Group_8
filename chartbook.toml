@@ -3,14 +3,14 @@ type = "pipeline"
 chartbook_format_version = "0.0.6"
 
 [site]
-title = "CORN ETF Trading Signal Pipeline"
+title = "CORN ETF Volatility Forecasting Pipeline"
 author = "FINM 33200 Group 8"
 copyright = "2026, FINM 33200 Group 8"
 
 [pipeline]
 id = "CORN"
-pipeline_name = "CORN ETF Trading Signal Pipeline"
-pipeline_description = "Weekly CORN ETF trading-signal research pipeline with price, calendar, USDA/GLM, GDELT, weather, and text feature hooks."
+pipeline_name = "CORN ETF Volatility Forecasting Pipeline"
+pipeline_description = "Weekly CORN ETF volatility forecasting pipeline with price, crop-season calendar, USDA/GLM, and GDELT feature blocks."
 lead_pipeline_developer = "FINM 33200 Group 8"
 contributors = ["FINM 33200 Group 8"]
 runs_on_grid_or_windows_or_other = "MacOS/Linux/Windows"
@@ -21,8 +21,8 @@ README_file_path = "./README.md"
 
 [dataframes.feature_panel]
 dataframe_name = "Weekly Feature Panel"
-short_description_df = "Point-in-time weekly modeling panel with price, calendar, USDA/GLM, GDELT, optional weather/text features, and next-week targets."
-data_sources = ["Yahoo Finance", "USDA ESMIS", "GDELT", "Optional teammate feature tables"]
+short_description_df = "Point-in-time weekly modeling panel with price, crop-season calendar, USDA/GLM, GDELT, and forward volatility targets."
+data_sources = ["Yahoo Finance", "USDA ESMIS", "GDELT"]
 data_providers = ["yfinance", "USDA", "GDELT", "FINM 33200 Group 8"]
 topic_tags = ["CORN", "ETF", "Trading Signal", "Weekly Forecast"]
 data_frequency = "Weekly"
@@ -104,7 +104,7 @@ data_providers = ["FINM 33200 Group 8"]
 topic_tags = ["GDELT", "News", "CORN", "Integrated Feature Block"]
 data_frequency = "Weekly"
 observation_period = "Weekly aggregation"
-how_is_pulled = "Prepared by teammate feature pipeline and staged under data/interim."
+how_is_pulled = "Prepared by the project feature pipeline and staged under data/interim."
 path_to_parquet_data = "./data/interim/gdelt_weekly_scores.parquet"
 date_col = "week"
 dataframe_docs_path = "./docs_src/final_report.md"
@@ -128,6 +128,9 @@ path_to_markdown_file = "./experiments/price_ai_ablation_results.md"
 
 [notes.gdelt_integration]
 path_to_markdown_file = "./experiments/gdelt_integration_results.md"
+
+[notes.seasonality_volatility_benchmark]
+path_to_markdown_file = "./experiments/seasonality_volatility_benchmark.md"
 
 [notes.volatility_results]
 path_to_markdown_file = "./experiments/volatility_pipeline_results.md"

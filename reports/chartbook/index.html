@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>CORN ETF Trading Signal Pipeline &#8212; CORN ETF Trading Signal Pipeline</title>
+    <title>CORN ETF Volatility Forecasting Pipeline &#8212; CORN ETF Volatility Forecasting Pipeline</title>
   
   
   
@@ -191,8 +191,8 @@
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="CORN ETF Trading Signal Pipeline - Home"/>
-    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="CORN ETF Trading Signal Pipeline - Home"/>
+    <img src="_static/logo.png" class="logo__image only-light" alt="CORN ETF Volatility Forecasting Pipeline - Home"/>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="CORN ETF Volatility Forecasting Pipeline - Home"/>
   
   
 </a></div>
@@ -209,7 +209,7 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    CORN ETF Trading Signal Pipeline
+                    CORN ETF Volatility Forecasting Pipeline
                 </a>
             </li>
         </ul>
@@ -220,11 +220,12 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cb/workflow.html">CORN ETF Trading Signal Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cb/final_report.html">Current Write-up: CORN ETF Trading Signal Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cb/final_report.html">Final Write-up: CORN ETF Volatility Forecasting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/data_glimpses.html">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/gdelt_integration.html">GDELT Integration Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cb/seasonality_volatility_benchmark.html">Seasonality Volatility Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/volatility_results.html">Volatility Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/horizon_robustness.html">Horizon Robustness Results</a></li>
 </ul>
@@ -390,7 +391,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>CORN ETF Trading Signal Pipeline</h1>
+    <h1>CORN ETF Volatility Forecasting Pipeline</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -422,9 +423,9 @@
                 
 <div id="searchbox"></div>
                 <article class="bd-article">
-                   <section class="tex2jax_ignore mathjax_ignore" id="corn-etf-trading-signal-pipeline">
-<h1>CORN ETF Trading Signal Pipeline<a class="headerlink" href="#corn-etf-trading-signal-pipeline" title="Link to this heading">#</a></h1>
-<p>Last updated: May 28, 2026, 3:39:29 AM</p>
+                   <section class="tex2jax_ignore mathjax_ignore" id="corn-etf-volatility-forecasting-pipeline">
+<h1>CORN ETF Volatility Forecasting Pipeline<a class="headerlink" href="#corn-etf-volatility-forecasting-pipeline" title="Link to this heading">#</a></h1>
+<p>Last updated: May 28, 2026, 4:19:31 AM</p>
 <section id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
@@ -437,11 +438,12 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cb/workflow.html">CORN ETF Trading Signal Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cb/final_report.html">Current Write-up: CORN ETF Trading Signal Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cb/final_report.html">Final Write-up: CORN ETF Volatility Forecasting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/data_glimpses.html">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/gdelt_integration.html">GDELT Integration Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cb/seasonality_volatility_benchmark.html">Seasonality Volatility Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/volatility_results.html">Volatility Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/horizon_robustness.html">Horizon Robustness Results</a></li>
 </ul>
@@ -462,7 +464,7 @@
 <li class="toctree-l1"><a class="reference internal" href="cb/dataframes/CORN/feature_panel.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:feature_panel</span></code> - Weekly Feature Panel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/dataframes/CORN/feature_panel.html#corn-etf-trading-signal-workflow">CORN ETF Trading Signal Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/dataframes/CORN/gdelt_weekly_scores.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cb/dataframes/CORN/gdelt_weekly_scores.html#current-write-up-corn-etf-trading-signal-pipeline">Current Write-up: CORN ETF Trading Signal Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cb/dataframes/CORN/gdelt_weekly_scores.html#final-write-up-corn-etf-volatility-forecasting">Final Write-up: CORN ETF Volatility Forecasting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/dataframes/CORN/horizon_robustness_metrics.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_metrics</span></code> - Horizon Robustness Metrics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/dataframes/CORN/horizon_robustness_metrics.html#horizon-robustness-results">Horizon Robustness Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/dataframes/CORN/horizon_robustness_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_predictions</span></code> - Horizon Robustness Predictions</a></li>
@@ -481,7 +483,7 @@
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Pipeline Name</p></th>
-<th class="head"><p>CORN ETF Trading Signal Pipeline</p></th>
+<th class="head"><p>CORN ETF Volatility Forecasting Pipeline</p></th>
 </tr>
 </thead>
 <tbody>
@@ -501,7 +503,7 @@
 <td><p><a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page</p></td>
 </tr>
 <tr class="row-odd"><td><p>Date of Last Code Update</p></td>
-<td><p>2026-05-27 22:39:20</p></td>
+<td><p>2026-05-27 23:19:14</p></td>
 </tr>
 <tr class="row-even"><td><p>OS Compatibility</p></td>
 <td><p></p></td>
@@ -512,8 +514,8 @@
 </tbody>
 </table>
 </div>
-<p>This repository contains a modular weekly forecasting pipeline for <code class="docutils literal notranslate"><span class="pre">CORN</span></code>, the Teucrium Corn ETF. The project frames CORN ETF forecasting as a trading-signal problem rather than a pure price-prediction task.</p>
-<p>The main task is a fixed-threshold three-class classification problem:</p>
+<p>This repository contains a modular weekly forecasting pipeline for <code class="docutils literal notranslate"><span class="pre">CORN</span></code>, the Teucrium Corn ETF. The final project emphasizes forward realized volatility because direction and expected-return forecasts are less stable out of sample.</p>
+<p>One auxiliary task is a fixed-threshold three-class classification problem:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Y =  1 if next_week_return &gt;= +2%
 Y =  0 if -2% &lt; next_week_return &lt; +2%
 Y = -1 if next_week_return &lt;= -2%
@@ -527,7 +529,7 @@ Y = -1 if next_week_return &lt;= -2%
 <li><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code>: historical price features plus agricultural seasonality</p></li>
 <li><p>combined calendar, USDA/GLM, and GDELT feature sets</p></li>
 </ul>
-<p>The pipeline is designed so that weekly weather and additional text features can be added through standard feature tables. See <code class="docutils literal notranslate"><span class="pre">pipeline_contract.md</span></code> for the data interface.</p>
+<p>The final write-up focuses on whether crop-season timing, USDA/GLM report scores, and GDELT news scores can forecast the future risk environment.</p>
 </section>
 <section id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
@@ -579,7 +581,7 @@ open<span class="w"> </span>reports/html/corn_forecast_workflow.html
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">chartbook</span></code> requires Python 3.10 or newer. The existing local Python 3.9 environment can still run the forecasting code and generated notebook script, but the ChartBook site build should be run from Python 3.10+.</p>
-<p>The default <code class="docutils literal notranslate"><span class="pre">baseline</span></code>, <code class="docutils literal notranslate"><span class="pre">research</span></code>, and <code class="docutils literal notranslate"><span class="pre">docs</span></code> tasks use the cached frozen data already under <code class="docutils literal notranslate"><span class="pre">data/</span></code>. Run <code class="docutils literal notranslate"><span class="pre">refresh_data</span></code> only when you intentionally want to contact Yahoo Finance, USDA, and weather sources.</p>
+<p>The default <code class="docutils literal notranslate"><span class="pre">baseline</span></code>, <code class="docutils literal notranslate"><span class="pre">research</span></code>, and <code class="docutils literal notranslate"><span class="pre">docs</span></code> tasks use the cached frozen data already under <code class="docutils literal notranslate"><span class="pre">data/</span></code>. Run <code class="docutils literal notranslate"><span class="pre">refresh_data</span></code> only when you intentionally want to refresh external sources.</p>
 </section>
 <section id="underlying-cli-commands">
 <h2>Underlying CLI Commands<a class="headerlink" href="#underlying-cli-commands" title="Link to this heading">#</a></h2>
@@ -637,8 +639,7 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 <h2>Data Interface<a class="headerlink" href="#data-interface" title="Link to this heading">#</a></h2>
 <p>Price data are pulled from Yahoo Finance through <code class="docutils literal notranslate"><span class="pre">yfinance</span></code>.</p>
 <p>Weekly feature tables can be added under <code class="docutils literal notranslate"><span class="pre">data/interim/</span></code>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data/interim/weather_weekly.parquet
-data/interim/text_weekly.parquet
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data/interim/text_weekly.parquet
 data/interim/ai_weekly.parquet
 data/interim/gdelt_weekly_scores.parquet
 </pre></div>
@@ -649,8 +650,7 @@ data/interim/gdelt_weekly_scores.parquet
 </pre></div>
 </div>
 <p>Column naming convention:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>weather_*   weather features
-text_*      numeric text features
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>text_*      numeric text features
 ai_*        AI-extracted structured features
 report_text optional free-text field for TF-IDF
 </pre></div>
@@ -658,17 +658,13 @@ report_text optional free-text field for TF-IDF
 <p>Example feature sets:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>price_only
 price_calendar
-price_calendar_weather
 price_calendar_text
-price_calendar_weather_text
 price_ai
 price_gdelt
 price_ai_gdelt
 price_calendar_ai
 price_calendar_gdelt
 price_calendar_ai_gdelt
-price_calendar_weather_ai
-price_calendar_weather_text_ai
 </pre></div>
 </div>
 </section>

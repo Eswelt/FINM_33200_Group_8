@@ -1,5 +1,5 @@
 Name,Metadata Complete,Object Type,Identifier,Pipeline,Missing Fields,Page Link
-CORN ETF Trading Signal Pipeline,False,pipeline,CORN,CORN,"build_commands, os_compatibility",../index.html
+CORN ETF Volatility Forecasting Pipeline,False,pipeline,CORN,CORN,"build_commands, os_compatibility",../index.html
 Weekly Feature Panel,False,dataframe,feature_panel,CORN,links_to_data_providers,./dataframes/CORN/feature_panel.html
 Fixed Threshold Classification Predictions,False,dataframe,price_target_predictions,CORN,links_to_data_providers,./dataframes/CORN/price_target_predictions.html
 Expected Return Strategy Predictions,False,dataframe,expected_return_predictions,CORN,links_to_data_providers,./dataframes/CORN/expected_return_predictions.html
