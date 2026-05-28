@@ -219,7 +219,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../workflow.html">CORN ETF Trading Signal Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../final_report.html">Final Write-up: CORN ETF Volatility Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../final_report.html">Final Report: CORN ETF Trading Signal Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../data_glimpses.html">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
@@ -401,18 +401,29 @@
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#final-write-up-corn-etf-volatility-forecasting">Final Write-up: CORN ETF Volatility Forecasting</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#final-report-corn-etf-trading-signal-pipeline">Final Report: CORN ETF Trading Signal Pipeline</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-open">How To Open</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary">Executive Summary</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-target">Prediction Target</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-and-features">Data And Features</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-volatility-results">Main Volatility Results</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonality-benchmark">Seasonality Benchmark</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-high-volatility-always-in-the-same-season">Is High Volatility Always In The Same Season?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-ai-and-news-features-may-underperform">Why AI And News Features May Underperform</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#direction-and-return-experiments">Direction And Return Experiments</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#investment-interpretation">Investment Interpretation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-usage">AI Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-architecture-and-file-directory">Project Architecture And File Directory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-outputs-generated">Workflow Outputs Generated</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strategy-ranking-snapshot">Strategy Ranking Snapshot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-result-fixed-2-percent-three-class-target">Main Result: Fixed 2 Percent Three-Class Target</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#direct-volatility-forecast">Direct Volatility Forecast</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#auxiliary-expected-return-strategy">Auxiliary Expected-Return Strategy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-adjusted-threshold-check">Volatility-Adjusted Threshold Check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secondary-binary-direction-pipeline">Secondary Binary Direction Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures">Figures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-class-distribution">Final Class Distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-strategy-sharpe">Final Strategy Sharpe</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-strategy-return">Final Strategy Return</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-expected-return-cumulative">Final Expected Return Cumulative</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-threshold-cumulative">Final Threshold Cumulative</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-fixed-target-confusion">Final Fixed Target Confusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-and-code-coverage">Data And Code Coverage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problems-and-caveats">Problems And Caveats</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-commands">Reproducibility Commands</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-glimpse">DataFrame Glimpse</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-manifest">Dataframe Manifest</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-manifest">Pipeline Manifest</a></li>
@@ -432,311 +443,1050 @@
                    <section class="tex2jax_ignore mathjax_ignore" id="dataframe-corn-gdelt-weekly-scores-gdelt-weekly-news-scores">
 <h1>Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores<a class="headerlink" href="#dataframe-corn-gdelt-weekly-scores-gdelt-weekly-news-scores" title="Link to this heading">#</a></h1>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="final-write-up-corn-etf-volatility-forecasting">
-<h1>Final Write-up: CORN ETF Volatility Forecasting<a class="headerlink" href="#final-write-up-corn-etf-volatility-forecasting" title="Link to this heading">#</a></h1>
-<p>Updated: <code class="docutils literal notranslate"><span class="pre">2026-05-28</span></code>.</p>
+<section class="tex2jax_ignore mathjax_ignore" id="final-report-corn-etf-trading-signal-pipeline">
+<h1>Final Report: CORN ETF Trading Signal Pipeline<a class="headerlink" href="#final-report-corn-etf-trading-signal-pipeline" title="Link to this heading">#</a></h1>
+<p>Generated: <code class="docutils literal notranslate"><span class="pre">2026-05-28</span> <span class="pre">05:30:19</span> <span class="pre">UTC</span></code>.</p>
+<section id="how-to-open">
+<h2>How To Open<a class="headerlink" href="#how-to-open" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>open<span class="w"> </span>reports/chartbook/index.html
+open<span class="w"> </span>reports/html/corn_forecast_workflow.html
+</pre></div>
+</div>
+</section>
 <section id="executive-summary">
 <h2>Executive Summary<a class="headerlink" href="#executive-summary" title="Link to this heading">#</a></h2>
-<p>This project studies whether agricultural information can help forecast the risk environment of <code class="docutils literal notranslate"><span class="pre">CORN</span></code>, the Teucrium Corn ETF. After testing direction classification, expected-return forecasting, and volatility forecasting, we choose <strong>future realized volatility</strong> as the final prediction target.</p>
-<p>The empirical result is clear:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>item</p></th>
+<th class="head"><p>result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Frozen sample</p></td>
+<td><p>2011-01-07 to 2026-05-15, 802 weekly rows</p></td>
+</tr>
+<tr class="row-odd"><td><p>OOS window</p></td>
+<td><p>2023-01-06 to 2026-05-08, 175 weeks / 2800 prediction rows</p></td>
+</tr>
+<tr class="row-even"><td><p>Main fixed-band classifier</p></td>
+<td><p>price_ai: balanced acc 32.6%, macro F1 32.6%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Best expected-return strategy</p></td>
+<td><p>price_calendar_ai_gdelt_hgb: return 18.3%, Sharpe 0.481</p></td>
+</tr>
+<tr class="row-even"><td><p>Best volatility forecast</p></td>
+<td><p>price_only_ridge: R2 -0.0249, high-vol balanced acc 50.0%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Best volatility-threshold strategy</p></td>
+<td><p>k_1_price_calendar: return 6.2%, Sharpe 0.508</p></td>
+</tr>
+<tr class="row-even"><td><p>Secondary binary direction result</p></td>
+<td><p>C_price_weather_text_logit: return 6.7%, Sharpe 0.655</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="project-architecture-and-file-directory">
+<h2>Project Architecture And File Directory<a class="headerlink" href="#project-architecture-and-file-directory" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>directory</p></th>
+<th class="head"><p>contains</p></th>
+<th class="head"><p>role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>./</p></td>
+<td><p><a class="reference external" href="http://README.md">README.md</a>, pyproject.toml, <a class="reference external" href="http://dodo.py">dodo.py</a>, chartbook.toml</p></td>
+<td><p>Project metadata, dependencies, task graph, and ChartBook configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>src/corn_forecast/</p></td>
+<td><p><a class="reference external" href="http://cli.py">cli.py</a>, <a class="reference external" href="http://features.py">features.py</a>, <a class="reference external" href="http://models.py">models.py</a>, <a class="reference external" href="http://strategy.py">strategy.py</a></p></td>
+<td><p>Forecasting package and command surface used by pydoit.</p></td>
+</tr>
+<tr class="row-even"><td><p>src/corn_forecast/data/</p></td>
+<td><p><a class="reference external" href="http://prices.py">prices.py</a>, <a class="reference external" href="http://weather.py">weather.py</a>, <a class="reference external" href="http://usda.py">usda.py</a></p></td>
+<td><p>Data adapters for price, weather, and USDA release inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p>src/corn_forecast/text/</p></td>
+<td><p>wwcb*.py, ai_features.py</p></td>
+<td><p>Optional WWCB parsing and AI feature extraction helpers.</p></td>
+</tr>
+<tr class="row-even"><td><p>scripts/</p></td>
+<td><p>build_project_notebook.py, run_horizon_robustness.py, WWCB scripts</p></td>
+<td><p>One-off report, robustness, and text-processing scripts.</p></td>
+</tr>
+<tr class="row-odd"><td><p>data/raw/</p></td>
+<td><p>prices_CORN.csv, usda_releases.csv</p></td>
+<td><p>Frozen raw inputs used by the default local workflow.</p></td>
+</tr>
+<tr class="row-even"><td><p>data/interim/</p></td>
+<td><p>weather_weekly.parquet, ai_weekly.parquet, gdelt_weekly_scores.parquet</p></td>
+<td><p>Staged weekly feature blocks before the final modeling panel.</p></td>
+</tr>
+<tr class="row-odd"><td><p>data/processed/</p></td>
+<td><p>feature_panel.parquet</p></td>
+<td><p>Final weekly modeling panel consumed by all model tasks.</p></td>
+</tr>
+<tr class="row-even"><td><p>experiments/</p></td>
+<td><p>*_results.md</p></td>
+<td><p>Experiment notes and robustness write-ups included in ChartBook.</p></td>
+</tr>
+<tr class="row-odd"><td><p>docs_src/</p></td>
+<td><p>project_workflow.md, final_report.md, data_glimpses.md, figures/</p></td>
+<td><p>Markdown and assets that ChartBook turns into the HTML site.</p></td>
+</tr>
+<tr class="row-even"><td><p>reports/</p></td>
+<td><p>metrics, predictions, figures, notebooks, html, chartbook</p></td>
+<td><p>Generated model outputs, notebook, standalone HTML, and ChartBook site.</p></td>
+</tr>
+<tr class="row-odd"><td><p>tests/</p></td>
+<td><p>test_*.py</p></td>
+<td><p>Unit and smoke tests for adapters, feature engineering, models, and reports.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="workflow-outputs-generated">
+<h2>Workflow Outputs Generated<a class="headerlink" href="#workflow-outputs-generated" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>workflow</p></th>
+<th class="head"><p>status</p></th>
+<th class="head"><p>main outputs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>research</p></td>
+<td><p>ready</p></td>
+<td><p>reports/price_target_tests.json, reports/price_target_predictions.csv, reports/expected_return_metrics.json, reports/expected_return_predictions.csv, reports/volatility_metrics.json …</p></td>
+</tr>
+<tr class="row-odd"><td><p>docs</p></td>
+<td><p>ready</p></td>
+<td><p>reports/notebooks/corn_forecast_workflow.ipynb, reports/html/corn_forecast_workflow.html, docs_src/final_report.md, docs_src/data_glimpses.md, reports/chartbook/index.html</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="strategy-ranking-snapshot">
+<h2>Strategy Ranking Snapshot<a class="headerlink" href="#strategy-ranking-snapshot" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>objective</p></th>
+<th class="head"><p>run</p></th>
+<th class="head"><p>strategy return</p></th>
+<th class="head"><p>Sharpe</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>binary secondary</p></td>
+<td><p>C_price_weather_text_logit</p></td>
+<td><p>6.7%</p></td>
+<td><p>0.655</p></td>
+</tr>
+<tr class="row-odd"><td><p>binary secondary</p></td>
+<td><p>B_price_weather_hgb</p></td>
+<td><p>15.5%</p></td>
+<td><p>0.608</p></td>
+</tr>
+<tr class="row-even"><td><p>vol threshold</p></td>
+<td><p>k_1_price_calendar</p></td>
+<td><p>6.2%</p></td>
+<td><p>0.508</p></td>
+</tr>
+<tr class="row-odd"><td><p>expected return</p></td>
+<td><p>price_calendar_ai_gdelt_hgb</p></td>
+<td><p>18.3%</p></td>
+<td><p>0.481</p></td>
+</tr>
+<tr class="row-even"><td><p>expected return</p></td>
+<td><p>price_calendar_ai_gdelt_ridge</p></td>
+<td><p>14.2%</p></td>
+<td><p>0.406</p></td>
+</tr>
+<tr class="row-odd"><td><p>binary secondary</p></td>
+<td><p>C_price_weather_text_hgb</p></td>
+<td><p>7.8%</p></td>
+<td><p>0.399</p></td>
+</tr>
+<tr class="row-even"><td><p>expected return</p></td>
+<td><p>price_calendar_ai_ridge</p></td>
+<td><p>10.7%</p></td>
+<td><p>0.322</p></td>
+</tr>
+<tr class="row-odd"><td><p>expected return</p></td>
+<td><p>price_calendar_hgb</p></td>
+<td><p>3.6%</p></td>
+<td><p>0.130</p></td>
+</tr>
+<tr class="row-even"><td><p>expected return</p></td>
+<td><p>price_only_ridge</p></td>
+<td><p>3.3%</p></td>
+<td><p>0.089</p></td>
+</tr>
+<tr class="row-odd"><td><p>binary secondary</p></td>
+<td><p>B_price_weather_logit</p></td>
+<td><p>0.5%</p></td>
+<td><p>0.085</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="main-result-fixed-2-percent-three-class-target">
+<h2>Main Result: Fixed 2 Percent Three-Class Target<a class="headerlink" href="#main-result-fixed-2-percent-three-class-target" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>features</p></th>
+<th class="head"><p>accuracy</p></th>
+<th class="head"><p>balanced acc</p></th>
+<th class="head"><p>macro F1</p></th>
+<th class="head"><p>down</p></th>
+<th class="head"><p>flat</p></th>
+<th class="head"><p>up</p></th>
+<th class="head"><p>OOS rows</p></th>
+<th class="head"><p>folds</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>price_ai</p></td>
+<td><p>49.7%</p></td>
+<td><p>32.6%</p></td>
+<td><p>32.6%</p></td>
+<td><p>32</p></td>
+<td><p>119</p></td>
+<td><p>24</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_gdelt</p></td>
+<td><p>45.1%</p></td>
+<td><p>32.2%</p></td>
+<td><p>31.9%</p></td>
+<td><p>32</p></td>
+<td><p>119</p></td>
+<td><p>24</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_ai_gdelt</p></td>
+<td><p>46.3%</p></td>
+<td><p>32.1%</p></td>
+<td><p>32.0%</p></td>
+<td><p>32</p></td>
+<td><p>119</p></td>
+<td><p>24</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_only</p></td>
+<td><p>46.9%</p></td>
+<td><p>31.9%</p></td>
+<td><p>31.4%</p></td>
+<td><p>32</p></td>
+<td><p>119</p></td>
+<td><p>24</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar</p></td>
+<td><p>42.3%</p></td>
+<td><p>30.9%</p></td>
+<td><p>30.4%</p></td>
+<td><p>32</p></td>
+<td><p>119</p></td>
+<td><p>24</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_gdelt</p></td>
+<td><p>38.9%</p></td>
+<td><p>30.8%</p></td>
+<td><p>29.3%</p></td>
+<td><p>32</p></td>
+<td><p>119</p></td>
+<td><p>24</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_ai</p></td>
+<td><p>42.9%</p></td>
+<td><p>30.0%</p></td>
+<td><p>30.0%</p></td>
+<td><p>32</p></td>
+<td><p>119</p></td>
+<td><p>24</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_ai_gdelt</p></td>
+<td><p>40.0%</p></td>
+<td><p>29.8%</p></td>
+<td><p>29.1%</p></td>
+<td><p>32</p></td>
+<td><p>119</p></td>
+<td><p>24</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Interpretation: the current fixed-band classifier is weak; the price-only baseline is stronger than price+calendar on balanced accuracy in this run.</p>
+</section>
+<section id="direct-volatility-forecast">
+<h2>Direct Volatility Forecast<a class="headerlink" href="#direct-volatility-forecast" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>run</p></th>
+<th class="head"><p>features</p></th>
+<th class="head"><p>model</p></th>
+<th class="head"><p>MAE</p></th>
+<th class="head"><p>RMSE</p></th>
+<th class="head"><p>R2</p></th>
+<th class="head"><p>Spearman</p></th>
+<th class="head"><p>high-vol balanced acc</p></th>
+<th class="head"><p>actual high-vol rate</p></th>
+<th class="head"><p>pred high-vol rate</p></th>
+<th class="head"><p>OOS rows</p></th>
+<th class="head"><p>folds</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>price_only_ridge</p></td>
+<td><p>price_only</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0079</p></td>
+<td><p>0.0096</p></td>
+<td><p>-0.0249</p></td>
+<td><p>-0.035</p></td>
+<td><p>50.0%</p></td>
+<td><p>29.1%</p></td>
+<td><p>0.0%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_ai_ridge</p></td>
+<td><p>price_ai</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0080</p></td>
+<td><p>0.0096</p></td>
+<td><p>-0.0283</p></td>
+<td><p>-0.010</p></td>
+<td><p>50.0%</p></td>
+<td><p>29.1%</p></td>
+<td><p>0.0%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_gdelt_ridge</p></td>
+<td><p>price_gdelt</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0078</p></td>
+<td><p>0.0096</p></td>
+<td><p>-0.0330</p></td>
+<td><p>-0.037</p></td>
+<td><p>50.0%</p></td>
+<td><p>29.1%</p></td>
+<td><p>0.0%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_ai_gdelt_ridge</p></td>
+<td><p>price_ai_gdelt</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0079</p></td>
+<td><p>0.0097</p></td>
+<td><p>-0.0396</p></td>
+<td><p>-0.015</p></td>
+<td><p>50.0%</p></td>
+<td><p>29.1%</p></td>
+<td><p>0.0%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_ridge</p></td>
+<td><p>price_calendar</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0080</p></td>
+<td><p>0.0097</p></td>
+<td><p>-0.0558</p></td>
+<td><p>-0.008</p></td>
+<td><p>51.2%</p></td>
+<td><p>29.1%</p></td>
+<td><p>2.3%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_ai_ridge</p></td>
+<td><p>price_calendar_ai</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0080</p></td>
+<td><p>0.0097</p></td>
+<td><p>-0.0584</p></td>
+<td><p>0.001</p></td>
+<td><p>49.9%</p></td>
+<td><p>29.1%</p></td>
+<td><p>4.0%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_gdelt_ridge</p></td>
+<td><p>price_calendar_gdelt</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0079</p></td>
+<td><p>0.0098</p></td>
+<td><p>-0.0780</p></td>
+<td><p>0.009</p></td>
+<td><p>49.4%</p></td>
+<td><p>29.1%</p></td>
+<td><p>2.9%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_ai_gdelt_ridge</p></td>
+<td><p>price_calendar_ai_gdelt</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0080</p></td>
+<td><p>0.0098</p></td>
+<td><p>-0.0807</p></td>
+<td><p>0.023</p></td>
+<td><p>47.4%</p></td>
+<td><p>29.1%</p></td>
+<td><p>5.7%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_gdelt_hgb</p></td>
+<td><p>price_gdelt</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0082</p></td>
+<td><p>0.0101</p></td>
+<td><p>-0.1292</p></td>
+<td><p>0.079</p></td>
+<td><p>48.0%</p></td>
+<td><p>29.1%</p></td>
+<td><p>12.6%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_ai_gdelt_hgb</p></td>
+<td><p>price_ai_gdelt</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0082</p></td>
+<td><p>0.0101</p></td>
+<td><p>-0.1304</p></td>
+<td><p>0.037</p></td>
+<td><p>46.1%</p></td>
+<td><p>29.1%</p></td>
+<td><p>11.4%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_gdelt_hgb</p></td>
+<td><p>price_calendar_gdelt</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0081</p></td>
+<td><p>0.0102</p></td>
+<td><p>-0.1595</p></td>
+<td><p>0.035</p></td>
+<td><p>48.0%</p></td>
+<td><p>29.1%</p></td>
+<td><p>12.6%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_ai_gdelt_hgb</p></td>
+<td><p>price_calendar_ai_gdelt</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0082</p></td>
+<td><p>0.0102</p></td>
+<td><p>-0.1693</p></td>
+<td><p>0.004</p></td>
+<td><p>47.9%</p></td>
+<td><p>29.1%</p></td>
+<td><p>10.9%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_ai_hgb</p></td>
+<td><p>price_ai</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0082</p></td>
+<td><p>0.0103</p></td>
+<td><p>-0.1718</p></td>
+<td><p>0.040</p></td>
+<td><p>47.5%</p></td>
+<td><p>29.1%</p></td>
+<td><p>11.4%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_only_hgb</p></td>
+<td><p>price_only</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0082</p></td>
+<td><p>0.0103</p></td>
+<td><p>-0.1833</p></td>
+<td><p>0.060</p></td>
+<td><p>47.9%</p></td>
+<td><p>29.1%</p></td>
+<td><p>10.9%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_hgb</p></td>
+<td><p>price_calendar</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0083</p></td>
+<td><p>0.0103</p></td>
+<td><p>-0.1883</p></td>
+<td><p>0.025</p></td>
+<td><p>48.6%</p></td>
+<td><p>29.1%</p></td>
+<td><p>13.7%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_ai_hgb</p></td>
+<td><p>price_calendar_ai</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0083</p></td>
+<td><p>0.0104</p></td>
+<td><p>-0.2102</p></td>
+<td><p>-0.001</p></td>
+<td><p>47.2%</p></td>
+<td><p>29.1%</p></td>
+<td><p>13.7%</p></td>
+<td><p>175</p></td>
+<td><p>14</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Interpretation: the direct one-week volatility forecast is the risk-focused diagnostic; high-volatility balanced accuracy is more relevant than directional accuracy for this target.</p>
+</section>
+<section id="auxiliary-expected-return-strategy">
+<h2>Auxiliary Expected-Return Strategy<a class="headerlink" href="#auxiliary-expected-return-strategy" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>run</p></th>
+<th class="head"><p>features</p></th>
+<th class="head"><p>model</p></th>
+<th class="head"><p>MAE</p></th>
+<th class="head"><p>RMSE</p></th>
+<th class="head"><p>R2</p></th>
+<th class="head"><p>direction acc</p></th>
+<th class="head"><p>trade freq</p></th>
+<th class="head"><p>strategy return</p></th>
+<th class="head"><p>Sharpe</p></th>
+<th class="head"><p>max drawdown</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>price_calendar_ai_gdelt_hgb</p></td>
+<td><p>price_calendar_ai_gdelt</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0182</p></td>
+<td><p>0.0244</p></td>
+<td><p>-0.0279</p></td>
+<td><p>54.9%</p></td>
+<td><p>33.1%</p></td>
+<td><p>18.3%</p></td>
+<td><p>0.481</p></td>
+<td><p>-13.2%</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_ai_gdelt_ridge</p></td>
+<td><p>price_calendar_ai_gdelt</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0179</p></td>
+<td><p>0.0253</p></td>
+<td><p>-0.1037</p></td>
+<td><p>55.4%</p></td>
+<td><p>30.3%</p></td>
+<td><p>14.2%</p></td>
+<td><p>0.406</p></td>
+<td><p>-17.5%</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_ai_ridge</p></td>
+<td><p>price_calendar_ai</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0180</p></td>
+<td><p>0.0252</p></td>
+<td><p>-0.1018</p></td>
+<td><p>53.7%</p></td>
+<td><p>27.4%</p></td>
+<td><p>10.7%</p></td>
+<td><p>0.322</p></td>
+<td><p>-14.8%</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_hgb</p></td>
+<td><p>price_calendar</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0181</p></td>
+<td><p>0.0252</p></td>
+<td><p>-0.0989</p></td>
+<td><p>53.7%</p></td>
+<td><p>30.9%</p></td>
+<td><p>3.6%</p></td>
+<td><p>0.130</p></td>
+<td><p>-9.4%</p></td>
+</tr>
+<tr class="row-even"><td><p>price_only_ridge</p></td>
+<td><p>price_only</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0175</p></td>
+<td><p>0.0246</p></td>
+<td><p>-0.0449</p></td>
+<td><p>52.0%</p></td>
+<td><p>11.4%</p></td>
+<td><p>3.3%</p></td>
+<td><p>0.089</p></td>
+<td><p>-14.2%</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_ai_ridge</p></td>
+<td><p>price_ai</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0182</p></td>
+<td><p>0.0254</p></td>
+<td><p>-0.1161</p></td>
+<td><p>48.6%</p></td>
+<td><p>20.6%</p></td>
+<td><p>3.1%</p></td>
+<td><p>0.077</p></td>
+<td><p>-20.7%</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_gdelt_ridge</p></td>
+<td><p>price_calendar_gdelt</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0174</p></td>
+<td><p>0.0243</p></td>
+<td><p>-0.0197</p></td>
+<td><p>53.7%</p></td>
+<td><p>22.3%</p></td>
+<td><p>2.5%</p></td>
+<td><p>0.062</p></td>
+<td><p>-19.9%</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_ai_gdelt_hgb</p></td>
+<td><p>price_ai_gdelt</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0184</p></td>
+<td><p>0.0252</p></td>
+<td><p>-0.0957</p></td>
+<td><p>52.0%</p></td>
+<td><p>28.6%</p></td>
+<td><p>-0.3%</p></td>
+<td><p>-0.012</p></td>
+<td><p>-19.9%</p></td>
+</tr>
+<tr class="row-even"><td><p>price_ai_gdelt_ridge</p></td>
+<td><p>price_ai_gdelt</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0182</p></td>
+<td><p>0.0254</p></td>
+<td><p>-0.1197</p></td>
+<td><p>52.0%</p></td>
+<td><p>24.0%</p></td>
+<td><p>-1.4%</p></td>
+<td><p>-0.034</p></td>
+<td><p>-22.4%</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_gdelt_ridge</p></td>
+<td><p>price_gdelt</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0176</p></td>
+<td><p>0.0246</p></td>
+<td><p>-0.0494</p></td>
+<td><p>52.6%</p></td>
+<td><p>19.4%</p></td>
+<td><p>-4.1%</p></td>
+<td><p>-0.110</p></td>
+<td><p>-18.4%</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_gdelt_hgb</p></td>
+<td><p>price_calendar_gdelt</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0183</p></td>
+<td><p>0.0252</p></td>
+<td><p>-0.0975</p></td>
+<td><p>54.3%</p></td>
+<td><p>34.9%</p></td>
+<td><p>-4.6%</p></td>
+<td><p>-0.158</p></td>
+<td><p>-14.0%</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_calendar_ridge</p></td>
+<td><p>price_calendar</p></td>
+<td><p>ridge</p></td>
+<td><p>0.0173</p></td>
+<td><p>0.0243</p></td>
+<td><p>-0.0220</p></td>
+<td><p>53.1%</p></td>
+<td><p>21.1%</p></td>
+<td><p>-6.2%</p></td>
+<td><p>-0.188</p></td>
+<td><p>-16.8%</p></td>
+</tr>
+<tr class="row-even"><td><p>price_calendar_ai_hgb</p></td>
+<td><p>price_calendar_ai</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0182</p></td>
+<td><p>0.0247</p></td>
+<td><p>-0.0527</p></td>
+<td><p>53.1%</p></td>
+<td><p>33.7%</p></td>
+<td><p>-5.8%</p></td>
+<td><p>-0.208</p></td>
+<td><p>-13.6%</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_gdelt_hgb</p></td>
+<td><p>price_gdelt</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0188</p></td>
+<td><p>0.0255</p></td>
+<td><p>-0.1250</p></td>
+<td><p>48.6%</p></td>
+<td><p>27.4%</p></td>
+<td><p>-9.2%</p></td>
+<td><p>-0.231</p></td>
+<td><p>-20.2%</p></td>
+</tr>
+<tr class="row-even"><td><p>price_only_hgb</p></td>
+<td><p>price_only</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0187</p></td>
+<td><p>0.0258</p></td>
+<td><p>-0.1535</p></td>
+<td><p>50.9%</p></td>
+<td><p>32.0%</p></td>
+<td><p>-25.9%</p></td>
+<td><p>-0.769</p></td>
+<td><p>-32.8%</p></td>
+</tr>
+<tr class="row-odd"><td><p>price_ai_hgb</p></td>
+<td><p>price_ai</p></td>
+<td><p>hgb</p></td>
+<td><p>0.0189</p></td>
+<td><p>0.0259</p></td>
+<td><p>-0.1640</p></td>
+<td><p>46.9%</p></td>
+<td><p>30.9%</p></td>
+<td><p>-30.9%</p></td>
+<td><p>-0.997</p></td>
+<td><p>-33.6%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="volatility-adjusted-threshold-check">
+<h2>Volatility-Adjusted Threshold Check<a class="headerlink" href="#volatility-adjusted-threshold-check" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>run</p></th>
+<th class="head"><p>k</p></th>
+<th class="head"><p>features</p></th>
+<th class="head"><p>accuracy</p></th>
+<th class="head"><p>balanced acc</p></th>
+<th class="head"><p>macro F1</p></th>
+<th class="head"><p>strategy return</p></th>
+<th class="head"><p>Sharpe</p></th>
+<th class="head"><p>max drawdown</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>k_1_price_calendar</p></td>
+<td><p>1.000</p></td>
+<td><p>price_calendar</p></td>
+<td><p>37.7%</p></td>
+<td><p>37.2%</p></td>
+<td><p>33.1%</p></td>
+<td><p>6.2%</p></td>
+<td><p>0.508</p></td>
+<td><p>-2.9%</p></td>
+</tr>
+<tr class="row-odd"><td><p>k_1_price_only</p></td>
+<td><p>1.000</p></td>
+<td><p>price_only</p></td>
+<td><p>37.1%</p></td>
+<td><p>36.9%</p></td>
+<td><p>32.7%</p></td>
+<td><p>-0.6%</p></td>
+<td><p>-0.074</p></td>
+<td><p>-5.4%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="secondary-binary-direction-pipeline">
+<h2>Secondary Binary Direction Pipeline<a class="headerlink" href="#secondary-binary-direction-pipeline" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>run</p></th>
+<th class="head"><p>accuracy</p></th>
+<th class="head"><p>balanced acc</p></th>
+<th class="head"><p>F1</p></th>
+<th class="head"><p>ROC-AUC</p></th>
+<th class="head"><p>strategy return</p></th>
+<th class="head"><p>Sharpe</p></th>
+<th class="head"><p>max drawdown</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>C_price_weather_text_logit</p></td>
+<td><p>47.4%</p></td>
+<td><p>47.9%</p></td>
+<td><p>28.1%</p></td>
+<td><p>47.9%</p></td>
+<td><p>6.7%</p></td>
+<td><p>0.655</p></td>
+<td><p>-5.3%</p></td>
+</tr>
+<tr class="row-odd"><td><p>B_price_weather_hgb</p></td>
+<td><p>52.0%</p></td>
+<td><p>52.3%</p></td>
+<td><p>44.0%</p></td>
+<td><p>50.4%</p></td>
+<td><p>15.5%</p></td>
+<td><p>0.608</p></td>
+<td><p>-10.8%</p></td>
+</tr>
+<tr class="row-even"><td><p>C_price_weather_text_hgb</p></td>
+<td><p>51.4%</p></td>
+<td><p>51.7%</p></td>
+<td><p>43.0%</p></td>
+<td><p>51.4%</p></td>
+<td><p>7.8%</p></td>
+<td><p>0.399</p></td>
+<td><p>-5.2%</p></td>
+</tr>
+<tr class="row-odd"><td><p>B_price_weather_logit</p></td>
+<td><p>53.7%</p></td>
+<td><p>54.3%</p></td>
+<td><p>31.9%</p></td>
+<td><p>50.9%</p></td>
+<td><p>0.5%</p></td>
+<td><p>0.085</p></td>
+<td><p>-2.4%</p></td>
+</tr>
+<tr class="row-even"><td><p>A_price_hgb</p></td>
+<td><p>50.3%</p></td>
+<td><p>50.4%</p></td>
+<td><p>47.3%</p></td>
+<td><p>49.8%</p></td>
+<td><p>0.4%</p></td>
+<td><p>0.020</p></td>
+<td><p>-13.4%</p></td>
+</tr>
+<tr class="row-odd"><td><p>A_price_logit</p></td>
+<td><p>47.4%</p></td>
+<td><p>47.6%</p></td>
+<td><p>43.2%</p></td>
+<td><p>49.2%</p></td>
+<td><p>-3.4%</p></td>
+<td><p>-0.323</p></td>
+<td><p>-5.4%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="figures">
+<h2>Figures<a class="headerlink" href="#figures" title="Link to this heading">#</a></h2>
+<section id="final-class-distribution">
+<h3>Final Class Distribution<a class="headerlink" href="#final-class-distribution" title="Link to this heading">#</a></h3>
+<p><img alt="Final Class Distribution" src="cb/dataframes/CORN/figures/final_class_distribution.png" /></p>
+</section>
+<section id="final-strategy-sharpe">
+<h3>Final Strategy Sharpe<a class="headerlink" href="#final-strategy-sharpe" title="Link to this heading">#</a></h3>
+<p><img alt="Final Strategy Sharpe" src="cb/dataframes/CORN/figures/final_strategy_sharpe.png" /></p>
+</section>
+<section id="final-strategy-return">
+<h3>Final Strategy Return<a class="headerlink" href="#final-strategy-return" title="Link to this heading">#</a></h3>
+<p><img alt="Final Strategy Return" src="cb/dataframes/CORN/figures/final_strategy_return.png" /></p>
+</section>
+<section id="final-expected-return-cumulative">
+<h3>Final Expected Return Cumulative<a class="headerlink" href="#final-expected-return-cumulative" title="Link to this heading">#</a></h3>
+<p><img alt="Final Expected Return Cumulative" src="cb/dataframes/CORN/figures/final_expected_return_cumulative.png" /></p>
+</section>
+<section id="final-threshold-cumulative">
+<h3>Final Threshold Cumulative<a class="headerlink" href="#final-threshold-cumulative" title="Link to this heading">#</a></h3>
+<p><img alt="Final Threshold Cumulative" src="cb/dataframes/CORN/figures/final_threshold_cumulative.png" /></p>
+</section>
+<section id="final-fixed-target-confusion">
+<h3>Final Fixed Target Confusion<a class="headerlink" href="#final-fixed-target-confusion" title="Link to this heading">#</a></h3>
+<p><img alt="Final Fixed Target Confusion" src="cb/dataframes/CORN/figures/final_fixed_target_confusion.png" /></p>
+</section>
+</section>
+<section id="data-and-code-coverage">
+<h2>Data And Code Coverage<a class="headerlink" href="#data-and-code-coverage" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>rows</p></th>
+<th class="head"><p>cols</p></th>
+<th class="head"><p>first_week</p></th>
+<th class="head"><p>last_week</p></th>
+<th class="head"><p>price_features</p></th>
+<th class="head"><p>calendar_features</p></th>
+<th class="head"><p>weather_features</p></th>
+<th class="head"><p>text_features</p></th>
+<th class="head"><p>ai_features</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>802</p></td>
+<td><p>39</p></td>
+<td><p>2011-01-07</p></td>
+<td><p>2026-05-15</p></td>
+<td><p>11</p></td>
+<td><p>9</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>7</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>artifact</p></th>
+<th class="head"><p>exists</p></th>
+<th class="head"><p>rows</p></th>
+<th class="head"><p>cols</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>data/raw/prices_CORN.csv</p></td>
+<td><p>yes</p></td>
+<td><p>4014</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td><p>data/raw/usda_releases.csv</p></td>
+<td><p>yes</p></td>
+<td><p>1606</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>data/interim/weather_weekly.parquet</p></td>
+<td><p>yes</p></td>
+<td><p>802</p></td>
+<td><p>11</p></td>
+</tr>
+<tr class="row-odd"><td><p>data/interim/ai_weekly.parquet</p></td>
+<td><p>yes</p></td>
+<td><p>789</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-even"><td><p>data/processed/feature_panel.parquet</p></td>
+<td><p>yes</p></td>
+<td><p>802</p></td>
+<td><p>39</p></td>
+</tr>
+<tr class="row-odd"><td><p>reports/price_target_predictions.csv</p></td>
+<td><p>yes</p></td>
+<td><p>2800</p></td>
+<td><p>13</p></td>
+</tr>
+<tr class="row-even"><td><p>reports/expected_return_predictions.csv</p></td>
+<td><p>yes</p></td>
+<td><p>2800</p></td>
+<td><p>18</p></td>
+</tr>
+<tr class="row-odd"><td><p>reports/threshold_selection_predictions.csv</p></td>
+<td><p>yes</p></td>
+<td><p>350</p></td>
+<td><p>22</p></td>
+</tr>
+<tr class="row-even"><td><p>reports/predictions.csv</p></td>
+<td><p>yes</p></td>
+<td><p>1050</p></td>
+<td><p>19</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>area</p></th>
+<th class="head"><p>files</p></th>
+<th class="head"><p>role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Task graph</p></td>
+<td><p><a class="reference external" href="http://dodo.py">dodo.py</a></p></td>
+<td><p>Single pydoit entrypoint for data, models, reports, ChartBook, tests.</p></td>
+</tr>
+<tr class="row-odd"><td><p>CLI orchestration</p></td>
+<td><p>src/corn_forecast/cli.py</p></td>
+<td><p>Command surface used by pydoit; now reuses cached prices when available.</p></td>
+</tr>
+<tr class="row-even"><td><p>Configuration</p></td>
+<td><p>src/corn_forecast/config.py</p></td>
+<td><p>Research defaults, dates, paths, thresholds, feature-set names.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data adapters</p></td>
+<td><p>data/prices.py, data/weather.py, data/usda.py</p></td>
+<td><p>Price pulls, weather cache/demo adapter, USDA text adapter.</p></td>
+</tr>
+<tr class="row-even"><td><p>Feature panel</p></td>
+<td><p>src/corn_forecast/features.py</p></td>
+<td><p>Weekly price, calendar, weather, text, AI feature joins.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Main target test</p></td>
+<td><p>src/corn_forecast/price_target_tests.py</p></td>
+<td><p>Fixed 2 percent three-class target plus return-regression diagnostics.</p></td>
+</tr>
+<tr class="row-even"><td><p>Return strategy</p></td>
+<td><p>src/corn_forecast/expected_return_strategy.py</p></td>
+<td><p>Expected-return models, trading threshold, strategy returns.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Threshold robustness</p></td>
+<td><p>src/corn_forecast/threshold_selection.py</p></td>
+<td><p>Volatility-adjusted 3-class target selection.</p></td>
+</tr>
+<tr class="row-even"><td><p>Binary direction</p></td>
+<td><p>src/corn_forecast/models.py, <a class="reference external" href="http://strategy.py">strategy.py</a></p></td>
+<td><p>Secondary up/down classifier and trading backtest.</p></td>
+</tr>
+<tr class="row-odd"><td><p>WWCB/AI text</p></td>
+<td><p>src/corn_forecast/text/<em>.py, scripts/</em>.py</p></td>
+<td><p>PDF download/parse and GLM/mock structured AI features.</p></td>
+</tr>
+<tr class="row-even"><td><p>Report generation</p></td>
+<td><p>src/corn_forecast/reports.py, scripts/build_project_notebook.py</p></td>
+<td><p>Figures, markdown, notebook, standalone HTML.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tests</p></td>
+<td><p>tests/*.py</p></td>
+<td><p>37 tests covering adapters, features, models, targets, strategy, parser, AI features.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="problems-and-caveats">
+<h2>Problems And Caveats<a class="headerlink" href="#problems-and-caveats" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Return direction and expected return are difficult to predict reliably.</p></li>
-<li><p>Volatility becomes more predictable as the forecast horizon lengthens.</p></li>
-<li><p>Seasonality is the dominant source of predictability.</p></li>
-<li><p>AI-read USDA report scores and GDELT news scores do not consistently improve on a clean calendar-only volatility benchmark.</p></li>
+<li><p>The fixed 2 percent target is imbalanced: 119 of 175 OOS weeks are flat. Accuracy alone is not enough.</p></li>
+<li><p>Calendar seasonality does not improve the main fixed-band classifier in this run; balanced accuracy is 1.0% lower than price-only.</p></li>
+<li><p>All expected-return regressions have negative OOS R2, so trading metrics should be treated as fragile.</p></li>
+<li><p>The direct one-week volatility regressions have non-positive OOS R2 in this run.</p></li>
+<li><p>The binary direction results use a different target (<code class="docutils literal notranslate"><span class="pre">target_up_next</span></code>) and are secondary, not the main 2 percent classification result.</p></li>
+<li><p>Optional weather/text/AI data exist locally, but the main default feature sets are still <code class="docutils literal notranslate"><span class="pre">price_only</span></code> and <code class="docutils literal notranslate"><span class="pre">price_calendar</span></code>.</p></li>
+<li><p>Generated report and data outputs are ignored by git; rerun <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">--extra</span> <span class="pre">dev</span> <span class="pre">doit</span> <span class="pre">docs</span></code> before submission.</p></li>
 </ul>
-<p>The main conclusion is that for an asset strongly tied to an agricultural production cycle, <strong>knowing the crop-season window is more important than adding noisy text or news features</strong>. AI/NLP features can still be useful for qualitative interpretation, but in our current out-of-sample tests they do not beat the simpler seasonal signal.</p>
 </section>
-<section id="prediction-target">
-<h2>Prediction Target<a class="headerlink" href="#prediction-target" title="Link to this heading">#</a></h2>
-<p>The final target is forward realized volatility:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1-week volatility = abs(next weekly log return)
-4-week volatility = sqrt(sum of squared weekly returns over the next 4 weeks)
-13-week volatility = sqrt(sum of squared weekly returns over the next 13 weeks)
-</pre></div>
-</div>
-<p>The 13-week target represents the risk environment over the next quarter, not the return or volatility of only the 13th week.</p>
-</section>
-<section id="data-and-features">
-<h2>Data And Features<a class="headerlink" href="#data-and-features" title="Link to this heading">#</a></h2>
-<p>The model panel uses weekly observations from 2011-01-01 to 2026-05-15. The out-of-sample window starts after 2022-12-31 and uses expanding walk-forward validation with 13-week test windows.</p>
-<p>We tested these feature groups:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>feature group</p></th>
-<th class="head"><p>description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>price</p></td>
-<td><p>Lagged CORN returns, rolling volatility, momentum, and volume change.</p></td>
-</tr>
-<tr class="row-odd"><td><p>calendar</p></td>
-<td><p>Month, quarter, week-of-year cyclic terms, planting season, pollination risk season, harvest season, and winter storage season.</p></td>
-</tr>
-<tr class="row-even"><td><p>USDA/GLM</p></td>
-<td><p>USDA Weekly Weather and Crop Bulletin text parsed from PDFs and scored by GLM into crop-risk variables.</p></td>
-</tr>
-<tr class="row-odd"><td><p>GDELT</p></td>
-<td><p>Weekly corn-market news scores for relevance, supply risk, demand strength, ethanol/export signals, and trade policy risk.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The core tested combinations include <code class="docutils literal notranslate"><span class="pre">price_only</span></code>, <code class="docutils literal notranslate"><span class="pre">price_ai</span></code>, <code class="docutils literal notranslate"><span class="pre">price_gdelt</span></code>, <code class="docutils literal notranslate"><span class="pre">price_ai_gdelt</span></code>, <code class="docutils literal notranslate"><span class="pre">price_calendar</span></code>, <code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code>, <code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code>, and <code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code>. We also ran a clean seasonality benchmark comparing <code class="docutils literal notranslate"><span class="pre">calendar_only</span></code> against <code class="docutils literal notranslate"><span class="pre">calendar_ai_gdelt</span></code>.</p>
-</section>
-<section id="main-volatility-results">
-<h2>Main Volatility Results<a class="headerlink" href="#main-volatility-results" title="Link to this heading">#</a></h2>
-<p>The best official volatility runs by horizon are:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>horizon</p></th>
-<th class="head"><p>best run</p></th>
-<th class="head text-right"><p>R2</p></th>
-<th class="head text-right"><p>Spearman</p></th>
-<th class="head text-right"><p>high-vol balanced accuracy</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1 week</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code> + HGB</p></td>
-<td class="text-right"><p>0.083</p></td>
-<td class="text-right"><p>0.211</p></td>
-<td class="text-right"><p>58.3%</p></td>
-</tr>
-<tr class="row-odd"><td><p>4 weeks</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code> + Ridge</p></td>
-<td class="text-right"><p>0.233</p></td>
-<td class="text-right"><p>0.420</p></td>
-<td class="text-right"><p>68.6%</p></td>
-</tr>
-<tr class="row-even"><td><p>13 weeks</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code> + HGB</p></td>
-<td class="text-right"><p>0.266</p></td>
-<td class="text-right"><p>0.687</p></td>
-<td class="text-right"><p>69.9%</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The result improves as the horizon moves from one week to multi-week windows. This supports the idea that agricultural information is more useful for forecasting the width of the return distribution over a crop-risk window than for predicting next week’s direction.</p>
-</section>
-<section id="seasonality-benchmark">
-<h2>Seasonality Benchmark<a class="headerlink" href="#seasonality-benchmark" title="Link to this heading">#</a></h2>
-<p>To test whether AI and news features add value beyond seasonality, we ran a clean benchmark with no price variables:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>horizon</p></th>
-<th class="head text-right"><p>best <code class="docutils literal notranslate"><span class="pre">calendar_only</span></code> R2</p></th>
-<th class="head text-right"><p>best <code class="docutils literal notranslate"><span class="pre">calendar_ai_gdelt</span></code> R2</p></th>
-<th class="head"><p>conclusion</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1 week</p></td>
-<td class="text-right"><p>0.072</p></td>
-<td class="text-right"><p>0.015</p></td>
-<td><p>Calendar is better.</p></td>
-</tr>
-<tr class="row-odd"><td><p>4 weeks</p></td>
-<td class="text-right"><p>0.252</p></td>
-<td class="text-right"><p>0.088</p></td>
-<td><p>Calendar is much better.</p></td>
-</tr>
-<tr class="row-even"><td><p>13 weeks</p></td>
-<td class="text-right"><p>0.205</p></td>
-<td class="text-right"><p>0.078</p></td>
-<td><p>Calendar is much better.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>High-volatility classification shows the same pattern:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>horizon</p></th>
-<th class="head text-right"><p>best <code class="docutils literal notranslate"><span class="pre">calendar_only</span></code> high-vol balanced accuracy</p></th>
-<th class="head text-right"><p>best <code class="docutils literal notranslate"><span class="pre">calendar_ai_gdelt</span></code> high-vol balanced accuracy</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1 week</p></td>
-<td class="text-right"><p>58.7%</p></td>
-<td class="text-right"><p>59.5%</p></td>
-</tr>
-<tr class="row-odd"><td><p>4 weeks</p></td>
-<td class="text-right"><p>81.9%</p></td>
-<td class="text-right"><p>74.5%</p></td>
-</tr>
-<tr class="row-even"><td><p>13 weeks</p></td>
-<td class="text-right"><p>81.2%</p></td>
-<td class="text-right"><p>73.2%</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The clean benchmark changes the interpretation of the project. AI-read USDA scores and GDELT news scores are not a stable improvement over the crop calendar. The dominant signal is the seasonal structure itself.</p>
-</section>
-<section id="is-high-volatility-always-in-the-same-season">
-<h2>Is High Volatility Always In The Same Season?<a class="headerlink" href="#is-high-volatility-always-in-the-same-season" title="Link to this heading">#</a></h2>
-<p>High volatility is strongly seasonal, but not identical every year.</p>
-<p>Average 13-week realized volatility by crop-season window:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>starting period</p></th>
-<th class="head text-right"><p>mean 13-week volatility</p></th>
-<th class="head text-right"><p>high-vol rate</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>planting</p></td>
-<td class="text-right"><p>0.137</p></td>
-<td class="text-right"><p>67.2%</p></td>
-</tr>
-<tr class="row-odd"><td><p>other</p></td>
-<td class="text-right"><p>0.109</p></td>
-<td class="text-right"><p>41.8%</p></td>
-</tr>
-<tr class="row-even"><td><p>pollination/weather-risk</p></td>
-<td class="text-right"><p>0.097</p></td>
-<td class="text-right"><p>32.0%</p></td>
-</tr>
-<tr class="row-odd"><td><p>winter storage</p></td>
-<td class="text-right"><p>0.087</p></td>
-<td class="text-right"><p>19.6%</p></td>
-</tr>
-<tr class="row-even"><td><p>harvest</p></td>
-<td class="text-right"><p>0.069</p></td>
-<td class="text-right"><p>9.7%</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Average 13-week realized volatility by calendar quarter:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>starting quarter</p></th>
-<th class="head text-right"><p>mean 13-week volatility</p></th>
-<th class="head text-right"><p>high-vol rate</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Q1</p></td>
-<td class="text-right"><p>0.097</p></td>
-<td class="text-right"><p>28.5%</p></td>
-</tr>
-<tr class="row-odd"><td><p>Q2</p></td>
-<td class="text-right"><p>0.133</p></td>
-<td class="text-right"><p>66.2%</p></td>
-</tr>
-<tr class="row-even"><td><p>Q3</p></td>
-<td class="text-right"><p>0.079</p></td>
-<td class="text-right"><p>13.6%</p></td>
-</tr>
-<tr class="row-odd"><td><p>Q4</p></td>
-<td class="text-right"><p>0.072</p></td>
-<td class="text-right"><p>12.2%</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Planting and Q2 are the most common high-volatility windows, but there are exceptions. For example, 2020 had stronger high-volatility concentration around harvest, while 2021 had more high-volatility weeks around winter storage. This means seasonality is not a perfect deterministic rule, but it is the strongest and most stable predictor in our tests.</p>
-</section>
-<section id="why-ai-and-news-features-may-underperform">
-<h2>Why AI And News Features May Underperform<a class="headerlink" href="#why-ai-and-news-features-may-underperform" title="Link to this heading">#</a></h2>
-<p>Several mechanisms could explain why GLM/GDELT features reduce performance relative to the calendar-only benchmark:</p>
-<ol class="arabic simple">
-<li><p><strong>Seasonality already captures the main base rate.</strong> CORN volatility is heavily driven by the agricultural production cycle. Once the model knows the crop window, additional text signals may add limited incremental information.</p></li>
-<li><p><strong>Text features are noisy relative to the target.</strong> USDA reports and GDELT news can describe important conditions, but converting narrative text into weekly numeric scores introduces measurement error.</p></li>
-<li><p><strong>Small out-of-sample sample size.</strong> The post-2022 test window has limited crisis and crop-shock examples. Flexible models can overfit rare text/news patterns that do not repeat.</p></li>
-<li><p><strong>GDELT may measure attention as much as fundamentals.</strong> News intensity can rise after prices already move, or around broad market stories that are not specific enough to improve CORN volatility forecasts.</p></li>
-<li><p><strong>AI scores can be collinear with season.</strong> Planting delay, heat stress, harvest delay, and yield risk naturally occur in specific crop windows. If these features mostly restate the calendar with noise, the model can become less stable.</p></li>
-<li><p><strong>Timing alignment is difficult.</strong> Weekly aggregation may blur whether a report or news item was available before the market repriced the risk.</p></li>
-</ol>
-<p>These explanations do not mean AI is useless. They mean that in this project, the most robust quantitative signal is seasonal timing, while AI/NLP features are better treated as qualitative context or candidate features for future refinement.</p>
-</section>
-<section id="direction-and-return-experiments">
-<h2>Direction And Return Experiments<a class="headerlink" href="#direction-and-return-experiments" title="Link to this heading">#</a></h2>
-<p>We also tested direction classification and expected-return prediction. They are not the final target because performance is weaker and less stable.</p>
-<p>Best direction results:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>horizon</p></th>
-<th class="head"><p>best input set</p></th>
-<th class="head text-right"><p>balanced accuracy</p></th>
-<th class="head text-right"><p>macro F1</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>1 week</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
-<td class="text-right"><p>32.6%</p></td>
-<td class="text-right"><p>32.6%</p></td>
-</tr>
-<tr class="row-odd"><td><p>4 weeks</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
-<td class="text-right"><p>46.0%</p></td>
-<td class="text-right"><p>44.8%</p></td>
-</tr>
-<tr class="row-even"><td><p>13 weeks</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
-<td class="text-right"><p>46.6%</p></td>
-<td class="text-right"><p>44.8%</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Best one-week expected-return trading result:</p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>best run</p></th>
-<th class="head text-right"><p>strategy return</p></th>
-<th class="head text-right"><p>Sharpe</p></th>
-<th class="head text-right"><p>R2</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code> + HGB</p></td>
-<td class="text-right"><p>18.3%</p></td>
-<td class="text-right"><p>0.481</p></td>
-<td class="text-right"><p>-0.028</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The expected-return R2 remains negative, so we do not present return forecasting as the main empirical success.</p>
-</section>
-<section id="investment-interpretation">
-<h2>Investment Interpretation<a class="headerlink" href="#investment-interpretation" title="Link to this heading">#</a></h2>
-<p>Volatility prediction does not tell an investor whether to buy or sell CORN. Its value is as a risk overlay:</p>
-<ul class="simple">
-<li><p>Reduce position size when predicted volatility is high.</p></li>
-<li><p>Require stronger return signals before trading in high-risk seasonal windows.</p></li>
-<li><p>Use high-volatility forecasts to inform hedging or options-related decisions.</p></li>
-<li><p>Recognize that CORN risk is structurally higher in parts of the crop cycle.</p></li>
-</ul>
-<p>The final investment lesson is:</p>
-<blockquote>
-<div><p>For seasonally driven assets, the calendar itself can be more informative than complex AI-read news features. A simple seasonal risk model may be more robust than a larger model that adds noisy text signals.</p>
-</div></blockquote>
-</section>
-<section id="ai-usage">
-<h2>AI Usage<a class="headerlink" href="#ai-usage" title="Link to this heading">#</a></h2>
-<p>Human team members made the main research decisions, including choosing the prediction target, defining feature groups, interpreting the economic meaning of the results, and deciding which findings should be emphasized.</p>
-<p>Claude Code and Codex were used as coding assistants to batch-run experiments, integrate feature files, regenerate model outputs, update ChartBook pages, and draft reproducible write-ups from the experiment results.</p>
-</section>
-<section id="reproducibility">
-<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
-<p>Core commands:</p>
+<section id="reproducibility-commands">
+<h2>Reproducibility Commands<a class="headerlink" href="#reproducibility-commands" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>sync<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>--extra<span class="w"> </span>docs
-uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>doit<span class="w"> </span>fetch_prices<span class="w"> </span>build_features
-<span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>scripts/run_horizon_robustness.py
-uv<span class="w"> </span>run<span class="w"> </span>pytest
-</pre></div>
-</div>
-<p>ChartBook build:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>docs<span class="w"> </span>chartbook<span class="w"> </span>build<span class="w"> </span>reports/chartbook<span class="w"> </span>-f<span class="w"> </span>--project-dir<span class="w"> </span>.
-<span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>scripts/fix_chartbook_assets.py
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>doit<span class="w"> </span>research
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>doit<span class="w"> </span>docs
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>doit<span class="w"> </span>tests
 </pre></div>
 </div>
 </section>
@@ -793,7 +1543,7 @@ $ trade_policy_risk          &lt;f64&gt; 0.015873015873015872
 <td><p>N/A</p></td>
 </tr>
 <tr class="row-odd"><td><p>Dataframe Path</p></td>
-<td><p>/private/tmp/FINM_33200_Group_8_three_inputs/data/interim/gdelt_weekly_scores.parquet</p></td>
+<td><p>/Users/Haruki/Library/Mobile Documents/com~apple~CloudDocs/Python/AIF/final/FINM_33200_Group_8/data/interim/gdelt_weekly_scores.parquet</p></td>
 </tr>
 </tbody>
 </table>
@@ -825,10 +1575,10 @@ $ trade_policy_risk          &lt;f64&gt; 0.015873015873015872
 <td><p>local</p></td>
 </tr>
 <tr class="row-even"><td><p>Pipeline Web Page</p></td>
-<td><p><a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page</p></td>
+<td><p><a href="file:///Users/Haruki/Library/Mobile Documents/com~apple~CloudDocs/Python/AIF/final/FINM_33200_Group_8/docs/index.html">Pipeline Web Page</p></td>
 </tr>
 <tr class="row-odd"><td><p>Date of Last Code Update</p></td>
-<td><p>2026-05-27 23:19:14</p></td>
+<td><p>2026-05-28 00:30:21</p></td>
 </tr>
 <tr class="row-even"><td><p>OS Compatibility</p></td>
 <td><p></p></td>
@@ -892,18 +1642,29 @@ $ trade_policy_risk          &lt;f64&gt; 0.015873015873015872
   <nav class="bd-toc-nav page-toc">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#final-write-up-corn-etf-volatility-forecasting">Final Write-up: CORN ETF Volatility Forecasting</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#final-report-corn-etf-trading-signal-pipeline">Final Report: CORN ETF Trading Signal Pipeline</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-open">How To Open</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary">Executive Summary</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-target">Prediction Target</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-and-features">Data And Features</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-volatility-results">Main Volatility Results</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seasonality-benchmark">Seasonality Benchmark</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#is-high-volatility-always-in-the-same-season">Is High Volatility Always In The Same Season?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-ai-and-news-features-may-underperform">Why AI And News Features May Underperform</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#direction-and-return-experiments">Direction And Return Experiments</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#investment-interpretation">Investment Interpretation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-usage">AI Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-architecture-and-file-directory">Project Architecture And File Directory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-outputs-generated">Workflow Outputs Generated</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strategy-ranking-snapshot">Strategy Ranking Snapshot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-result-fixed-2-percent-three-class-target">Main Result: Fixed 2 Percent Three-Class Target</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#direct-volatility-forecast">Direct Volatility Forecast</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#auxiliary-expected-return-strategy">Auxiliary Expected-Return Strategy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-adjusted-threshold-check">Volatility-Adjusted Threshold Check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secondary-binary-direction-pipeline">Secondary Binary Direction Pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures">Figures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-class-distribution">Final Class Distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-strategy-sharpe">Final Strategy Sharpe</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-strategy-return">Final Strategy Return</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-expected-return-cumulative">Final Expected Return Cumulative</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-threshold-cumulative">Final Threshold Cumulative</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-fixed-target-confusion">Final Fixed Target Confusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-and-code-coverage">Data And Code Coverage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problems-and-caveats">Problems And Caveats</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-commands">Reproducibility Commands</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-glimpse">DataFrame Glimpse</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-manifest">Dataframe Manifest</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-manifest">Pipeline Manifest</a></li>

@@ -58,7 +58,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Three Input Pipeline Results" href="three_input_results.html" />
-    <link rel="prev" title="Final Write-up: CORN ETF Volatility Forecasting" href="final_report.html" /> 
+    <link rel="prev" title="Final Report: CORN ETF Trading Signal Pipeline" href="final_report.html" /> 
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -219,7 +219,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="workflow.html">CORN ETF Trading Signal Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="final_report.html">Final Write-up: CORN ETF Volatility Forecasting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="final_report.html">Final Report: CORN ETF Trading Signal Pipeline</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
@@ -407,7 +407,10 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#return-strategy">Return Strategy</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#select-threshold">Select Threshold</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-evaluate">Train Evaluate</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility">Volatility</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wwcb-ai-features">Wwcb Ai Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wwcb-ai-features-mock">Wwcb Ai Features Mock</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wwcb-parse">Wwcb Parse</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-weekly-parquet">ai_weekly.parquet</a><ul class="nav section-nav flex-column">
@@ -422,40 +425,51 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Numeric Column Statistics</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-panel-parquet">feature_panel.parquet</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wwcb-core-text-parquet">wwcb_core_text.parquet</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Columns</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Numeric Column Statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-panel-parquet">feature_panel.parquet</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prices-corn-csv">prices_CORN.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-return-predictions-csv">expected_return_predictions.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predictions-csv">predictions.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#price-target-predictions-csv">price_target_predictions.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#threshold-selection-predictions-csv">threshold_selection_predictions.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Numeric Column Statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-predictions-csv">volatility_predictions.csv</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Numeric Column Statistics</a></li>
 </ul>
 </li>
 </ul>
@@ -470,8 +484,8 @@
                 <article class="bd-article">
                    <section class="tex2jax_ignore mathjax_ignore" id="data-glimpses-report">
 <h1>Data Glimpses Report<a class="headerlink" href="#data-glimpses-report" title="Link to this heading">#</a></h1>
-<p>Generated: 2026-05-26 16:53:15
-Total files: 8</p>
+<p>Generated: 2026-05-28 00:30:21
+Total files: 10</p>
 <section id="summary-of-datasets-by-task">
 <h2>Summary of Datasets by Task<a class="headerlink" href="#summary-of-datasets-by-task" title="Link to this heading">#</a></h2>
 <section id="build-features">
@@ -515,11 +529,31 @@ Total files: 8</p>
 <li><p><a class="reference internal" href="#predictions-csv"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">predictions.csv</span></code></span></a></p></li>
 </ul>
 </section>
+<section id="volatility">
+<h3>Volatility<a class="headerlink" href="#volatility" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#prices-corn-csv"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">prices_CORN.csv</span></code></span></a></p></li>
+<li><p><a class="reference internal" href="#volatility-predictions-csv"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">volatility_predictions.csv</span></code></span></a></p></li>
+</ul>
+</section>
 <section id="wwcb-ai-features">
 <h3>Wwcb Ai Features<a class="headerlink" href="#wwcb-ai-features" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="#ai-weekly-parquet"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">ai_weekly.parquet</span></code></span></a></p></li>
 <li><p><a class="reference internal" href="#ai-wwcb-raw-parquet"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">ai_wwcb_raw.parquet</span></code></span></a></p></li>
+<li><p><a class="reference internal" href="#wwcb-core-text-parquet"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">wwcb_core_text.parquet</span></code></span></a></p></li>
+</ul>
+</section>
+<section id="wwcb-ai-features-mock">
+<h3>Wwcb Ai Features Mock<a class="headerlink" href="#wwcb-ai-features-mock" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#wwcb-core-text-parquet"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">wwcb_core_text.parquet</span></code></span></a></p></li>
+</ul>
+</section>
+<section id="wwcb-parse">
+<h3>Wwcb Parse<a class="headerlink" href="#wwcb-parse" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#wwcb-core-text-parquet"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">wwcb_core_text.parquet</span></code></span></a></p></li>
 </ul>
 </section>
 </section>
@@ -631,12 +665,48 @@ $ glm_total_tokens                 &lt;i64&gt; 560, 560, 560, 560, 560
 </section>
 </section>
 <hr class="docutils" />
+<section id="wwcb-core-text-parquet">
+<h2>wwcb_core_text.parquet<a class="headerlink" href="#wwcb-core-text-parquet" title="Link to this heading">#</a></h2>
+<p><strong>Path:</strong> <code class="docutils literal notranslate"><span class="pre">data/interim/wwcb_core_text.parquet</span></code>
+<strong>Size:</strong> 3.0 MB | <strong>Type:</strong> Parquet | <strong>Shape:</strong> 806 rows × 9 columns</p>
+<section id="id4">
+<h3>Columns<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source_file</span>                              <span class="n">String</span>         
+<span class="n">report_date</span>                              <span class="n">String</span>         
+<span class="n">week_ending</span>                              <span class="n">String</span>         
+<span class="n">week</span>                                     <span class="n">String</span>         
+<span class="n">weather_highlights</span>                       <span class="n">String</span>         
+<span class="n">national_ag_summary</span>                      <span class="n">String</span>         
+<span class="n">corn_section</span>                             <span class="n">String</span>         
+<span class="n">corn_table_text</span>                          <span class="n">String</span>         
+<span class="n">report_text</span>                              <span class="n">String</span>         
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 806
+Columns: 9
+$ source_file         &lt;str&gt; &#39;data/external/wwcb_pdfs/weather_weekly-01-02-2013.pdf&#39;, &#39;data/external/wwcb_pdfs/weather_weekly-01-03-2018.pdf&#39;, &#39;data/external/wwcb_pdfs/weather_weekly-01-04-2017.pdf&#39;, &#39;data/external/wwcb_pdfs/weather_weekly-01-05-2011.pdf&#39;, &#39;data/external/wwcb_pdfs/weather_weekly-01-05-2012.pdf&#39;
+$ report_date         &lt;str&gt; &#39;2013-01-02&#39;, &#39;2018-01-03&#39;, &#39;2017-01-04&#39;, &#39;2011-01-04&#39;, &#39;2012-01-05&#39;
+$ week_ending         &lt;str&gt; &#39;2012-12-29&#39;, &#39;2017-12-30&#39;, &#39;2016-12-31&#39;, &#39;2010-12-25&#39;, &#39;2011-12-31&#39;
+$ week                &lt;str&gt; &#39;2013-01-04&#39;, &#39;2018-01-05&#39;, &#39;2017-01-06&#39;, &#39;2011-01-07&#39;, &#39;2012-01-06&#39;
+$ weather_highlights  &lt;str&gt; &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;
+$ national_ag_summary &lt;str&gt; &#39;&#39;, &#39;During the last week of 2017, frigid weather blanketed Temperatures east of the Rockies were below\nthe northern part of the nation, particularly along the average, while many Western States were warmer\nCanadian border. Temperatures in Montana, which than normal. Most of the nation was fairly dry during\nhad been warmer than average for most of the week, with snow reported in the North and rain\nDecember, plunged well below zero at month’s end. falling along the Gulf and Southern Atlantic Coasts.\n\nCalifornia: As the end of the year approached, much of the Florida: There were 6.5 days suitable for fieldwork for the\nstate was subject to warmer-than-average afternoon week ending Sunday, December 31, 2017. Precipitation\ntemperatures, while evening temperatures were seasonal. estimates ranged from no rain in multiple locations to 1.23\nAlong the northern coast, occasional light rain appeared at the inches in Miami-Dade County. The average mean temperature\nstart of the week before giving way to high pressure aloft. ranged from 43.4°F in Leon County to 75.2°F in Monroe\nHigh pressure dominated the central interior region throughout County. Some cover crops, such as millet and rye, were\nthe week. Hazy conditions existed most nights. In the south, planted in Dixie and Volusia Counties. Sugarcane harvest was\nthe beginning of the week brought high clouds and mist or ongoing in Glades and Hendry Counties. Temperatures were\nhaze. Conditions dried out as high pressure strengthened aloft, variable in the citrus region last week as cooler weather began\nfollowed by a warming trend over the region. At the end of to enter the peninsula. Lows were in the 50s and upper 40s,\nthe week, high broke down and moved northward, allowing for while highs ranged from the mid-60s to a maximum of 80°F,\nsome regional cooling. Fields that were planted earlier in the as reported in DeSoto County. No significant rainfall was\nseason had signs of good growth, though most fields were recorded during the week. Grove operations included\nirrigated due to the lack of rain to maintain growth. Planting fertilizing, mowing, topping and hedging, spraying, and\nwas ongoing for wheat, other cereal grains, and forage. harvesting. All growers irrigated regularly due to the drier-\nPruning continued in stone fruit orchards and vineyards, while than-normal weather. Field staff reported more instances of\nsome older, poorly producing orchards and vineyards were sporadic bloom, especially in Navel orange groves.\nremoved and prepared for replanting. Some growers prepared Tangerines and tangelos being harvested for the fresh market\nto apply winter dormant sprays. The Navel orange and pomelo included midseason cultivars (Autumn Honey, Orri, Osceola,\nharvests continued, but overnight temperatures were a concern Robinson and Tango tangerines, and Orlando tangelos were\nfor citrus growers. Olive growers continued to prune groves the main varieties at the packinghouses). Early orange harvest\nand strawberry fields thrived. Pruning continued in nut for the fresh market was mostly Hamlins and Navels.\norchards, while some older orchards were pushed out and the Persistently dry conditions caused continued irrigation in Palm\nground was prepped for planting. Fields were being prepared Beach County. Foggy conditions persisted in several southern\nand planted with winter vegetable crops, while lettuce counties, increasing disease pressures in some vegetable crops.\ncontinued to grow well. In already-planted winter vegetable Growers continued to plant cool season crops and were\nfields, crops continued to develop. Work continued preparing harvesting a wide variety of crops, including avocado, beans,\ntomato beds and planting onions. Brussels sprouts were eggplant, herbs, peppers, radishes, squash, sweet corn,\nharvested in San Mateo County. In Tulare County, the lack of tomatoes, and zucchini. Hard freezes in Holmes County had\nrainfall has left rangeland forage conditions poor. More rain winter grazing at a standstill. In Washington County, forages\nwas needed for germination and growth of rangeland forage. were beginning to improve as moisture conditions remained\nSupplemental feeding was ongoing. Sheep were grazing on favorable. Pasture quality continued to decline as a result of\nidle cropland, stubble fields, and dormant alfalfa fields. Honey cold weather. Producers in several counties were feeding\nbees were moved into almond orchards in preparation for supplements as necessary. Cattle remained in mostly good\nbloom. condition throughout the state.&#39;, &#39;Most of the nation experienced above-average 0°F in large sections of the Rocky Mountains and\ntemperatures, with the southern Great Plains the Great Basin. Precipitation totaled less than 2\nand lower Mississippi Valley recording inches in most locations, with the most notable\ntemperatures more than 10°F above normal. In exception being the central Gulf Coast, where in\ncontrast, the Northwest had below-average some areas rainfall totaled more than 4.5 inches\ntemperatures, with temperatures dipping below above normal weekly values.\n\nArizona: Barley and Durum wheat planting was well underway by level of the ground allowed. Winter wheat continued to progress\nthe end of the week. Barley planting was 25 percent complete, well due to adequate soil moisture. Post-harvest pruning and\ncompared to 29 percent last year and 49 percent for the 5-year orchard removal continued in all deciduous tree fruit orchards and\naverage. Durum wheat planting was estimated at 22 percent vineyards. Wet weather slowed citrus harvest. Navel and Mandarin\ncomplete, 8 percentage points ahead of last year. Alfalfa conditions oranges were harvested and exported. Melogold grapefruit, lemons,\nwere rated mostly good to excellent, depending on location, with and limes were exported. New planting of citrus trees were covered\nharvesting taking place on almost three-quarters of the state’s alfalfa for frost protection. Almonds, pistachios, shelled and in-shell\nacreage. Central Arizona growers shipped anise, beets, broccoli, walnuts, and shelled pecans continued to be packed and shipped.\ncabbage (green and red), carrots, cauliflower, cilantro, kale greens, Nut orchards continued to be pruned, irrigated, and treated in\ngreen onions, parsley, and Swiss chard. In western Arizona, growers preparation for their dormant season. Orchard replanting continued.\nshipped anise, arugula, bok choy, broccoli, cabbage (green and red), In San Joaquin County, winter farmers’ market vegetables were\ncauliflower, celery, Chinese cabbage, cilantro, endive, escarole, harvested. In Fresno County, winter vegetables were in good\nfrisee, kale greens, lettuce (Boston, green leaf, iceberg, red leaf, condition. Irrigation was not needed due to the rainy weather. With\nromaine and other), parsley, radicchio, and spinach. Beneficial rains snow covering higher rangeland, more cattle were in valley pastures\ncontinued last week in Coconino and Yavapai Counties, where soil and most were being fed supplemental hay. Also in Fresno County,\nmoisture levels were reported as high and water tanks were nearly full supplemental feeding of livestock continued as new germination of\nor completely full. Wheat planting was delayed in Graham County rangeland grasses improved from recent rains. Sheep were grazing\naccording to respondents, due to cold and wet weather. For the on idle crop fields, dormant alfalfa, and stubble crop grounds.\nsecond week in a row, every weather station reported some\nmeasurable precipitation. Douglas reported the least at 0.07 inch, Florida: There were 6.4 days suitable for fieldwork. Precipitation\nwhile Payson reported the most at 1.71 inches. All but 12 of the estimates ranged from no rain in several locations including Apopka\n52 weather stations reported above-normal temperatures. The highest (Orange County), Dade City (Pasco County), and Sebring\ntemperature was 78°F at Buckeye; the lowest was 0°F at Flagstaff. (Highlands County) to 7.74 inches in DeFuniak Springs\n(Walton County). Average temperatures ranged from 60.6°F in\nCalifornia: Rainfall was limited to the far northwestern mountains Macclenny (Baker County) to 73.2°F in Ft. Lauderdale\non Monday, where over an inch of rain fell. Tuesday and (Broward County). Although rain fell during the week across many\nWednesday were fairly dry, but the Pineapple Express began on parts of the state, most farms remain in drought or abnormally dry.\nThursday evening affecting areas from Salinas to Los Angeles with In the citrus-growing region, temperatures were warmer than\nlight rain. Friday and Saturday saw moderate to heavy rain across average for the first part of the week. Daily highs were in the mid\nthe southern one-third of the state, with the highest totals (over to upper 80s on most afternoons. A front passing through the center\n2 inches) in and around Bakersfield. The deserts received around an of the state late Thursday lowered temperature about 20°F, but did\ninch of rain, while other locations in the southern valley saw up to not bring much rain. Canals and ditches remained at low levels due\nan inch. Upslope showers also affected the central Sierras, where of the lack of widespread rain over the past couple of months.\nup to one-half of an inch of rain fell. On Sunday, the main rainfall Growers were irrigating frequently to keep moisture in the ground\narea shifted to the northern half of the state, where most locations and on the trees. Early tangerine harvest (Fallglo and Sunburst) was\nsaw up to one-quarter inch of rain, but the northwestern mountains about over for the season. Early and mid-season oranges were still\nand windward slopes of the Sierras saw just over one-half inch. being harvested for the fresh market. Grapefruit harvest was in full\nTemperatures at higher elevations in the central and southern swing, with internal quality holding well. All processing plants\nSierras were low enough to result in snow. Up to 10 inches of new were open and accepting field-run fruit. Growers continued to\nsnow fell at high elevations, particularly at Mt. Whitney. Up to spray in order to lower the psyllid population. Primarily, growers\n6 inches fell just south of Tahoe. However, mild weather resulted were performing general grove maintenance in well-kept groves.\nin a decrease of the mountain snowpack, as meltwater runoff Strawberry harvesting activities were reported during the week in\nincreased. High temperatures were in the 30s to 50s in the Hillsborough County. Greens, cabbage, and broccoli were being\nmountains, 40s to 50s along the coast and in the valley, and 50s to planted in Bradford County. Spring watermelons continued to be\n70s in the desert. Low temperatures were between the 0s and 30s in planted in several counties. Crops coming to market included\nthe mountains; 20s to 40s in the desert; and 30s to 40s in the coast avocado, beets, bitter melon, boniato, collards, eggplant, green\nand valley. On Monday and Tuesday temperatures fell into the 20s beans, kale, malanga, pepper, squash, sweet corn, tomato, zucchini,\nwith widespread hard freezes across the agricultural areas of the and other tropical fruits. Cattle condition remained mostly fair to\nvalley, and subzero temperatures in the mountains. Field good despite persistently dry conditions and deteriorating pasture\npreparation for winter forage crops continued where the moisture quality. Many cattle operators were using supplemental feeding.&#39;, &#39;&#39;, &#39;&#39;
+$ corn_section        &lt;str&gt; &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;
+$ corn_table_text     &lt;str&gt; &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;
+$ report_text         &lt;str&gt; &#39;[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]&#39;, &#39;[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]&#39;, &#39;[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]&#39;, &#39;[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]&#39;, &#39;[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]&#39;
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
 <section id="feature-panel-parquet">
 <h2>feature_panel.parquet<a class="headerlink" href="#feature-panel-parquet" title="Link to this heading">#</a></h2>
 <p><strong>Path:</strong> <code class="docutils literal notranslate"><span class="pre">data/processed/feature_panel.parquet</span></code>
-<strong>Size:</strong> 210890 bytes | <strong>Type:</strong> Parquet | <strong>Shape:</strong> 802 rows × 52 columns</p>
-<section id="id4">
-<h3>Columns<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<strong>Size:</strong> 162923 bytes | <strong>Type:</strong> Parquet | <strong>Shape:</strong> 802 rows × 39 columns</p>
+<section id="id6">
+<h3>Columns<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">close</span>                                    <span class="n">Float64</span>        
 <span class="n">volume</span>                                   <span class="n">Int64</span>          
 <span class="n">week</span>                                     <span class="n">Datetime</span><span class="p">(</span><span class="n">time_unit</span><span class="o">=</span><span class="s1">&#39;us&#39;</span><span class="p">,</span> <span class="n">time_zone</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -662,26 +732,7 @@ $ glm_total_tokens                 &lt;i64&gt; 560, 560, 560, 560, 560
 <span class="n">calendar_is_pollination_weather_season</span>   <span class="n">Int64</span>          
 <span class="n">calendar_is_harvest_season</span>               <span class="n">Int64</span>          
 <span class="n">calendar_is_winter_storage_season</span>        <span class="n">Int64</span>          
-<span class="n">weather_temp_mean_f</span>                      <span class="n">Float64</span>        
-<span class="n">weather_precip_mm</span>                        <span class="n">Float64</span>        
-<span class="n">weather_gdd</span>                              <span class="n">Float64</span>        
-<span class="n">weather_temp_anomaly_f</span>                   <span class="n">Float64</span>        
-<span class="n">weather_precip_anomaly_mm</span>                <span class="n">Float64</span>        
-<span class="n">weather_forecast_temp_week1_f</span>            <span class="n">Float64</span>        
-<span class="n">weather_forecast_precip_week1_mm</span>         <span class="n">Float64</span>        
-<span class="n">weather_forecast_temp_week2_f</span>            <span class="n">Float64</span>        
-<span class="n">weather_forecast_precip_week2_mm</span>         <span class="n">Float64</span>        
-<span class="n">weather_year</span>                             <span class="n">Int32</span>          
 <span class="n">report_text</span>                              <span class="n">String</span>         
-<span class="n">report_count</span>                             <span class="n">Int64</span>          
-<span class="n">text_kw_drought</span>                          <span class="n">Int64</span>          
-<span class="n">text_kw_rain</span>                             <span class="n">Int64</span>          
-<span class="n">text_kw_heat</span>                             <span class="n">Int64</span>          
-<span class="n">text_kw_planting</span>                         <span class="n">Int64</span>          
-<span class="n">text_kw_harvest</span>                          <span class="n">Int64</span>          
-<span class="n">text_kw_yield</span>                            <span class="n">Int64</span>          
-<span class="n">text_kw_export</span>                           <span class="n">Int64</span>          
-<span class="n">text_kw_ethanol</span>                          <span class="n">Int64</span>          
 <span class="n">ai_moisture_stress</span>                       <span class="n">Float64</span>         <span class="p">(</span><span class="mf">1.6</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
 <span class="n">ai_heat_stress</span>                           <span class="n">Float64</span>         <span class="p">(</span><span class="mf">1.6</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
 <span class="n">ai_excess_rain_risk</span>                      <span class="n">Float64</span>         <span class="p">(</span><span class="mf">1.6</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
@@ -689,29 +740,35 @@ $ glm_total_tokens                 &lt;i64&gt; 560, 560, 560, 560, 560
 <span class="n">ai_harvest_delay_risk</span>                    <span class="n">Float64</span>         <span class="p">(</span><span class="mf">1.6</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
 <span class="n">ai_yield_risk</span>                            <span class="n">Float64</span>         <span class="p">(</span><span class="mf">1.6</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
 <span class="n">ai_crop_condition_trend</span>                  <span class="n">Float64</span>         <span class="p">(</span><span class="mf">1.6</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
+<span class="n">gdelt_relevance_score</span>                    <span class="n">Float64</span>         <span class="p">(</span><span class="mf">28.1</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
+<span class="n">gdelt_yield_supply_risk</span>                  <span class="n">Float64</span>         <span class="p">(</span><span class="mf">28.1</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
+<span class="n">gdelt_inventory_supply_tightness</span>         <span class="n">Float64</span>         <span class="p">(</span><span class="mf">28.1</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
+<span class="n">gdelt_demand_strength</span>                    <span class="n">Float64</span>         <span class="p">(</span><span class="mf">28.1</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
+<span class="n">gdelt_ethanol_export_signal</span>              <span class="n">Float64</span>         <span class="p">(</span><span class="mf">28.1</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
+<span class="n">gdelt_trade_policy_risk</span>                  <span class="n">Float64</span>         <span class="p">(</span><span class="mf">28.1</span><span class="o">%</span> <span class="n">null</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="id5">
-<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<section id="id7">
+<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 802
-Columns: 52
-$ close                                           &lt;f64&gt; 22.45616321018651, 22.33453974462214, 22.392190003077836, 21.75809667646509, 22.178868211016503
-$ volume                                          &lt;i64&gt; 1073599, 1135960, 1120464, 1217645, 1219154
+Columns: 39
+$ close                                           &lt;f64&gt; 37.43000030517578, 40.22999954223633, 40.70000076293945, 40.099998474121094, 42.150001525878906
+$ volume                                          &lt;i64&gt; 443900, 657300, 371200, 310100, 420000
 $ week                                   &lt;datetime[μs]&gt; 2011-01-07 00:00:00, 2011-01-14 00:00:00, 2011-01-21 00:00:00, 2011-01-28 00:00:00, 2011-02-04 00:00:00
-$ price_log_close                                 &lt;f64&gt; 3.1115651070322126, 3.106134347679831, 3.108712237487881, 3.0799859492496635, 3.0991399531638515
-$ price_log_return                                &lt;f64&gt; null, -0.005430759352381465, 0.00257788980804996, -0.028726288238217546, 0.019154003914187978
-$ price_lag_return_1w                             &lt;f64&gt; null, null, -0.005430759352381465, 0.00257788980804996, -0.028726288238217546
-$ price_lag_return_2w                             &lt;f64&gt; null, null, null, -0.005430759352381465, 0.00257788980804996
+$ price_log_close                                 &lt;f64&gt; 3.6224725300695777, 3.6946129745830323, 3.7062281111939903, 3.6913762962606795, 3.741234720649024
+$ price_log_return                                &lt;f64&gt; null, 0.07214044451345458, 0.011615136610958032, -0.01485181493331078, 0.049858424388344424
+$ price_lag_return_1w                             &lt;f64&gt; null, null, 0.07214044451345458, 0.011615136610958032, -0.01485181493331078
+$ price_lag_return_2w                             &lt;f64&gt; null, null, null, 0.07214044451345458, 0.011615136610958032
 $ price_lag_return_4w                             &lt;f64&gt; null, null, null, null, null
 $ price_lag_return_12w                            &lt;f64&gt; null, null, null, null, null
-$ price_rolling_vol_4w                            &lt;f64&gt; null, null, null, null, 0.01991329583245575
+$ price_rolling_vol_4w                            &lt;f64&gt; null, null, null, null, 0.03881356955406374
 $ price_rolling_vol_12w                           &lt;f64&gt; null, null, null, null, null
-$ price_momentum_4w                               &lt;f64&gt; null, null, null, null, -0.012425153868361072
+$ price_momentum_4w                               &lt;f64&gt; null, null, null, null, 0.11876219057944626
 $ price_momentum_12w                              &lt;f64&gt; null, null, null, null, null
-$ price_volume_change_4w                          &lt;f64&gt; null, null, null, null, 0.12714061979042768
-$ target_log_return_next                          &lt;f64&gt; -0.005430759352381465, 0.00257788980804996, -0.028726288238217546, 0.019154003914187978, -0.007852846750882936
-$ target_up_next                                  &lt;f64&gt; 0.0, 1.0, 0.0, 1.0, 0.0
+$ price_volume_change_4w                          &lt;f64&gt; null, null, null, null, -0.05534460056257558
+$ target_log_return_next                          &lt;f64&gt; 0.07214044451345458, 0.011615136610958032, -0.01485181493331078, 0.049858424388344424, 0.03473942632978799
+$ target_up_next                                  &lt;f64&gt; 1.0, 1.0, 0.0, 1.0, 1.0
 $ calendar_month                                  &lt;i32&gt; 1, 1, 1, 1, 2
 $ calendar_quarter                                &lt;i32&gt; 1, 1, 1, 1, 1
 $ calendar_week_of_year                           &lt;i64&gt; 1, 2, 3, 4, 5
@@ -721,26 +778,7 @@ $ calendar_is_planting_season                     &lt;i64&gt; 0, 0, 0, 0, 0
 $ calendar_is_pollination_weather_season          &lt;i64&gt; 0, 0, 0, 0, 0
 $ calendar_is_harvest_season                      &lt;i64&gt; 0, 0, 0, 0, 0
 $ calendar_is_winter_storage_season               &lt;i64&gt; 1, 1, 1, 1, 1
-$ weather_temp_mean_f                             &lt;f64&gt; 24.138762916729455, 27.705206811169017, 30.590972709341923, 34.412611356635175, 33.20059461592409
-$ weather_precip_mm                               &lt;f64&gt; 7.383392305013175, 10.166843148745293, 11.799872327255878, 11.13757939408952, 14.973133901404852
-$ weather_gdd                                     &lt;f64&gt; 0.0, 0.0, 0.0, 0.0, 0.0
-$ weather_temp_anomaly_f                          &lt;f64&gt; -5.24448899537412, -1.6623283677233402, 0.06859144153178676, 2.2852389050530206, 2.396268533362388
-$ weather_precip_anomaly_mm                       &lt;f64&gt; -1.6689264959935448, 2.0150364252257784, -0.3576529459245723, 1.3057155566209087, 4.894894104268705
-$ weather_forecast_temp_week1_f                   &lt;f64&gt; 22.77857384956378, 28.225073377256063, 32.676367637233454, 34.246851773709125, 31.5193003497357
-$ weather_forecast_precip_week1_mm                &lt;f64&gt; 1.178248349548526, 12.741298553260759, 15.12202477875238, 20.282685315286916, 21.69842376341291
-$ weather_forecast_temp_week2_f                   &lt;f64&gt; 19.496900462617027, 29.383307177675206, 27.4660250540197, 34.56841451216575, 35.36437048110509
-$ weather_forecast_precip_week2_mm                &lt;f64&gt; 5.690742036849238, 10.754046489919329, 12.053196427047673, 7.808407839788405, 16.84800157164146
-$ weather_year                                    &lt;i32&gt; 2011, 2011, 2011, 2011, 2011
-$ report_text                                     &lt;str&gt; &#39;Crop progress notes corn planting pace, yield condition, and harvest delays. Corn Belt yield rain soil moisture. Crop progress notes corn planting pace, yield condition, and harvest delays. Corn Belt yield rain soil moisture.&#39;, &#39;Weekly weather bulletin highlights rain, drought, heat, and soil moisture across the Corn Belt. Corn Belt yield rain soil moisture. Weekly weather bulletin highlights rain, drought, heat, and soil moisture across the Corn Belt. Corn Belt yield rain soil moisture.&#39;, &#39;Markets discuss export demand, ethanol use, and crop ratings for corn. Corn Belt yield rain soil moisture. Markets discuss export demand, ethanol use, and crop ratings for corn. Corn Belt yield rain soil moisture.&#39;, &#39;Crop progress notes corn planting pace, yield condition, and harvest delays. Corn Belt yield rain soil moisture. Crop progress notes corn planting pace, yield condition, and harvest delays. Corn Belt yield rain soil moisture.&#39;, &#39;Weekly weather bulletin highlights rain, drought, heat, and soil moisture across the Corn Belt. Corn Belt yield rain soil moisture. Weekly weather bulletin highlights rain, drought, heat, and soil moisture across the Corn Belt. Corn Belt yield rain soil moisture.&#39;
-$ report_count                                    &lt;i64&gt; 2, 2, 2, 2, 2
-$ text_kw_drought                                 &lt;i64&gt; 0, 2, 0, 0, 2
-$ text_kw_rain                                    &lt;i64&gt; 2, 4, 2, 2, 4
-$ text_kw_heat                                    &lt;i64&gt; 0, 2, 0, 0, 2
-$ text_kw_planting                                &lt;i64&gt; 2, 0, 0, 2, 0
-$ text_kw_harvest                                 &lt;i64&gt; 2, 0, 0, 2, 0
-$ text_kw_yield                                   &lt;i64&gt; 4, 2, 2, 4, 2
-$ text_kw_export                                  &lt;i64&gt; 0, 0, 2, 0, 0
-$ text_kw_ethanol                                 &lt;i64&gt; 0, 0, 2, 0, 0
+$ report_text                                     &lt;str&gt; &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;
 $ ai_moisture_stress                              &lt;f64&gt; 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_heat_stress                                  &lt;f64&gt; 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_excess_rain_risk                             &lt;f64&gt; 0.0, 0.0, 0.0, 0.0, 0.0
@@ -748,25 +786,31 @@ $ ai_planting_delay_risk                          &lt;f64&gt; 0.0, 0.0, 0.0, 0.0
 $ ai_harvest_delay_risk                           &lt;f64&gt; 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_yield_risk                                   &lt;f64&gt; 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_crop_condition_trend                         &lt;f64&gt; 0.0, 0.0, 0.0, 0.0, 0.0
+$ gdelt_relevance_score                           &lt;f64&gt; null, null, null, null, null
+$ gdelt_yield_supply_risk                         &lt;f64&gt; null, null, null, null, null
+$ gdelt_inventory_supply_tightness                &lt;f64&gt; null, null, null, null, null
+$ gdelt_demand_strength                           &lt;f64&gt; null, null, null, null, null
+$ gdelt_ethanol_export_signal                     &lt;f64&gt; null, null, null, null, null
+$ gdelt_trade_policy_risk                         &lt;f64&gt; null, null, null, null, null
 </pre></div>
 </div>
 </section>
-<section id="id6">
-<h3>Numeric Column Statistics<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">close</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">10.771362557195754</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">32.454616574824456</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">20.21</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">21.99329894283777</span>
-<span class="n">volume</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">816013</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1350999</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">1074026.04</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">1075587.0</span>
-<span class="n">price_log_close</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">2.376890997297513</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">3.479842700360013</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">2.95</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">3.090737662508623</span>
-<span class="n">price_log_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04967994866510317</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.0529566094015097</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.00035372149320478385</span>
-<span class="n">price_lag_return_1w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04967994866510317</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.0529566094015097</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.00033014603484371463</span>
-<span class="n">price_lag_return_2w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04967994866510317</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.0529566094015097</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0003065705764826454</span>
-<span class="n">price_lag_return_4w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04967994866510317</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.0529566094015097</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.00026690093345171917</span>
-<span class="n">price_lag_return_12w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04967994866510317</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.0529566094015097</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.00048154464968375166</span>
-<span class="n">price_rolling_vol_4w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0015885467944480685</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.036231878096158854</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.015551830764662688</span>
-<span class="n">price_rolling_vol_12w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.007555558486665588</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.026440798072540992</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.016752351169801987</span>
-<span class="n">price_momentum_4w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.10102073782633347</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.09925102912748551</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0031695505832920468</span>
-<span class="n">price_momentum_12w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.19617381191835737</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.21358851117552957</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0117398816562293</span>
-<span class="n">price_volume_change_4w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.16714690655835346</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.18770733039090806</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.004292832957425918</span>
-<span class="n">target_log_return_next</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04967994866510317</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.0529566094015097</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.00035372149320478385</span>
+<section id="id8">
+<h3>Numeric Column Statistics<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">close</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">11.59000015258789</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">51.36000061035156</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">24.43</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">20.90999984741211</span>
+<span class="n">volume</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">60700</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">9555100</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">676546.13</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">398150.0</span>
+<span class="n">price_log_close</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">2.4501426705171383</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">3.9388596712654977</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">3.13</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">3.0402201872692</span>
+<span class="n">price_log_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.13984923381861636</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.11158576469817572</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0005964944213276979</span>
+<span class="n">price_lag_return_1w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.13984923381861636</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.11158576469817572</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0005821026957320008</span>
+<span class="n">price_lag_return_2w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.13984923381861636</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.11158576469817572</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0005677109701363037</span>
+<span class="n">price_lag_return_4w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.13984923381861636</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.11158576469817572</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0005964944213276979</span>
+<span class="n">price_lag_return_12w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.13984923381861636</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.11158576469817572</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0006337280979558102</span>
+<span class="n">price_rolling_vol_4w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0015756596193694358</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.10972818015591461</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.02148892925655887</span>
+<span class="n">price_rolling_vol_12w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.00890176468741303</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.08032535289019585</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.023510440417527503</span>
+<span class="n">price_momentum_4w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.22093450024319905</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.30313848706068525</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.003797647256803538</span>
+<span class="n">price_momentum_12w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.29371849352609614</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.36294226478401503</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.019747363018708164</span>
+<span class="n">price_volume_change_4w</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">1.7668431179635204</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">3.5579259226646456</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.03001673628646175</span>
+<span class="n">target_log_return_next</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.13984923381861636</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.11158576469817572</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0005964944213276979</span>
 <span class="n">target_up_next</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.49</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">calendar_month</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">6.43</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">6.0</span>
 <span class="n">calendar_quarter</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">2.48</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">2.0</span>
@@ -777,25 +821,6 @@ $ ai_crop_condition_trend                         &lt;f64&gt; 0.0, 0.0, 0.0, 0.0
 <span class="n">calendar_is_pollination_weather_season</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">calendar_is_harvest_season</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.24</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">calendar_is_winter_storage_season</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="n">weather_temp_mean_f</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">24.105800392075874</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">87.38961319880403</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">53.59</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">53.38310844817467</span>
-<span class="n">weather_precip_mm</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">40.488545937862014</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">18.16</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">18.84287374615051</span>
-<span class="n">weather_gdd</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">261.7272923916282</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">67.36</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">23.681759137222645</span>
-<span class="n">weather_temp_anomaly_f</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">12.179558193469632</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">10.249991954370422</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0018894469516510526</span>
-<span class="n">weather_precip_anomaly_mm</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">14.182001642637282</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">17.523418270053362</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.06379272920694312</span>
-<span class="n">weather_forecast_temp_week1_f</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">21.87789690850726</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">88.39781762061138</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">53.63</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">54.17414676880444</span>
-<span class="n">weather_forecast_precip_week1_mm</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">50.08926895285116</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">18.45</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">18.683879145220757</span>
-<span class="n">weather_forecast_temp_week2_f</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">19.496900462617027</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">89.11762214923885</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">53.61</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">52.986969292580454</span>
-<span class="n">weather_forecast_precip_week2_mm</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">48.31869572004351</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">18.22</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">18.23608412792977</span>
-<span class="n">weather_year</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">2011</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">2026</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">2018.20</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">2018.0</span>
-<span class="n">report_count</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">2.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">2.0</span>
-<span class="n">text_kw_drought</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="n">text_kw_rain</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">2.33</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">2.0</span>
-<span class="n">text_kw_heat</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="n">text_kw_planting</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">1.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="n">text_kw_harvest</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">1.15</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="n">text_kw_yield</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">1.84</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">2.0</span>
-<span class="n">text_kw_export</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.67</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="n">text_kw_ethanol</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.67</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">ai_moisture_stress</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.17</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">ai_heat_stress</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">ai_excess_rain_risk</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.14</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
@@ -803,6 +828,12 @@ $ ai_crop_condition_trend                         &lt;f64&gt; 0.0, 0.0, 0.0, 0.0
 <span class="n">ai_harvest_delay_risk</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">ai_yield_risk</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.30</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">ai_crop_condition_trend</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">2.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="n">gdelt_relevance_score</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">2.5384615384615383</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">1.85</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">1.9047619047619047</span>
+<span class="n">gdelt_yield_supply_risk</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.847457627118644</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.845679012345679</span>
+<span class="n">gdelt_inventory_supply_tightness</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.4179104477611941</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.66</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.6470588235294118</span>
+<span class="n">gdelt_demand_strength</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">2.255892255892256</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.9192546583850931</span>
+<span class="n">gdelt_ethanol_export_signal</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.7965451055662187</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.63</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.5766871165644172</span>
+<span class="n">gdelt_trade_policy_risk</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.86</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.20714285714285716</span>
 </pre></div>
 </div>
 </section>
@@ -812,8 +843,8 @@ $ ai_crop_condition_trend                         &lt;f64&gt; 0.0, 0.0, 0.0, 0.0
 <h2>prices_CORN.csv<a class="headerlink" href="#prices-corn-csv" title="Link to this heading">#</a></h2>
 <p><strong>Path:</strong> <code class="docutils literal notranslate"><span class="pre">data/raw/prices_CORN.csv</span></code>
 <strong>Size:</strong> 447144 bytes | <strong>Type:</strong> Csv | <strong>Shape:</strong> 4,014 rows × 7 columns</p>
-<section id="id7">
-<h3>Columns<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<section id="id9">
+<h3>Columns<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">date</span>                                     <span class="n">String</span>         
 <span class="nb">open</span>                                     <span class="n">Float64</span>        
 <span class="n">high</span>                                     <span class="n">Float64</span>        
@@ -824,8 +855,8 @@ $ ai_crop_condition_trend                         &lt;f64&gt; 0.0, 0.0, 0.0, 0.0
 </pre></div>
 </div>
 </section>
-<section id="id8">
-<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<section id="id10">
+<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 4014
 Columns: 7
 $ date      &lt;str&gt; &#39;2011-01-03&#39;, &#39;2011-01-04&#39;, &#39;2011-01-05&#39;, &#39;2011-01-06&#39;, &#39;2011-01-07&#39;
@@ -838,8 +869,8 @@ $ volume    &lt;i64&gt; 224197, 203252, 198926, 223346, 223878
 </pre></div>
 </div>
 </section>
-<section id="id9">
-<h3>Numeric Column Statistics<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<section id="id11">
+<h3>Numeric Column Statistics<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">open</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">10.814056892585334</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">32.456320220922905</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">20.21</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">22.008949650214866</span>
 <span class="n">high</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">10.830804998257996</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">32.643888347095654</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">20.26</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">22.054549024488942</span>
 <span class="n">low</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">10.748182697476071</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">32.384391804830216</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">20.15</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">21.935101942671057</span>
@@ -854,9 +885,9 @@ $ volume    &lt;i64&gt; 224197, 203252, 198926, 223346, 223878
 <section id="expected-return-predictions-csv">
 <h2>expected_return_predictions.csv<a class="headerlink" href="#expected-return-predictions-csv" title="Link to this heading">#</a></h2>
 <p><strong>Path:</strong> <code class="docutils literal notranslate"><span class="pre">reports/expected_return_predictions.csv</span></code>
-<strong>Size:</strong> 145226 bytes | <strong>Type:</strong> Csv | <strong>Shape:</strong> 700 rows × 18 columns</p>
-<section id="id10">
-<h3>Columns<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<strong>Size:</strong> 598336 bytes | <strong>Type:</strong> Csv | <strong>Shape:</strong> 2,800 rows × 18 columns</p>
+<section id="id12">
+<h3>Columns<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">week</span>                                     <span class="n">String</span>         
 <span class="n">fold</span>                                     <span class="n">Int64</span>          
 <span class="n">feature_set</span>                              <span class="n">String</span>         
@@ -878,45 +909,45 @@ $ volume    &lt;i64&gt; 224197, 203252, 198926, 223346, 223878
 </pre></div>
 </div>
 </section>
-<section id="id11">
-<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 700
+<section id="id13">
+<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 2800
 Columns: 18
 $ week                   &lt;str&gt; &#39;2023-01-06&#39;, &#39;2023-01-13&#39;, &#39;2023-01-20&#39;, &#39;2023-01-27&#39;, &#39;2023-02-03&#39;
 $ fold                   &lt;i64&gt; 0, 0, 0, 0, 0
-$ feature_set            &lt;str&gt; &#39;price_calendar&#39;, &#39;price_calendar&#39;, &#39;price_calendar&#39;, &#39;price_calendar&#39;, &#39;price_calendar&#39;
+$ feature_set            &lt;str&gt; &#39;price_ai_gdelt&#39;, &#39;price_ai_gdelt&#39;, &#39;price_ai_gdelt&#39;, &#39;price_ai_gdelt&#39;, &#39;price_ai_gdelt&#39;
 $ estimator              &lt;str&gt; &#39;hgb&#39;, &#39;hgb&#39;, &#39;hgb&#39;, &#39;hgb&#39;, &#39;hgb&#39;
-$ model                  &lt;str&gt; &#39;price_calendar_hgb&#39;, &#39;price_calendar_hgb&#39;, &#39;price_calendar_hgb&#39;, &#39;price_calendar_hgb&#39;, &#39;price_calendar_hgb&#39;
-$ target_log_return_next &lt;f64&gt; 0.0024110656570526245, -0.007558729831937505, 0.04091419471991031, -0.00465628239000182, -0.0015193966698214822
-$ predicted_return       &lt;f64&gt; 0.008489099733810127, 0.004242262824826182, -0.002621742966443223, 0.009952973865791396, 3.7244199907186776e-05
+$ model                  &lt;str&gt; &#39;price_ai_gdelt_hgb&#39;, &#39;price_ai_gdelt_hgb&#39;, &#39;price_ai_gdelt_hgb&#39;, &#39;price_ai_gdelt_hgb&#39;, &#39;price_ai_gdelt_hgb&#39;
+$ target_log_return_next &lt;f64&gt; 0.026637756991465977, -0.005271073667588055, 0.0018857687565256853, 0.0015059870145548437, 0.0030052586123381353
+$ predicted_return       &lt;f64&gt; 0.008084752295827505, -0.0032932471307475196, 0.004446621839089969, -0.008702088708664162, -0.003893687693006561
 $ train_start            &lt;str&gt; &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;
 $ train_end              &lt;str&gt; &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;
 $ n_train                &lt;i64&gt; 626, 626, 626, 626, 626
 $ trade_threshold        &lt;f64&gt; 0.003, 0.003, 0.003, 0.003, 0.003
-$ position               &lt;f64&gt; 1.0, 1.0, 0.0, 1.0, 0.0
-$ turnover               &lt;f64&gt; 1.0, 0.0, 1.0, 1.0, 1.0
-$ transaction_cost       &lt;f64&gt; 0.0005, 0.0, 0.0005, 0.0005, 0.0005
-$ strategy_log_return    &lt;f64&gt; 0.0019110656570526245, -0.007558729831937505, -0.0005, -0.005156282390001821, -0.0005
-$ benchmark_log_return   &lt;f64&gt; 0.0024110656570526245, -0.007558729831937505, 0.04091419471991031, -0.00465628239000182, -0.0015193966698214822
-$ cum_strategy_return    &lt;f64&gt; 0.0019128929068381595, -0.005631746100313362, -0.006128805951944871, -0.011240297017027112, -0.011734553294152295
-$ cum_benchmark_return   &lt;f64&gt; 0.0024139746132789686, -0.0051344376566132555, 0.03641384726626007, 0.03159922952916583, 0.030033011249957386
+$ position               &lt;f64&gt; 1.0, 0.0, 1.0, 0.0, 0.0
+$ turnover               &lt;f64&gt; 1.0, 1.0, 1.0, 1.0, 0.0
+$ transaction_cost       &lt;f64&gt; 0.0005, 0.0005, 0.0005, 0.0005, 0.0
+$ strategy_log_return    &lt;f64&gt; 0.026137756991465977, -0.0005, 0.0013857687565256853, -0.0005, 0.0
+$ benchmark_log_return   &lt;f64&gt; 0.026637756991465977, -0.005271073667588055, 0.0018857687565256853, 0.0015059870145548437, 0.0030052586123381353
+$ cum_strategy_return    &lt;f64&gt; 0.02648234385359971, 0.025969230970583457, 0.027391972643818097, 0.026878405060091426, 0.026878405060091426
+$ cum_benchmark_return   &lt;f64&gt; 0.026995713357207185, 0.021596585397285928, 0.023524897924116273, 0.02506747438797885, 0.028152700873305347
 </pre></div>
 </div>
 </section>
-<section id="id12">
-<h3>Numeric Column Statistics<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<section id="id14">
+<h3>Numeric Column Statistics<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fold</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">6.24</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">6.0</span>
-<span class="n">target_log_return_next</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04705158725929204</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.04091419471991031</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0004587613480366848</span>
-<span class="n">predicted_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.01671334611219972</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.01807692672272437</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0007957815765080265</span>
+<span class="n">target_log_return_next</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.1386444483967515</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.1047184545507811</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0004552801920918448</span>
+<span class="n">predicted_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.042631901773694206</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.03919041496771588</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.001505576329211728</span>
 <span class="n">n_train</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">626</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">795</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">707.12</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">704.0</span>
 <span class="n">trade_threshold</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.003</span>
-<span class="n">position</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="n">turnover</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="n">position</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="n">turnover</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.34</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
 <span class="n">transaction_cost</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.0005</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
-<span class="n">strategy_log_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.038672138662130984</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.02737802063894995</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0</span>
-<span class="n">benchmark_log_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04705158725929204</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.04091419471991031</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0004587613480366848</span>
-<span class="n">cum_strategy_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.07790436672785361</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.07324013247701933</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0074596142273398724</span>
-<span class="n">cum_benchmark_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04075585041612628</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.15913636058971115</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.050862385429549795</span>
+<span class="n">strategy_log_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.1391444483967515</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.1047184545507811</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="n">benchmark_log_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.1386444483967515</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.1047184545507811</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0004552801920918448</span>
+<span class="n">cum_strategy_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.3178399020577737</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.23882738294848926</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.007753249615289448</span>
+<span class="n">cum_benchmark_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.34284609660702303</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.028152700873305347</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.23</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.27111456243377985</span>
 </pre></div>
 </div>
 </section>
@@ -926,8 +957,8 @@ $ cum_benchmark_return   &lt;f64&gt; 0.0024139746132789686, -0.00513443765661325
 <h2>predictions.csv<a class="headerlink" href="#predictions-csv" title="Link to this heading">#</a></h2>
 <p><strong>Path:</strong> <code class="docutils literal notranslate"><span class="pre">reports/predictions.csv</span></code>
 <strong>Size:</strong> 217351 bytes | <strong>Type:</strong> Csv | <strong>Shape:</strong> 1,050 rows × 19 columns</p>
-<section id="id13">
-<h3>Columns<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<section id="id15">
+<h3>Columns<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">week</span>                                     <span class="n">String</span>         
 <span class="n">fold</span>                                     <span class="n">Int64</span>          
 <span class="n">feature_set</span>                              <span class="n">String</span>         
@@ -950,8 +981,8 @@ $ cum_benchmark_return   &lt;f64&gt; 0.0024139746132789686, -0.00513443765661325
 </pre></div>
 </div>
 </section>
-<section id="id14">
-<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<section id="id16">
+<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 1050
 Columns: 19
 $ week                   &lt;str&gt; &#39;2023-01-06&#39;, &#39;2023-01-13&#39;, &#39;2023-01-20&#39;, &#39;2023-01-27&#39;, &#39;2023-02-03&#39;
@@ -976,8 +1007,8 @@ $ cum_benchmark_return   &lt;f64&gt; 0.0024139746132789686, -0.00513443765661325
 </pre></div>
 </div>
 </section>
-<section id="id15">
-<h3>Numeric Column Statistics<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<section id="id17">
+<h3>Numeric Column Statistics<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fold</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">6.24</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">6.0</span>
 <span class="n">y_true</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.51</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">1.0</span>
 <span class="n">y_prob</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.02823961613811589</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.8832203549030702</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.45332479516151225</span>
@@ -999,9 +1030,9 @@ $ cum_benchmark_return   &lt;f64&gt; 0.0024139746132789686, -0.00513443765661325
 <section id="price-target-predictions-csv">
 <h2>price_target_predictions.csv<a class="headerlink" href="#price-target-predictions-csv" title="Link to this heading">#</a></h2>
 <p><strong>Path:</strong> <code class="docutils literal notranslate"><span class="pre">reports/price_target_predictions.csv</span></code>
-<strong>Size:</strong> 88735 bytes | <strong>Type:</strong> Csv | <strong>Shape:</strong> 700 rows × 13 columns</p>
-<section id="id16">
-<h3>Columns<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
+<strong>Size:</strong> 359596 bytes | <strong>Type:</strong> Csv | <strong>Shape:</strong> 2,800 rows × 13 columns</p>
+<section id="id18">
+<h3>Columns<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">week</span>                                     <span class="n">String</span>         
 <span class="n">fold</span>                                     <span class="n">Int64</span>          
 <span class="n">experiment</span>                               <span class="n">String</span>         
@@ -1018,17 +1049,17 @@ $ cum_benchmark_return   &lt;f64&gt; 0.0024139746132789686, -0.00513443765661325
 </pre></div>
 </div>
 </section>
-<section id="id17">
-<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 700
+<section id="id19">
+<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 2800
 Columns: 13
 $ week                   &lt;str&gt; &#39;2023-01-06&#39;, &#39;2023-01-13&#39;, &#39;2023-01-20&#39;, &#39;2023-01-27&#39;, &#39;2023-02-03&#39;
 $ fold                   &lt;i64&gt; 0, 0, 0, 0, 0
 $ experiment             &lt;str&gt; &#39;return_regression&#39;, &#39;return_regression&#39;, &#39;return_regression&#39;, &#39;return_regression&#39;, &#39;return_regression&#39;
-$ feature_set            &lt;str&gt; &#39;price_calendar&#39;, &#39;price_calendar&#39;, &#39;price_calendar&#39;, &#39;price_calendar&#39;, &#39;price_calendar&#39;
+$ feature_set            &lt;str&gt; &#39;price_ai&#39;, &#39;price_ai&#39;, &#39;price_ai&#39;, &#39;price_ai&#39;, &#39;price_ai&#39;
 $ model                  &lt;str&gt; &#39;price_only_ridge&#39;, &#39;price_only_ridge&#39;, &#39;price_only_ridge&#39;, &#39;price_only_ridge&#39;, &#39;price_only_ridge&#39;
-$ y_true_return          &lt;f64&gt; 0.0024110656570526245, -0.007558729831937505, 0.04091419471991031, -0.00465628239000182, -0.0015193966698214822
-$ y_pred_return          &lt;f64&gt; -0.0026879685651374835, -0.002673485234279229, -0.0023521984721173233, -5.8082546002575716e-05, -0.001127041103793948
+$ y_true_return          &lt;f64&gt; 0.026637756991465977, -0.005271073667588055, 0.0018857687565256853, 0.0015059870145548437, 0.0030052586123381353
+$ y_pred_return          &lt;f64&gt; 0.0034024391760000706, -0.0022157332551042993, -0.000777280100868632, -0.00018789958747508426, -0.001984342289117705
 $ train_start            &lt;str&gt; &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;
 $ train_end              &lt;str&gt; &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;
 $ n_train                &lt;i64&gt; 626, 626, 626, 626, 626
@@ -1038,11 +1069,11 @@ $ target_log_return_next &lt;str&gt; null, null, null, null, null
 </pre></div>
 </div>
 </section>
-<section id="id18">
-<h3>Numeric Column Statistics<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
+<section id="id20">
+<h3>Numeric Column Statistics<a class="headerlink" href="#id20" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fold</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">6.24</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">6.0</span>
-<span class="n">y_true_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04705158725929204</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.04091419471991031</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0004587613480366848</span>
-<span class="n">y_pred_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.008114867796390077</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.004914865276110814</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0007107599942706166</span>
+<span class="n">y_true_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.1386444483967515</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.1047184545507811</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0004552801920918448</span>
+<span class="n">y_pred_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.030128189347007603</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.03919041496771588</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=-</span><span class="mf">0.0014918937072026432</span>
 <span class="n">n_train</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">626</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">795</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">707.12</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">704.0</span>
 </pre></div>
 </div>
@@ -1053,8 +1084,8 @@ $ target_log_return_next &lt;str&gt; null, null, null, null, null
 <h2>threshold_selection_predictions.csv<a class="headerlink" href="#threshold-selection-predictions-csv" title="Link to this heading">#</a></h2>
 <p><strong>Path:</strong> <code class="docutils literal notranslate"><span class="pre">reports/threshold_selection_predictions.csv</span></code>
 <strong>Size:</strong> 93958 bytes | <strong>Type:</strong> Csv | <strong>Shape:</strong> 350 rows × 22 columns</p>
-<section id="id19">
-<h3>Columns<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<section id="id21">
+<h3>Columns<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">week</span>                                     <span class="n">String</span>         
 <span class="n">fold</span>                                     <span class="n">Int64</span>          
 <span class="n">k</span>                                        <span class="n">Float64</span>        
@@ -1080,8 +1111,8 @@ $ target_log_return_next &lt;str&gt; null, null, null, null, null
 </pre></div>
 </div>
 </section>
-<section id="id20">
-<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id20" title="Link to this heading">#</a></h3>
+<section id="id22">
+<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id22" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 350
 Columns: 22
 $ week                   &lt;str&gt; &#39;2023-01-06&#39;, &#39;2023-01-13&#39;, &#39;2023-01-20&#39;, &#39;2023-01-27&#39;, &#39;2023-02-03&#39;
@@ -1109,8 +1140,8 @@ $ model                  &lt;str&gt; &#39;vol_adj_k_1.0_price_calendar&#39;, &#3
 </pre></div>
 </div>
 </section>
-<section id="id21">
-<h3>Numeric Column Statistics<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
+<section id="id23">
+<h3>Numeric Column Statistics<a class="headerlink" href="#id23" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fold</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">6.24</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">6.0</span>
 <span class="n">k</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">1.0</span>
 <span class="n">y_true</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
@@ -1128,6 +1159,65 @@ $ model                  &lt;str&gt; &#39;vol_adj_k_1.0_price_calendar&#39;, &#3
 <span class="n">benchmark_log_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04705158725929204</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.04091419471991031</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0004587613480366848</span>
 <span class="n">cum_strategy_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.019265152072670988</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.09072365321143483</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.03084648100507159</span>
 <span class="n">cum_benchmark_return</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04075585041612628</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.15913636058971115</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.050862385429549795</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="volatility-predictions-csv">
+<h2>volatility_predictions.csv<a class="headerlink" href="#volatility-predictions-csv" title="Link to this heading">#</a></h2>
+<p><strong>Path:</strong> <code class="docutils literal notranslate"><span class="pre">reports/volatility_predictions.csv</span></code>
+<strong>Size:</strong> 470364 bytes | <strong>Type:</strong> Csv | <strong>Shape:</strong> 2,800 rows × 14 columns</p>
+<section id="id24">
+<h3>Columns<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">week</span>                                     <span class="n">String</span>         
+<span class="n">fold</span>                                     <span class="n">Int64</span>          
+<span class="n">feature_set</span>                              <span class="n">String</span>         
+<span class="n">estimator</span>                                <span class="n">String</span>         
+<span class="n">model</span>                                    <span class="n">String</span>         
+<span class="n">target_log_return_next</span>                   <span class="n">Float64</span>        
+<span class="n">target_abs_return_next</span>                   <span class="n">Float64</span>        
+<span class="n">predicted_abs_return_next</span>                <span class="n">Float64</span>        
+<span class="n">high_vol_threshold</span>                       <span class="n">Float64</span>        
+<span class="n">y_true_high_vol</span>                          <span class="n">Int64</span>          
+<span class="n">y_pred_high_vol</span>                          <span class="n">Int64</span>          
+<span class="n">train_start</span>                              <span class="n">String</span>         
+<span class="n">train_end</span>                                <span class="n">String</span>         
+<span class="n">n_train</span>                                  <span class="n">Int64</span>          
+</pre></div>
+</div>
+</section>
+<section id="id25">
+<h3>Sample Values (first 5 rows)<a class="headerlink" href="#id25" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 2800
+Columns: 14
+$ week                      &lt;str&gt; &#39;2023-01-06&#39;, &#39;2023-01-13&#39;, &#39;2023-01-20&#39;, &#39;2023-01-27&#39;, &#39;2023-02-03&#39;
+$ fold                      &lt;i64&gt; 0, 0, 0, 0, 0
+$ feature_set               &lt;str&gt; &#39;price_ai_gdelt&#39;, &#39;price_ai_gdelt&#39;, &#39;price_ai_gdelt&#39;, &#39;price_ai_gdelt&#39;, &#39;price_ai_gdelt&#39;
+$ estimator                 &lt;str&gt; &#39;hgb&#39;, &#39;hgb&#39;, &#39;hgb&#39;, &#39;hgb&#39;, &#39;hgb&#39;
+$ model                     &lt;str&gt; &#39;price_ai_gdelt_hgb&#39;, &#39;price_ai_gdelt_hgb&#39;, &#39;price_ai_gdelt_hgb&#39;, &#39;price_ai_gdelt_hgb&#39;, &#39;price_ai_gdelt_hgb&#39;
+$ target_log_return_next    &lt;f64&gt; 0.0024110656570526245, -0.007558729831937505, 0.04091419471991031, -0.00465628239000182, -0.0015193966698214822
+$ target_abs_return_next    &lt;f64&gt; 0.0024110656570526245, 0.007558729831937505, 0.04091419471991031, 0.00465628239000182, 0.0015193966698214822
+$ predicted_abs_return_next &lt;f64&gt; 0.01044648495481766, 0.010719116925302863, 0.01168537911713701, 0.011482403115315832, 0.012592687476475371
+$ high_vol_threshold        &lt;f64&gt; 0.0182262198375418, 0.0182262198375418, 0.0182262198375418, 0.0182262198375418, 0.0182262198375418
+$ y_true_high_vol           &lt;i64&gt; 0, 0, 1, 0, 0
+$ y_pred_high_vol           &lt;i64&gt; 0, 0, 0, 0, 0
+$ train_start               &lt;str&gt; &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;, &#39;2011-01-07&#39;
+$ train_end                 &lt;str&gt; &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;, &#39;2022-12-30&#39;
+$ n_train                   &lt;i64&gt; 626, 626, 626, 626, 626
+</pre></div>
+</div>
+</section>
+<section id="id26">
+<h3>Numeric Column Statistics<a class="headerlink" href="#id26" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fold</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">6.24</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">6.0</span>
+<span class="n">target_log_return_next</span><span class="p">:</span> <span class="nb">min</span><span class="o">=-</span><span class="mf">0.04705158725929204</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.04091419471991031</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0004587613480366848</span>
+<span class="n">target_abs_return_next</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0002309886158760044</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.04705158725929204</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.011295155480222974</span>
+<span class="n">predicted_abs_return_next</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.003783356297469759</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.02743627110554362</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.013828642894690952</span>
+<span class="n">high_vol_threshold</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.01805487745517942</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">0.018246381393258734</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.018133283173099635</span>
+<span class="n">y_true_high_vol</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.29</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="n">y_pred_high_vol</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.07</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="n">n_train</span><span class="p">:</span> <span class="nb">min</span><span class="o">=</span><span class="mi">626</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">795</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">707.12</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="mf">704.0</span>
 </pre></div>
 </div>
 </section>
@@ -1154,7 +1244,7 @@ $ model                  &lt;str&gt; &#39;vol_adj_k_1.0_price_calendar&#39;, &#3
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Final Write-up: CORN ETF Volatility Forecasting</p>
+        <p class="prev-next-title">Final Report: CORN ETF Trading Signal Pipeline</p>
       </div>
     </a>
     <a class="right-next"
@@ -1190,7 +1280,10 @@ $ model                  &lt;str&gt; &#39;vol_adj_k_1.0_price_calendar&#39;, &#3
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#return-strategy">Return Strategy</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#select-threshold">Select Threshold</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-evaluate">Train Evaluate</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility">Volatility</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wwcb-ai-features">Wwcb Ai Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wwcb-ai-features-mock">Wwcb Ai Features Mock</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wwcb-parse">Wwcb Parse</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-weekly-parquet">ai_weekly.parquet</a><ul class="nav section-nav flex-column">
@@ -1205,40 +1298,51 @@ $ model                  &lt;str&gt; &#39;vol_adj_k_1.0_price_calendar&#39;, &#3
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Numeric Column Statistics</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-panel-parquet">feature_panel.parquet</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wwcb-core-text-parquet">wwcb_core_text.parquet</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Columns</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Numeric Column Statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-panel-parquet">feature_panel.parquet</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prices-corn-csv">prices_CORN.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-return-predictions-csv">expected_return_predictions.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predictions-csv">predictions.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#price-target-predictions-csv">price_target_predictions.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Numeric Column Statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#threshold-selection-predictions-csv">threshold_selection_predictions.csv</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Columns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Sample Values (first 5 rows)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Numeric Column Statistics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Numeric Column Statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-predictions-csv">volatility_predictions.csv</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Columns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Sample Values (first 5 rows)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Numeric Column Statistics</a></li>
 </ul>
 </li>
 </ul>

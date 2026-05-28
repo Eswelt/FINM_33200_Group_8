@@ -1,175 +1,216 @@
-# Final Write-up: CORN ETF Volatility Forecasting
+# Final Report: CORN ETF Trading Signal Pipeline
 
-Updated: `2026-05-28`.
+Generated: `2026-05-28 05:30:19 UTC`.
+
+## How To Open
+
+```bash
+open reports/chartbook/index.html
+open reports/html/corn_forecast_workflow.html
+```
 
 ## Executive Summary
 
-This project studies whether agricultural information can help forecast the risk environment of `CORN`, the Teucrium Corn ETF. After testing direction classification, expected-return forecasting, and volatility forecasting, we choose **future realized volatility** as the final prediction target.
-
-The empirical result is clear:
-
-- Return direction and expected return are difficult to predict reliably.
-- Volatility becomes more predictable as the forecast horizon lengthens.
-- Seasonality is the dominant source of predictability.
-- AI-read USDA report scores and GDELT news scores do not consistently improve on a clean calendar-only volatility benchmark.
-
-The main conclusion is that for an asset strongly tied to an agricultural production cycle, **knowing the crop-season window is more important than adding noisy text or news features**. AI/NLP features can still be useful for qualitative interpretation, but in our current out-of-sample tests they do not beat the simpler seasonal signal.
-
-## Prediction Target
-
-The final target is forward realized volatility:
-
-```text
-1-week volatility = abs(next weekly log return)
-4-week volatility = sqrt(sum of squared weekly returns over the next 4 weeks)
-13-week volatility = sqrt(sum of squared weekly returns over the next 13 weeks)
-```
-
-The 13-week target represents the risk environment over the next quarter, not the return or volatility of only the 13th week.
-
-## Data And Features
-
-The model panel uses weekly observations from 2011-01-01 to 2026-05-15. The out-of-sample window starts after 2022-12-31 and uses expanding walk-forward validation with 13-week test windows.
-
-We tested these feature groups:
-
-| feature group | description |
+| item | result |
 | --- | --- |
-| price | Lagged CORN returns, rolling volatility, momentum, and volume change. |
-| calendar | Month, quarter, week-of-year cyclic terms, planting season, pollination risk season, harvest season, and winter storage season. |
-| USDA/GLM | USDA Weekly Weather and Crop Bulletin text parsed from PDFs and scored by GLM into crop-risk variables. |
-| GDELT | Weekly corn-market news scores for relevance, supply risk, demand strength, ethanol/export signals, and trade policy risk. |
+| Frozen sample | 2011-01-07 to 2026-05-15, 802 weekly rows |
+| OOS window | 2023-01-06 to 2026-05-08, 175 weeks / 2800 prediction rows |
+| Main fixed-band classifier | price_ai: balanced acc 32.6%, macro F1 32.6% |
+| Best expected-return strategy | price_calendar_ai_gdelt_hgb: return 18.3%, Sharpe 0.481 |
+| Best volatility forecast | price_only_ridge: R2 -0.0249, high-vol balanced acc 50.0% |
+| Best volatility-threshold strategy | k_1_price_calendar: return 6.2%, Sharpe 0.508 |
+| Secondary binary direction result | C_price_weather_text_logit: return 6.7%, Sharpe 0.655 |
 
-The core tested combinations include `price_only`, `price_ai`, `price_gdelt`, `price_ai_gdelt`, `price_calendar`, `price_calendar_ai`, `price_calendar_gdelt`, and `price_calendar_ai_gdelt`. We also ran a clean seasonality benchmark comparing `calendar_only` against `calendar_ai_gdelt`.
+## Project Architecture And File Directory
 
-## Main Volatility Results
+| directory | contains | role |
+| --- | --- | --- |
+| ./ | README.md, pyproject.toml, dodo.py, chartbook.toml | Project metadata, dependencies, task graph, and ChartBook configuration. |
+| src/corn_forecast/ | cli.py, features.py, models.py, strategy.py | Forecasting package and command surface used by pydoit. |
+| src/corn_forecast/data/ | prices.py, weather.py, usda.py | Data adapters for price, weather, and USDA release inputs. |
+| src/corn_forecast/text/ | wwcb*.py, ai_features.py | Optional WWCB parsing and AI feature extraction helpers. |
+| scripts/ | build_project_notebook.py, run_horizon_robustness.py, WWCB scripts | One-off report, robustness, and text-processing scripts. |
+| data/raw/ | prices_CORN.csv, usda_releases.csv | Frozen raw inputs used by the default local workflow. |
+| data/interim/ | weather_weekly.parquet, ai_weekly.parquet, gdelt_weekly_scores.parquet | Staged weekly feature blocks before the final modeling panel. |
+| data/processed/ | feature_panel.parquet | Final weekly modeling panel consumed by all model tasks. |
+| experiments/ | *_results.md | Experiment notes and robustness write-ups included in ChartBook. |
+| docs_src/ | project_workflow.md, final_report.md, data_glimpses.md, figures/ | Markdown and assets that ChartBook turns into the HTML site. |
+| reports/ | metrics, predictions, figures, notebooks, html, chartbook | Generated model outputs, notebook, standalone HTML, and ChartBook site. |
+| tests/ | test_*.py | Unit and smoke tests for adapters, feature engineering, models, and reports. |
 
-The best official volatility runs by horizon are:
+## Workflow Outputs Generated
 
-| horizon | best run | R2 | Spearman | high-vol balanced accuracy |
-| --- | --- | ---: | ---: | ---: |
-| 1 week | `price_calendar_gdelt` + HGB | 0.083 | 0.211 | 58.3% |
-| 4 weeks | `price_calendar` + Ridge | 0.233 | 0.420 | 68.6% |
-| 13 weeks | `price_calendar_ai_gdelt` + HGB | 0.266 | 0.687 | 69.9% |
+| workflow | status | main outputs |
+| --- | --- | --- |
+| research | ready | reports/price_target_tests.json, reports/price_target_predictions.csv, reports/expected_return_metrics.json, reports/expected_return_predictions.csv, reports/volatility_metrics.json ... |
+| docs | ready | reports/notebooks/corn_forecast_workflow.ipynb, reports/html/corn_forecast_workflow.html, docs_src/final_report.md, docs_src/data_glimpses.md, reports/chartbook/index.html |
 
-The result improves as the horizon moves from one week to multi-week windows. This supports the idea that agricultural information is more useful for forecasting the width of the return distribution over a crop-risk window than for predicting next week's direction.
+## Strategy Ranking Snapshot
 
-## Seasonality Benchmark
+| objective | run | strategy return | Sharpe |
+| --- | --- | --- | --- |
+| binary secondary | C_price_weather_text_logit | 6.7% | 0.655 |
+| binary secondary | B_price_weather_hgb | 15.5% | 0.608 |
+| vol threshold | k_1_price_calendar | 6.2% | 0.508 |
+| expected return | price_calendar_ai_gdelt_hgb | 18.3% | 0.481 |
+| expected return | price_calendar_ai_gdelt_ridge | 14.2% | 0.406 |
+| binary secondary | C_price_weather_text_hgb | 7.8% | 0.399 |
+| expected return | price_calendar_ai_ridge | 10.7% | 0.322 |
+| expected return | price_calendar_hgb | 3.6% | 0.130 |
+| expected return | price_only_ridge | 3.3% | 0.089 |
+| binary secondary | B_price_weather_logit | 0.5% | 0.085 |
 
-To test whether AI and news features add value beyond seasonality, we ran a clean benchmark with no price variables:
+## Main Result: Fixed 2 Percent Three-Class Target
 
-| horizon | best `calendar_only` R2 | best `calendar_ai_gdelt` R2 | conclusion |
-| --- | ---: | ---: | --- |
-| 1 week | 0.072 | 0.015 | Calendar is better. |
-| 4 weeks | 0.252 | 0.088 | Calendar is much better. |
-| 13 weeks | 0.205 | 0.078 | Calendar is much better. |
+| features | accuracy | balanced acc | macro F1 | down | flat | up | OOS rows | folds |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| price_ai | 49.7% | 32.6% | 32.6% | 32 | 119 | 24 | 175 | 14 |
+| price_gdelt | 45.1% | 32.2% | 31.9% | 32 | 119 | 24 | 175 | 14 |
+| price_ai_gdelt | 46.3% | 32.1% | 32.0% | 32 | 119 | 24 | 175 | 14 |
+| price_only | 46.9% | 31.9% | 31.4% | 32 | 119 | 24 | 175 | 14 |
+| price_calendar | 42.3% | 30.9% | 30.4% | 32 | 119 | 24 | 175 | 14 |
+| price_calendar_gdelt | 38.9% | 30.8% | 29.3% | 32 | 119 | 24 | 175 | 14 |
+| price_calendar_ai | 42.9% | 30.0% | 30.0% | 32 | 119 | 24 | 175 | 14 |
+| price_calendar_ai_gdelt | 40.0% | 29.8% | 29.1% | 32 | 119 | 24 | 175 | 14 |
 
-High-volatility classification shows the same pattern:
+Interpretation: the current fixed-band classifier is weak; the price-only baseline is stronger than price+calendar on balanced accuracy in this run.
 
-| horizon | best `calendar_only` high-vol balanced accuracy | best `calendar_ai_gdelt` high-vol balanced accuracy |
-| --- | ---: | ---: |
-| 1 week | 58.7% | 59.5% |
-| 4 weeks | 81.9% | 74.5% |
-| 13 weeks | 81.2% | 73.2% |
+## Direct Volatility Forecast
 
-The clean benchmark changes the interpretation of the project. AI-read USDA scores and GDELT news scores are not a stable improvement over the crop calendar. The dominant signal is the seasonal structure itself.
+| run | features | model | MAE | RMSE | R2 | Spearman | high-vol balanced acc | actual high-vol rate | pred high-vol rate | OOS rows | folds |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| price_only_ridge | price_only | ridge | 0.0079 | 0.0096 | -0.0249 | -0.035 | 50.0% | 29.1% | 0.0% | 175 | 14 |
+| price_ai_ridge | price_ai | ridge | 0.0080 | 0.0096 | -0.0283 | -0.010 | 50.0% | 29.1% | 0.0% | 175 | 14 |
+| price_gdelt_ridge | price_gdelt | ridge | 0.0078 | 0.0096 | -0.0330 | -0.037 | 50.0% | 29.1% | 0.0% | 175 | 14 |
+| price_ai_gdelt_ridge | price_ai_gdelt | ridge | 0.0079 | 0.0097 | -0.0396 | -0.015 | 50.0% | 29.1% | 0.0% | 175 | 14 |
+| price_calendar_ridge | price_calendar | ridge | 0.0080 | 0.0097 | -0.0558 | -0.008 | 51.2% | 29.1% | 2.3% | 175 | 14 |
+| price_calendar_ai_ridge | price_calendar_ai | ridge | 0.0080 | 0.0097 | -0.0584 | 0.001 | 49.9% | 29.1% | 4.0% | 175 | 14 |
+| price_calendar_gdelt_ridge | price_calendar_gdelt | ridge | 0.0079 | 0.0098 | -0.0780 | 0.009 | 49.4% | 29.1% | 2.9% | 175 | 14 |
+| price_calendar_ai_gdelt_ridge | price_calendar_ai_gdelt | ridge | 0.0080 | 0.0098 | -0.0807 | 0.023 | 47.4% | 29.1% | 5.7% | 175 | 14 |
+| price_gdelt_hgb | price_gdelt | hgb | 0.0082 | 0.0101 | -0.1292 | 0.079 | 48.0% | 29.1% | 12.6% | 175 | 14 |
+| price_ai_gdelt_hgb | price_ai_gdelt | hgb | 0.0082 | 0.0101 | -0.1304 | 0.037 | 46.1% | 29.1% | 11.4% | 175 | 14 |
+| price_calendar_gdelt_hgb | price_calendar_gdelt | hgb | 0.0081 | 0.0102 | -0.1595 | 0.035 | 48.0% | 29.1% | 12.6% | 175 | 14 |
+| price_calendar_ai_gdelt_hgb | price_calendar_ai_gdelt | hgb | 0.0082 | 0.0102 | -0.1693 | 0.004 | 47.9% | 29.1% | 10.9% | 175 | 14 |
+| price_ai_hgb | price_ai | hgb | 0.0082 | 0.0103 | -0.1718 | 0.040 | 47.5% | 29.1% | 11.4% | 175 | 14 |
+| price_only_hgb | price_only | hgb | 0.0082 | 0.0103 | -0.1833 | 0.060 | 47.9% | 29.1% | 10.9% | 175 | 14 |
+| price_calendar_hgb | price_calendar | hgb | 0.0083 | 0.0103 | -0.1883 | 0.025 | 48.6% | 29.1% | 13.7% | 175 | 14 |
+| price_calendar_ai_hgb | price_calendar_ai | hgb | 0.0083 | 0.0104 | -0.2102 | -0.001 | 47.2% | 29.1% | 13.7% | 175 | 14 |
 
-## Is High Volatility Always In The Same Season?
+Interpretation: the direct one-week volatility forecast is the risk-focused diagnostic; high-volatility balanced accuracy is more relevant than directional accuracy for this target.
 
-High volatility is strongly seasonal, but not identical every year.
+## Auxiliary Expected-Return Strategy
 
-Average 13-week realized volatility by crop-season window:
+| run | features | model | MAE | RMSE | R2 | direction acc | trade freq | strategy return | Sharpe | max drawdown |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| price_calendar_ai_gdelt_hgb | price_calendar_ai_gdelt | hgb | 0.0182 | 0.0244 | -0.0279 | 54.9% | 33.1% | 18.3% | 0.481 | -13.2% |
+| price_calendar_ai_gdelt_ridge | price_calendar_ai_gdelt | ridge | 0.0179 | 0.0253 | -0.1037 | 55.4% | 30.3% | 14.2% | 0.406 | -17.5% |
+| price_calendar_ai_ridge | price_calendar_ai | ridge | 0.0180 | 0.0252 | -0.1018 | 53.7% | 27.4% | 10.7% | 0.322 | -14.8% |
+| price_calendar_hgb | price_calendar | hgb | 0.0181 | 0.0252 | -0.0989 | 53.7% | 30.9% | 3.6% | 0.130 | -9.4% |
+| price_only_ridge | price_only | ridge | 0.0175 | 0.0246 | -0.0449 | 52.0% | 11.4% | 3.3% | 0.089 | -14.2% |
+| price_ai_ridge | price_ai | ridge | 0.0182 | 0.0254 | -0.1161 | 48.6% | 20.6% | 3.1% | 0.077 | -20.7% |
+| price_calendar_gdelt_ridge | price_calendar_gdelt | ridge | 0.0174 | 0.0243 | -0.0197 | 53.7% | 22.3% | 2.5% | 0.062 | -19.9% |
+| price_ai_gdelt_hgb | price_ai_gdelt | hgb | 0.0184 | 0.0252 | -0.0957 | 52.0% | 28.6% | -0.3% | -0.012 | -19.9% |
+| price_ai_gdelt_ridge | price_ai_gdelt | ridge | 0.0182 | 0.0254 | -0.1197 | 52.0% | 24.0% | -1.4% | -0.034 | -22.4% |
+| price_gdelt_ridge | price_gdelt | ridge | 0.0176 | 0.0246 | -0.0494 | 52.6% | 19.4% | -4.1% | -0.110 | -18.4% |
+| price_calendar_gdelt_hgb | price_calendar_gdelt | hgb | 0.0183 | 0.0252 | -0.0975 | 54.3% | 34.9% | -4.6% | -0.158 | -14.0% |
+| price_calendar_ridge | price_calendar | ridge | 0.0173 | 0.0243 | -0.0220 | 53.1% | 21.1% | -6.2% | -0.188 | -16.8% |
+| price_calendar_ai_hgb | price_calendar_ai | hgb | 0.0182 | 0.0247 | -0.0527 | 53.1% | 33.7% | -5.8% | -0.208 | -13.6% |
+| price_gdelt_hgb | price_gdelt | hgb | 0.0188 | 0.0255 | -0.1250 | 48.6% | 27.4% | -9.2% | -0.231 | -20.2% |
+| price_only_hgb | price_only | hgb | 0.0187 | 0.0258 | -0.1535 | 50.9% | 32.0% | -25.9% | -0.769 | -32.8% |
+| price_ai_hgb | price_ai | hgb | 0.0189 | 0.0259 | -0.1640 | 46.9% | 30.9% | -30.9% | -0.997 | -33.6% |
 
-| starting period | mean 13-week volatility | high-vol rate |
-| --- | ---: | ---: |
-| planting | 0.137 | 67.2% |
-| other | 0.109 | 41.8% |
-| pollination/weather-risk | 0.097 | 32.0% |
-| winter storage | 0.087 | 19.6% |
-| harvest | 0.069 | 9.7% |
+## Volatility-Adjusted Threshold Check
 
-Average 13-week realized volatility by calendar quarter:
+| run | k | features | accuracy | balanced acc | macro F1 | strategy return | Sharpe | max drawdown |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| k_1_price_calendar | 1.000 | price_calendar | 37.7% | 37.2% | 33.1% | 6.2% | 0.508 | -2.9% |
+| k_1_price_only | 1.000 | price_only | 37.1% | 36.9% | 32.7% | -0.6% | -0.074 | -5.4% |
 
-| starting quarter | mean 13-week volatility | high-vol rate |
-| --- | ---: | ---: |
-| Q1 | 0.097 | 28.5% |
-| Q2 | 0.133 | 66.2% |
-| Q3 | 0.079 | 13.6% |
-| Q4 | 0.072 | 12.2% |
+## Secondary Binary Direction Pipeline
 
-Planting and Q2 are the most common high-volatility windows, but there are exceptions. For example, 2020 had stronger high-volatility concentration around harvest, while 2021 had more high-volatility weeks around winter storage. This means seasonality is not a perfect deterministic rule, but it is the strongest and most stable predictor in our tests.
+| run | accuracy | balanced acc | F1 | ROC-AUC | strategy return | Sharpe | max drawdown |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| C_price_weather_text_logit | 47.4% | 47.9% | 28.1% | 47.9% | 6.7% | 0.655 | -5.3% |
+| B_price_weather_hgb | 52.0% | 52.3% | 44.0% | 50.4% | 15.5% | 0.608 | -10.8% |
+| C_price_weather_text_hgb | 51.4% | 51.7% | 43.0% | 51.4% | 7.8% | 0.399 | -5.2% |
+| B_price_weather_logit | 53.7% | 54.3% | 31.9% | 50.9% | 0.5% | 0.085 | -2.4% |
+| A_price_hgb | 50.3% | 50.4% | 47.3% | 49.8% | 0.4% | 0.020 | -13.4% |
+| A_price_logit | 47.4% | 47.6% | 43.2% | 49.2% | -3.4% | -0.323 | -5.4% |
 
-## Why AI And News Features May Underperform
+## Figures
 
-Several mechanisms could explain why GLM/GDELT features reduce performance relative to the calendar-only benchmark:
+### Final Class Distribution
 
-1. **Seasonality already captures the main base rate.** CORN volatility is heavily driven by the agricultural production cycle. Once the model knows the crop window, additional text signals may add limited incremental information.
+![Final Class Distribution](figures/final_class_distribution.png)
 
-2. **Text features are noisy relative to the target.** USDA reports and GDELT news can describe important conditions, but converting narrative text into weekly numeric scores introduces measurement error.
+### Final Strategy Sharpe
 
-3. **Small out-of-sample sample size.** The post-2022 test window has limited crisis and crop-shock examples. Flexible models can overfit rare text/news patterns that do not repeat.
+![Final Strategy Sharpe](figures/final_strategy_sharpe.png)
 
-4. **GDELT may measure attention as much as fundamentals.** News intensity can rise after prices already move, or around broad market stories that are not specific enough to improve CORN volatility forecasts.
+### Final Strategy Return
 
-5. **AI scores can be collinear with season.** Planting delay, heat stress, harvest delay, and yield risk naturally occur in specific crop windows. If these features mostly restate the calendar with noise, the model can become less stable.
+![Final Strategy Return](figures/final_strategy_return.png)
 
-6. **Timing alignment is difficult.** Weekly aggregation may blur whether a report or news item was available before the market repriced the risk.
+### Final Expected Return Cumulative
 
-These explanations do not mean AI is useless. They mean that in this project, the most robust quantitative signal is seasonal timing, while AI/NLP features are better treated as qualitative context or candidate features for future refinement.
+![Final Expected Return Cumulative](figures/final_expected_return_cumulative.png)
 
-## Direction And Return Experiments
+### Final Threshold Cumulative
 
-We also tested direction classification and expected-return prediction. They are not the final target because performance is weaker and less stable.
+![Final Threshold Cumulative](figures/final_threshold_cumulative.png)
 
-Best direction results:
+### Final Fixed Target Confusion
 
-| horizon | best input set | balanced accuracy | macro F1 |
-| --- | --- | ---: | ---: |
-| 1 week | `price_ai` | 32.6% | 32.6% |
-| 4 weeks | `price_calendar_ai_gdelt` | 46.0% | 44.8% |
-| 13 weeks | `price_calendar` | 46.6% | 44.8% |
+![Final Fixed Target Confusion](figures/final_fixed_target_confusion.png)
 
-Best one-week expected-return trading result:
+## Data And Code Coverage
 
-| best run | strategy return | Sharpe | R2 |
-| --- | ---: | ---: | ---: |
-| `price_calendar_ai_gdelt` + HGB | 18.3% | 0.481 | -0.028 |
+| rows | cols | first_week | last_week | price_features | calendar_features | weather_features | text_features | ai_features |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 802 | 39 | 2011-01-07 | 2026-05-15 | 11 | 9 | 0 | 0 | 7 |
 
-The expected-return R2 remains negative, so we do not present return forecasting as the main empirical success.
+| artifact | exists | rows | cols |
+| --- | --- | --- | --- |
+| data/raw/prices_CORN.csv | yes | 4014 | 7 |
+| data/raw/usda_releases.csv | yes | 1606 | 5 |
+| data/interim/weather_weekly.parquet | yes | 802 | 11 |
+| data/interim/ai_weekly.parquet | yes | 789 | 8 |
+| data/processed/feature_panel.parquet | yes | 802 | 39 |
+| reports/price_target_predictions.csv | yes | 2800 | 13 |
+| reports/expected_return_predictions.csv | yes | 2800 | 18 |
+| reports/threshold_selection_predictions.csv | yes | 350 | 22 |
+| reports/predictions.csv | yes | 1050 | 19 |
 
-## Investment Interpretation
+| area | files | role |
+| --- | --- | --- |
+| Task graph | dodo.py | Single pydoit entrypoint for data, models, reports, ChartBook, tests. |
+| CLI orchestration | src/corn_forecast/cli.py | Command surface used by pydoit; now reuses cached prices when available. |
+| Configuration | src/corn_forecast/config.py | Research defaults, dates, paths, thresholds, feature-set names. |
+| Data adapters | data/prices.py, data/weather.py, data/usda.py | Price pulls, weather cache/demo adapter, USDA text adapter. |
+| Feature panel | src/corn_forecast/features.py | Weekly price, calendar, weather, text, AI feature joins. |
+| Main target test | src/corn_forecast/price_target_tests.py | Fixed 2 percent three-class target plus return-regression diagnostics. |
+| Return strategy | src/corn_forecast/expected_return_strategy.py | Expected-return models, trading threshold, strategy returns. |
+| Threshold robustness | src/corn_forecast/threshold_selection.py | Volatility-adjusted 3-class target selection. |
+| Binary direction | src/corn_forecast/models.py, strategy.py | Secondary up/down classifier and trading backtest. |
+| WWCB/AI text | src/corn_forecast/text/*.py, scripts/*.py | PDF download/parse and GLM/mock structured AI features. |
+| Report generation | src/corn_forecast/reports.py, scripts/build_project_notebook.py | Figures, markdown, notebook, standalone HTML. |
+| Tests | tests/*.py | 37 tests covering adapters, features, models, targets, strategy, parser, AI features. |
 
-Volatility prediction does not tell an investor whether to buy or sell CORN. Its value is as a risk overlay:
+## Problems And Caveats
 
-- Reduce position size when predicted volatility is high.
-- Require stronger return signals before trading in high-risk seasonal windows.
-- Use high-volatility forecasts to inform hedging or options-related decisions.
-- Recognize that CORN risk is structurally higher in parts of the crop cycle.
+- The fixed 2 percent target is imbalanced: 119 of 175 OOS weeks are flat. Accuracy alone is not enough.
+- Calendar seasonality does not improve the main fixed-band classifier in this run; balanced accuracy is 1.0% lower than price-only.
+- All expected-return regressions have negative OOS R2, so trading metrics should be treated as fragile.
+- The direct one-week volatility regressions have non-positive OOS R2 in this run.
+- The binary direction results use a different target (`target_up_next`) and are secondary, not the main 2 percent classification result.
+- Optional weather/text/AI data exist locally, but the main default feature sets are still `price_only` and `price_calendar`.
+- Generated report and data outputs are ignored by git; rerun `uv run --extra dev doit docs` before submission.
 
-The final investment lesson is:
-
-> For seasonally driven assets, the calendar itself can be more informative than complex AI-read news features. A simple seasonal risk model may be more robust than a larger model that adds noisy text signals.
-
-## AI Usage
-
-Human team members made the main research decisions, including choosing the prediction target, defining feature groups, interpreting the economic meaning of the results, and deciding which findings should be emphasized.
-
-Claude Code and Codex were used as coding assistants to batch-run experiments, integrate feature files, regenerate model outputs, update ChartBook pages, and draft reproducible write-ups from the experiment results.
-
-## Reproducibility
-
-Core commands:
+## Reproducibility Commands
 
 ```bash
 uv sync --python 3.12 --extra dev --extra docs
-uv run --extra dev doit fetch_prices build_features
-PYTHONPATH=src uv run python scripts/run_horizon_robustness.py
-uv run pytest
-```
-
-ChartBook build:
-
-```bash
-PYTHONPATH=src uv run --extra docs chartbook build reports/chartbook -f --project-dir .
-PYTHONPATH=src uv run python scripts/fix_chartbook_assets.py
+uv run --extra dev doit research
+uv run --extra dev doit docs
+uv run --extra dev doit tests
 ```

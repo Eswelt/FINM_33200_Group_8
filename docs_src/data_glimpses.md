@@ -1,6 +1,6 @@
 # Data Glimpses Report
-Generated: 2026-05-26 16:53:15
-Total files: 8
+Generated: 2026-05-28 00:30:21
+Total files: 10
 
 ## Summary of Datasets by Task
 
@@ -27,9 +27,20 @@ Total files: 8
 - [`feature_panel.parquet`](#feature-panel-parquet)
 - [`predictions.csv`](#predictions-csv)
 
+### Volatility
+- [`prices_CORN.csv`](#prices-corn-csv)
+- [`volatility_predictions.csv`](#volatility-predictions-csv)
+
 ### Wwcb Ai Features
 - [`ai_weekly.parquet`](#ai-weekly-parquet)
 - [`ai_wwcb_raw.parquet`](#ai-wwcb-raw-parquet)
+- [`wwcb_core_text.parquet`](#wwcb-core-text-parquet)
+
+### Wwcb Ai Features Mock
+- [`wwcb_core_text.parquet`](#wwcb-core-text-parquet)
+
+### Wwcb Parse
+- [`wwcb_core_text.parquet`](#wwcb-core-text-parquet)
 
 ---
 
@@ -134,9 +145,43 @@ glm_total_tokens: min=560, max=4613, mean=908.75, median=698.0
 
 ---
 
+## wwcb_core_text.parquet
+**Path:** `data/interim/wwcb_core_text.parquet`
+**Size:** 3.0 MB | **Type:** Parquet | **Shape:** 806 rows × 9 columns
+
+### Columns
+```
+source_file                              String         
+report_date                              String         
+week_ending                              String         
+week                                     String         
+weather_highlights                       String         
+national_ag_summary                      String         
+corn_section                             String         
+corn_table_text                          String         
+report_text                              String         
+```
+
+### Sample Values (first 5 rows)
+```
+Rows: 806
+Columns: 9
+$ source_file         <str> 'data/external/wwcb_pdfs/weather_weekly-01-02-2013.pdf', 'data/external/wwcb_pdfs/weather_weekly-01-03-2018.pdf', 'data/external/wwcb_pdfs/weather_weekly-01-04-2017.pdf', 'data/external/wwcb_pdfs/weather_weekly-01-05-2011.pdf', 'data/external/wwcb_pdfs/weather_weekly-01-05-2012.pdf'
+$ report_date         <str> '2013-01-02', '2018-01-03', '2017-01-04', '2011-01-04', '2012-01-05'
+$ week_ending         <str> '2012-12-29', '2017-12-30', '2016-12-31', '2010-12-25', '2011-12-31'
+$ week                <str> '2013-01-04', '2018-01-05', '2017-01-06', '2011-01-07', '2012-01-06'
+$ weather_highlights  <str> '', '', '', '', ''
+$ national_ag_summary <str> '', 'During the last week of 2017, frigid weather blanketed Temperatures east of the Rockies were below\nthe northern part of the nation, particularly along the average, while many Western States were warmer\nCanadian border. Temperatures in Montana, which than normal. Most of the nation was fairly dry during\nhad been warmer than average for most of the week, with snow reported in the North and rain\nDecember, plunged well below zero at month’s end. falling along the Gulf and Southern Atlantic Coasts.\n\nCalifornia: As the end of the year approached, much of the Florida: There were 6.5 days suitable for fieldwork for the\nstate was subject to warmer-than-average afternoon week ending Sunday, December 31, 2017. Precipitation\ntemperatures, while evening temperatures were seasonal. estimates ranged from no rain in multiple locations to 1.23\nAlong the northern coast, occasional light rain appeared at the inches in Miami-Dade County. The average mean temperature\nstart of the week before giving way to high pressure aloft. ranged from 43.4°F in Leon County to 75.2°F in Monroe\nHigh pressure dominated the central interior region throughout County. Some cover crops, such as millet and rye, were\nthe week. Hazy conditions existed most nights. In the south, planted in Dixie and Volusia Counties. Sugarcane harvest was\nthe beginning of the week brought high clouds and mist or ongoing in Glades and Hendry Counties. Temperatures were\nhaze. Conditions dried out as high pressure strengthened aloft, variable in the citrus region last week as cooler weather began\nfollowed by a warming trend over the region. At the end of to enter the peninsula. Lows were in the 50s and upper 40s,\nthe week, high broke down and moved northward, allowing for while highs ranged from the mid-60s to a maximum of 80°F,\nsome regional cooling. Fields that were planted earlier in the as reported in DeSoto County. No significant rainfall was\nseason had signs of good growth, though most fields were recorded during the week. Grove operations included\nirrigated due to the lack of rain to maintain growth. Planting fertilizing, mowing, topping and hedging, spraying, and\nwas ongoing for wheat, other cereal grains, and forage. harvesting. All growers irrigated regularly due to the drier-\nPruning continued in stone fruit orchards and vineyards, while than-normal weather. Field staff reported more instances of\nsome older, poorly producing orchards and vineyards were sporadic bloom, especially in Navel orange groves.\nremoved and prepared for replanting. Some growers prepared Tangerines and tangelos being harvested for the fresh market\nto apply winter dormant sprays. The Navel orange and pomelo included midseason cultivars (Autumn Honey, Orri, Osceola,\nharvests continued, but overnight temperatures were a concern Robinson and Tango tangerines, and Orlando tangelos were\nfor citrus growers. Olive growers continued to prune groves the main varieties at the packinghouses). Early orange harvest\nand strawberry fields thrived. Pruning continued in nut for the fresh market was mostly Hamlins and Navels.\norchards, while some older orchards were pushed out and the Persistently dry conditions caused continued irrigation in Palm\nground was prepped for planting. Fields were being prepared Beach County. Foggy conditions persisted in several southern\nand planted with winter vegetable crops, while lettuce counties, increasing disease pressures in some vegetable crops.\ncontinued to grow well. In already-planted winter vegetable Growers continued to plant cool season crops and were\nfields, crops continued to develop. Work continued preparing harvesting a wide variety of crops, including avocado, beans,\ntomato beds and planting onions. Brussels sprouts were eggplant, herbs, peppers, radishes, squash, sweet corn,\nharvested in San Mateo County. In Tulare County, the lack of tomatoes, and zucchini. Hard freezes in Holmes County had\nrainfall has left rangeland forage conditions poor. More rain winter grazing at a standstill. In Washington County, forages\nwas needed for germination and growth of rangeland forage. were beginning to improve as moisture conditions remained\nSupplemental feeding was ongoing. Sheep were grazing on favorable. Pasture quality continued to decline as a result of\nidle cropland, stubble fields, and dormant alfalfa fields. Honey cold weather. Producers in several counties were feeding\nbees were moved into almond orchards in preparation for supplements as necessary. Cattle remained in mostly good\nbloom. condition throughout the state.', 'Most of the nation experienced above-average 0°F in large sections of the Rocky Mountains and\ntemperatures, with the southern Great Plains the Great Basin. Precipitation totaled less than 2\nand lower Mississippi Valley recording inches in most locations, with the most notable\ntemperatures more than 10°F above normal. In exception being the central Gulf Coast, where in\ncontrast, the Northwest had below-average some areas rainfall totaled more than 4.5 inches\ntemperatures, with temperatures dipping below above normal weekly values.\n\nArizona: Barley and Durum wheat planting was well underway by level of the ground allowed. Winter wheat continued to progress\nthe end of the week. Barley planting was 25 percent complete, well due to adequate soil moisture. Post-harvest pruning and\ncompared to 29 percent last year and 49 percent for the 5-year orchard removal continued in all deciduous tree fruit orchards and\naverage. Durum wheat planting was estimated at 22 percent vineyards. Wet weather slowed citrus harvest. Navel and Mandarin\ncomplete, 8 percentage points ahead of last year. Alfalfa conditions oranges were harvested and exported. Melogold grapefruit, lemons,\nwere rated mostly good to excellent, depending on location, with and limes were exported. New planting of citrus trees were covered\nharvesting taking place on almost three-quarters of the state’s alfalfa for frost protection. Almonds, pistachios, shelled and in-shell\nacreage. Central Arizona growers shipped anise, beets, broccoli, walnuts, and shelled pecans continued to be packed and shipped.\ncabbage (green and red), carrots, cauliflower, cilantro, kale greens, Nut orchards continued to be pruned, irrigated, and treated in\ngreen onions, parsley, and Swiss chard. In western Arizona, growers preparation for their dormant season. Orchard replanting continued.\nshipped anise, arugula, bok choy, broccoli, cabbage (green and red), In San Joaquin County, winter farmers’ market vegetables were\ncauliflower, celery, Chinese cabbage, cilantro, endive, escarole, harvested. In Fresno County, winter vegetables were in good\nfrisee, kale greens, lettuce (Boston, green leaf, iceberg, red leaf, condition. Irrigation was not needed due to the rainy weather. With\nromaine and other), parsley, radicchio, and spinach. Beneficial rains snow covering higher rangeland, more cattle were in valley pastures\ncontinued last week in Coconino and Yavapai Counties, where soil and most were being fed supplemental hay. Also in Fresno County,\nmoisture levels were reported as high and water tanks were nearly full supplemental feeding of livestock continued as new germination of\nor completely full. Wheat planting was delayed in Graham County rangeland grasses improved from recent rains. Sheep were grazing\naccording to respondents, due to cold and wet weather. For the on idle crop fields, dormant alfalfa, and stubble crop grounds.\nsecond week in a row, every weather station reported some\nmeasurable precipitation. Douglas reported the least at 0.07 inch, Florida: There were 6.4 days suitable for fieldwork. Precipitation\nwhile Payson reported the most at 1.71 inches. All but 12 of the estimates ranged from no rain in several locations including Apopka\n52 weather stations reported above-normal temperatures. The highest (Orange County), Dade City (Pasco County), and Sebring\ntemperature was 78°F at Buckeye; the lowest was 0°F at Flagstaff. (Highlands County) to 7.74 inches in DeFuniak Springs\n(Walton County). Average temperatures ranged from 60.6°F in\nCalifornia: Rainfall was limited to the far northwestern mountains Macclenny (Baker County) to 73.2°F in Ft. Lauderdale\non Monday, where over an inch of rain fell. Tuesday and (Broward County). Although rain fell during the week across many\nWednesday were fairly dry, but the Pineapple Express began on parts of the state, most farms remain in drought or abnormally dry.\nThursday evening affecting areas from Salinas to Los Angeles with In the citrus-growing region, temperatures were warmer than\nlight rain. Friday and Saturday saw moderate to heavy rain across average for the first part of the week. Daily highs were in the mid\nthe southern one-third of the state, with the highest totals (over to upper 80s on most afternoons. A front passing through the center\n2 inches) in and around Bakersfield. The deserts received around an of the state late Thursday lowered temperature about 20°F, but did\ninch of rain, while other locations in the southern valley saw up to not bring much rain. Canals and ditches remained at low levels due\nan inch. Upslope showers also affected the central Sierras, where of the lack of widespread rain over the past couple of months.\nup to one-half of an inch of rain fell. On Sunday, the main rainfall Growers were irrigating frequently to keep moisture in the ground\narea shifted to the northern half of the state, where most locations and on the trees. Early tangerine harvest (Fallglo and Sunburst) was\nsaw up to one-quarter inch of rain, but the northwestern mountains about over for the season. Early and mid-season oranges were still\nand windward slopes of the Sierras saw just over one-half inch. being harvested for the fresh market. Grapefruit harvest was in full\nTemperatures at higher elevations in the central and southern swing, with internal quality holding well. All processing plants\nSierras were low enough to result in snow. Up to 10 inches of new were open and accepting field-run fruit. Growers continued to\nsnow fell at high elevations, particularly at Mt. Whitney. Up to spray in order to lower the psyllid population. Primarily, growers\n6 inches fell just south of Tahoe. However, mild weather resulted were performing general grove maintenance in well-kept groves.\nin a decrease of the mountain snowpack, as meltwater runoff Strawberry harvesting activities were reported during the week in\nincreased. High temperatures were in the 30s to 50s in the Hillsborough County. Greens, cabbage, and broccoli were being\nmountains, 40s to 50s along the coast and in the valley, and 50s to planted in Bradford County. Spring watermelons continued to be\n70s in the desert. Low temperatures were between the 0s and 30s in planted in several counties. Crops coming to market included\nthe mountains; 20s to 40s in the desert; and 30s to 40s in the coast avocado, beets, bitter melon, boniato, collards, eggplant, green\nand valley. On Monday and Tuesday temperatures fell into the 20s beans, kale, malanga, pepper, squash, sweet corn, tomato, zucchini,\nwith widespread hard freezes across the agricultural areas of the and other tropical fruits. Cattle condition remained mostly fair to\nvalley, and subzero temperatures in the mountains. Field good despite persistently dry conditions and deteriorating pasture\npreparation for winter forage crops continued where the moisture quality. Many cattle operators were using supplemental feeding.', '', ''
+$ corn_section        <str> '', '', '', '', ''
+$ corn_table_text     <str> '', '', '', '', ''
+$ report_text         <str> '[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]', '[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]', '[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]', '[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]', '[WEATHER HIGHLIGHTS]\n\n[CORN SECTION]\n\n[CORN PROGRESS TABLE]'
+```
+
+---
+
 ## feature_panel.parquet
 **Path:** `data/processed/feature_panel.parquet`
-**Size:** 210890 bytes | **Type:** Parquet | **Shape:** 802 rows × 52 columns
+**Size:** 162923 bytes | **Type:** Parquet | **Shape:** 802 rows × 39 columns
 
 ### Columns
 ```
@@ -165,26 +210,7 @@ calendar_is_planting_season              Int64
 calendar_is_pollination_weather_season   Int64          
 calendar_is_harvest_season               Int64          
 calendar_is_winter_storage_season        Int64          
-weather_temp_mean_f                      Float64        
-weather_precip_mm                        Float64        
-weather_gdd                              Float64        
-weather_temp_anomaly_f                   Float64        
-weather_precip_anomaly_mm                Float64        
-weather_forecast_temp_week1_f            Float64        
-weather_forecast_precip_week1_mm         Float64        
-weather_forecast_temp_week2_f            Float64        
-weather_forecast_precip_week2_mm         Float64        
-weather_year                             Int32          
 report_text                              String         
-report_count                             Int64          
-text_kw_drought                          Int64          
-text_kw_rain                             Int64          
-text_kw_heat                             Int64          
-text_kw_planting                         Int64          
-text_kw_harvest                          Int64          
-text_kw_yield                            Int64          
-text_kw_export                           Int64          
-text_kw_ethanol                          Int64          
 ai_moisture_stress                       Float64         (1.6% null)
 ai_heat_stress                           Float64         (1.6% null)
 ai_excess_rain_risk                      Float64         (1.6% null)
@@ -192,28 +218,34 @@ ai_planting_delay_risk                   Float64         (1.6% null)
 ai_harvest_delay_risk                    Float64         (1.6% null)
 ai_yield_risk                            Float64         (1.6% null)
 ai_crop_condition_trend                  Float64         (1.6% null)
+gdelt_relevance_score                    Float64         (28.1% null)
+gdelt_yield_supply_risk                  Float64         (28.1% null)
+gdelt_inventory_supply_tightness         Float64         (28.1% null)
+gdelt_demand_strength                    Float64         (28.1% null)
+gdelt_ethanol_export_signal              Float64         (28.1% null)
+gdelt_trade_policy_risk                  Float64         (28.1% null)
 ```
 
 ### Sample Values (first 5 rows)
 ```
 Rows: 802
-Columns: 52
-$ close                                           <f64> 22.45616321018651, 22.33453974462214, 22.392190003077836, 21.75809667646509, 22.178868211016503
-$ volume                                          <i64> 1073599, 1135960, 1120464, 1217645, 1219154
+Columns: 39
+$ close                                           <f64> 37.43000030517578, 40.22999954223633, 40.70000076293945, 40.099998474121094, 42.150001525878906
+$ volume                                          <i64> 443900, 657300, 371200, 310100, 420000
 $ week                                   <datetime[μs]> 2011-01-07 00:00:00, 2011-01-14 00:00:00, 2011-01-21 00:00:00, 2011-01-28 00:00:00, 2011-02-04 00:00:00
-$ price_log_close                                 <f64> 3.1115651070322126, 3.106134347679831, 3.108712237487881, 3.0799859492496635, 3.0991399531638515
-$ price_log_return                                <f64> null, -0.005430759352381465, 0.00257788980804996, -0.028726288238217546, 0.019154003914187978
-$ price_lag_return_1w                             <f64> null, null, -0.005430759352381465, 0.00257788980804996, -0.028726288238217546
-$ price_lag_return_2w                             <f64> null, null, null, -0.005430759352381465, 0.00257788980804996
+$ price_log_close                                 <f64> 3.6224725300695777, 3.6946129745830323, 3.7062281111939903, 3.6913762962606795, 3.741234720649024
+$ price_log_return                                <f64> null, 0.07214044451345458, 0.011615136610958032, -0.01485181493331078, 0.049858424388344424
+$ price_lag_return_1w                             <f64> null, null, 0.07214044451345458, 0.011615136610958032, -0.01485181493331078
+$ price_lag_return_2w                             <f64> null, null, null, 0.07214044451345458, 0.011615136610958032
 $ price_lag_return_4w                             <f64> null, null, null, null, null
 $ price_lag_return_12w                            <f64> null, null, null, null, null
-$ price_rolling_vol_4w                            <f64> null, null, null, null, 0.01991329583245575
+$ price_rolling_vol_4w                            <f64> null, null, null, null, 0.03881356955406374
 $ price_rolling_vol_12w                           <f64> null, null, null, null, null
-$ price_momentum_4w                               <f64> null, null, null, null, -0.012425153868361072
+$ price_momentum_4w                               <f64> null, null, null, null, 0.11876219057944626
 $ price_momentum_12w                              <f64> null, null, null, null, null
-$ price_volume_change_4w                          <f64> null, null, null, null, 0.12714061979042768
-$ target_log_return_next                          <f64> -0.005430759352381465, 0.00257788980804996, -0.028726288238217546, 0.019154003914187978, -0.007852846750882936
-$ target_up_next                                  <f64> 0.0, 1.0, 0.0, 1.0, 0.0
+$ price_volume_change_4w                          <f64> null, null, null, null, -0.05534460056257558
+$ target_log_return_next                          <f64> 0.07214044451345458, 0.011615136610958032, -0.01485181493331078, 0.049858424388344424, 0.03473942632978799
+$ target_up_next                                  <f64> 1.0, 1.0, 0.0, 1.0, 1.0
 $ calendar_month                                  <i32> 1, 1, 1, 1, 2
 $ calendar_quarter                                <i32> 1, 1, 1, 1, 1
 $ calendar_week_of_year                           <i64> 1, 2, 3, 4, 5
@@ -223,26 +255,7 @@ $ calendar_is_planting_season                     <i64> 0, 0, 0, 0, 0
 $ calendar_is_pollination_weather_season          <i64> 0, 0, 0, 0, 0
 $ calendar_is_harvest_season                      <i64> 0, 0, 0, 0, 0
 $ calendar_is_winter_storage_season               <i64> 1, 1, 1, 1, 1
-$ weather_temp_mean_f                             <f64> 24.138762916729455, 27.705206811169017, 30.590972709341923, 34.412611356635175, 33.20059461592409
-$ weather_precip_mm                               <f64> 7.383392305013175, 10.166843148745293, 11.799872327255878, 11.13757939408952, 14.973133901404852
-$ weather_gdd                                     <f64> 0.0, 0.0, 0.0, 0.0, 0.0
-$ weather_temp_anomaly_f                          <f64> -5.24448899537412, -1.6623283677233402, 0.06859144153178676, 2.2852389050530206, 2.396268533362388
-$ weather_precip_anomaly_mm                       <f64> -1.6689264959935448, 2.0150364252257784, -0.3576529459245723, 1.3057155566209087, 4.894894104268705
-$ weather_forecast_temp_week1_f                   <f64> 22.77857384956378, 28.225073377256063, 32.676367637233454, 34.246851773709125, 31.5193003497357
-$ weather_forecast_precip_week1_mm                <f64> 1.178248349548526, 12.741298553260759, 15.12202477875238, 20.282685315286916, 21.69842376341291
-$ weather_forecast_temp_week2_f                   <f64> 19.496900462617027, 29.383307177675206, 27.4660250540197, 34.56841451216575, 35.36437048110509
-$ weather_forecast_precip_week2_mm                <f64> 5.690742036849238, 10.754046489919329, 12.053196427047673, 7.808407839788405, 16.84800157164146
-$ weather_year                                    <i32> 2011, 2011, 2011, 2011, 2011
-$ report_text                                     <str> 'Crop progress notes corn planting pace, yield condition, and harvest delays. Corn Belt yield rain soil moisture. Crop progress notes corn planting pace, yield condition, and harvest delays. Corn Belt yield rain soil moisture.', 'Weekly weather bulletin highlights rain, drought, heat, and soil moisture across the Corn Belt. Corn Belt yield rain soil moisture. Weekly weather bulletin highlights rain, drought, heat, and soil moisture across the Corn Belt. Corn Belt yield rain soil moisture.', 'Markets discuss export demand, ethanol use, and crop ratings for corn. Corn Belt yield rain soil moisture. Markets discuss export demand, ethanol use, and crop ratings for corn. Corn Belt yield rain soil moisture.', 'Crop progress notes corn planting pace, yield condition, and harvest delays. Corn Belt yield rain soil moisture. Crop progress notes corn planting pace, yield condition, and harvest delays. Corn Belt yield rain soil moisture.', 'Weekly weather bulletin highlights rain, drought, heat, and soil moisture across the Corn Belt. Corn Belt yield rain soil moisture. Weekly weather bulletin highlights rain, drought, heat, and soil moisture across the Corn Belt. Corn Belt yield rain soil moisture.'
-$ report_count                                    <i64> 2, 2, 2, 2, 2
-$ text_kw_drought                                 <i64> 0, 2, 0, 0, 2
-$ text_kw_rain                                    <i64> 2, 4, 2, 2, 4
-$ text_kw_heat                                    <i64> 0, 2, 0, 0, 2
-$ text_kw_planting                                <i64> 2, 0, 0, 2, 0
-$ text_kw_harvest                                 <i64> 2, 0, 0, 2, 0
-$ text_kw_yield                                   <i64> 4, 2, 2, 4, 2
-$ text_kw_export                                  <i64> 0, 0, 2, 0, 0
-$ text_kw_ethanol                                 <i64> 0, 0, 2, 0, 0
+$ report_text                                     <str> '', '', '', '', ''
 $ ai_moisture_stress                              <f64> 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_heat_stress                                  <f64> 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_excess_rain_risk                             <f64> 0.0, 0.0, 0.0, 0.0, 0.0
@@ -250,24 +263,30 @@ $ ai_planting_delay_risk                          <f64> 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_harvest_delay_risk                           <f64> 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_yield_risk                                   <f64> 0.0, 0.0, 0.0, 0.0, 0.0
 $ ai_crop_condition_trend                         <f64> 0.0, 0.0, 0.0, 0.0, 0.0
+$ gdelt_relevance_score                           <f64> null, null, null, null, null
+$ gdelt_yield_supply_risk                         <f64> null, null, null, null, null
+$ gdelt_inventory_supply_tightness                <f64> null, null, null, null, null
+$ gdelt_demand_strength                           <f64> null, null, null, null, null
+$ gdelt_ethanol_export_signal                     <f64> null, null, null, null, null
+$ gdelt_trade_policy_risk                         <f64> null, null, null, null, null
 ```
 
 ### Numeric Column Statistics
 ```
-close: min=10.771362557195754, max=32.454616574824456, mean=20.21, median=21.99329894283777
-volume: min=816013, max=1350999, mean=1074026.04, median=1075587.0
-price_log_close: min=2.376890997297513, max=3.479842700360013, mean=2.95, median=3.090737662508623
-price_log_return: min=-0.04967994866510317, max=0.0529566094015097, mean=-0.00, median=-0.00035372149320478385
-price_lag_return_1w: min=-0.04967994866510317, max=0.0529566094015097, mean=-0.00, median=-0.00033014603484371463
-price_lag_return_2w: min=-0.04967994866510317, max=0.0529566094015097, mean=-0.00, median=-0.0003065705764826454
-price_lag_return_4w: min=-0.04967994866510317, max=0.0529566094015097, mean=-0.00, median=-0.00026690093345171917
-price_lag_return_12w: min=-0.04967994866510317, max=0.0529566094015097, mean=-0.00, median=-0.00048154464968375166
-price_rolling_vol_4w: min=0.0015885467944480685, max=0.036231878096158854, mean=0.02, median=0.015551830764662688
-price_rolling_vol_12w: min=0.007555558486665588, max=0.026440798072540992, mean=0.02, median=0.016752351169801987
-price_momentum_4w: min=-0.10102073782633347, max=0.09925102912748551, mean=-0.00, median=-0.0031695505832920468
-price_momentum_12w: min=-0.19617381191835737, max=0.21358851117552957, mean=-0.01, median=-0.0117398816562293
-price_volume_change_4w: min=-0.16714690655835346, max=0.18770733039090806, mean=-0.00, median=-0.004292832957425918
-target_log_return_next: min=-0.04967994866510317, max=0.0529566094015097, mean=-0.00, median=-0.00035372149320478385
+close: min=11.59000015258789, max=51.36000061035156, mean=24.43, median=20.90999984741211
+volume: min=60700, max=9555100, mean=676546.13, median=398150.0
+price_log_close: min=2.4501426705171383, max=3.9388596712654977, mean=3.13, median=3.0402201872692
+price_log_return: min=-0.13984923381861636, max=0.11158576469817572, mean=-0.00, median=-0.0005964944213276979
+price_lag_return_1w: min=-0.13984923381861636, max=0.11158576469817572, mean=-0.00, median=-0.0005821026957320008
+price_lag_return_2w: min=-0.13984923381861636, max=0.11158576469817572, mean=-0.00, median=-0.0005677109701363037
+price_lag_return_4w: min=-0.13984923381861636, max=0.11158576469817572, mean=-0.00, median=-0.0005964944213276979
+price_lag_return_12w: min=-0.13984923381861636, max=0.11158576469817572, mean=-0.00, median=-0.0006337280979558102
+price_rolling_vol_4w: min=0.0015756596193694358, max=0.10972818015591461, mean=0.02, median=0.02148892925655887
+price_rolling_vol_12w: min=0.00890176468741303, max=0.08032535289019585, mean=0.03, median=0.023510440417527503
+price_momentum_4w: min=-0.22093450024319905, max=0.30313848706068525, mean=-0.00, median=-0.003797647256803538
+price_momentum_12w: min=-0.29371849352609614, max=0.36294226478401503, mean=-0.01, median=-0.019747363018708164
+price_volume_change_4w: min=-1.7668431179635204, max=3.5579259226646456, mean=0.01, median=-0.03001673628646175
+target_log_return_next: min=-0.13984923381861636, max=0.11158576469817572, mean=-0.00, median=-0.0005964944213276979
 target_up_next: min=0.0, max=1.0, mean=0.49, median=0.0
 calendar_month: min=1, max=12, mean=6.43, median=6.0
 calendar_quarter: min=1, max=4, mean=2.48, median=2.0
@@ -278,25 +297,6 @@ calendar_is_planting_season: min=0, max=1, mean=0.17, median=0.0
 calendar_is_pollination_weather_season: min=0, max=1, mean=0.25, median=0.0
 calendar_is_harvest_season: min=0, max=1, mean=0.24, median=0.0
 calendar_is_winter_storage_season: min=0, max=1, mean=0.25, median=0.0
-weather_temp_mean_f: min=24.105800392075874, max=87.38961319880403, mean=53.59, median=53.38310844817467
-weather_precip_mm: min=0.0, max=40.488545937862014, mean=18.16, median=18.84287374615051
-weather_gdd: min=0.0, max=261.7272923916282, mean=67.36, median=23.681759137222645
-weather_temp_anomaly_f: min=-12.179558193469632, max=10.249991954370422, mean=0.00, median=-0.0018894469516510526
-weather_precip_anomaly_mm: min=-14.182001642637282, max=17.523418270053362, mean=0.00, median=0.06379272920694312
-weather_forecast_temp_week1_f: min=21.87789690850726, max=88.39781762061138, mean=53.63, median=54.17414676880444
-weather_forecast_precip_week1_mm: min=0.0, max=50.08926895285116, mean=18.45, median=18.683879145220757
-weather_forecast_temp_week2_f: min=19.496900462617027, max=89.11762214923885, mean=53.61, median=52.986969292580454
-weather_forecast_precip_week2_mm: min=0.0, max=48.31869572004351, mean=18.22, median=18.23608412792977
-weather_year: min=2011, max=2026, mean=2018.20, median=2018.0
-report_count: min=2, max=2, mean=2.00, median=2.0
-text_kw_drought: min=0, max=4, mean=1.00, median=0.0
-text_kw_rain: min=0, max=4, mean=2.33, median=2.0
-text_kw_heat: min=0, max=4, mean=1.00, median=0.0
-text_kw_planting: min=0, max=4, mean=1.01, median=0.0
-text_kw_harvest: min=0, max=4, mean=1.15, median=0.0
-text_kw_yield: min=0, max=4, mean=1.84, median=2.0
-text_kw_export: min=0, max=2, mean=0.67, median=0.0
-text_kw_ethanol: min=0, max=2, mean=0.67, median=0.0
 ai_moisture_stress: min=0.0, max=3.0, mean=0.17, median=0.0
 ai_heat_stress: min=0.0, max=3.0, mean=0.12, median=0.0
 ai_excess_rain_risk: min=0.0, max=3.0, mean=0.14, median=0.0
@@ -304,6 +304,12 @@ ai_planting_delay_risk: min=0.0, max=3.0, mean=0.17, median=0.0
 ai_harvest_delay_risk: min=0.0, max=2.0, mean=0.12, median=0.0
 ai_yield_risk: min=0.0, max=3.0, mean=0.30, median=0.0
 ai_crop_condition_trend: min=-2.0, max=2.0, mean=-0.01, median=0.0
+gdelt_relevance_score: min=0.0, max=2.5384615384615383, mean=1.85, median=1.9047619047619047
+gdelt_yield_supply_risk: min=0.0, max=1.847457627118644, mean=0.85, median=0.845679012345679
+gdelt_inventory_supply_tightness: min=0.0, max=1.4179104477611941, mean=0.66, median=0.6470588235294118
+gdelt_demand_strength: min=0.0, max=2.255892255892256, mean=0.95, median=0.9192546583850931
+gdelt_ethanol_export_signal: min=0.0, max=1.7965451055662187, mean=0.63, median=0.5766871165644172
+gdelt_trade_policy_risk: min=0.0, max=1.86, mean=0.27, median=0.20714285714285716
 ```
 
 ---
@@ -350,7 +356,7 @@ volume: min=143919, max=291292, mean=214779.39, median=215205.5
 
 ## expected_return_predictions.csv
 **Path:** `reports/expected_return_predictions.csv`
-**Size:** 145226 bytes | **Type:** Csv | **Shape:** 700 rows × 18 columns
+**Size:** 598336 bytes | **Type:** Csv | **Shape:** 2,800 rows × 18 columns
 
 ### Columns
 ```
@@ -376,42 +382,42 @@ cum_benchmark_return                     Float64
 
 ### Sample Values (first 5 rows)
 ```
-Rows: 700
+Rows: 2800
 Columns: 18
 $ week                   <str> '2023-01-06', '2023-01-13', '2023-01-20', '2023-01-27', '2023-02-03'
 $ fold                   <i64> 0, 0, 0, 0, 0
-$ feature_set            <str> 'price_calendar', 'price_calendar', 'price_calendar', 'price_calendar', 'price_calendar'
+$ feature_set            <str> 'price_ai_gdelt', 'price_ai_gdelt', 'price_ai_gdelt', 'price_ai_gdelt', 'price_ai_gdelt'
 $ estimator              <str> 'hgb', 'hgb', 'hgb', 'hgb', 'hgb'
-$ model                  <str> 'price_calendar_hgb', 'price_calendar_hgb', 'price_calendar_hgb', 'price_calendar_hgb', 'price_calendar_hgb'
-$ target_log_return_next <f64> 0.0024110656570526245, -0.007558729831937505, 0.04091419471991031, -0.00465628239000182, -0.0015193966698214822
-$ predicted_return       <f64> 0.008489099733810127, 0.004242262824826182, -0.002621742966443223, 0.009952973865791396, 3.7244199907186776e-05
+$ model                  <str> 'price_ai_gdelt_hgb', 'price_ai_gdelt_hgb', 'price_ai_gdelt_hgb', 'price_ai_gdelt_hgb', 'price_ai_gdelt_hgb'
+$ target_log_return_next <f64> 0.026637756991465977, -0.005271073667588055, 0.0018857687565256853, 0.0015059870145548437, 0.0030052586123381353
+$ predicted_return       <f64> 0.008084752295827505, -0.0032932471307475196, 0.004446621839089969, -0.008702088708664162, -0.003893687693006561
 $ train_start            <str> '2011-01-07', '2011-01-07', '2011-01-07', '2011-01-07', '2011-01-07'
 $ train_end              <str> '2022-12-30', '2022-12-30', '2022-12-30', '2022-12-30', '2022-12-30'
 $ n_train                <i64> 626, 626, 626, 626, 626
 $ trade_threshold        <f64> 0.003, 0.003, 0.003, 0.003, 0.003
-$ position               <f64> 1.0, 1.0, 0.0, 1.0, 0.0
-$ turnover               <f64> 1.0, 0.0, 1.0, 1.0, 1.0
-$ transaction_cost       <f64> 0.0005, 0.0, 0.0005, 0.0005, 0.0005
-$ strategy_log_return    <f64> 0.0019110656570526245, -0.007558729831937505, -0.0005, -0.005156282390001821, -0.0005
-$ benchmark_log_return   <f64> 0.0024110656570526245, -0.007558729831937505, 0.04091419471991031, -0.00465628239000182, -0.0015193966698214822
-$ cum_strategy_return    <f64> 0.0019128929068381595, -0.005631746100313362, -0.006128805951944871, -0.011240297017027112, -0.011734553294152295
-$ cum_benchmark_return   <f64> 0.0024139746132789686, -0.0051344376566132555, 0.03641384726626007, 0.03159922952916583, 0.030033011249957386
+$ position               <f64> 1.0, 0.0, 1.0, 0.0, 0.0
+$ turnover               <f64> 1.0, 1.0, 1.0, 1.0, 0.0
+$ transaction_cost       <f64> 0.0005, 0.0005, 0.0005, 0.0005, 0.0
+$ strategy_log_return    <f64> 0.026137756991465977, -0.0005, 0.0013857687565256853, -0.0005, 0.0
+$ benchmark_log_return   <f64> 0.026637756991465977, -0.005271073667588055, 0.0018857687565256853, 0.0015059870145548437, 0.0030052586123381353
+$ cum_strategy_return    <f64> 0.02648234385359971, 0.025969230970583457, 0.027391972643818097, 0.026878405060091426, 0.026878405060091426
+$ cum_benchmark_return   <f64> 0.026995713357207185, 0.021596585397285928, 0.023524897924116273, 0.02506747438797885, 0.028152700873305347
 ```
 
 ### Numeric Column Statistics
 ```
 fold: min=0, max=13, mean=6.24, median=6.0
-target_log_return_next: min=-0.04705158725929204, max=0.04091419471991031, mean=0.00, median=0.0004587613480366848
-predicted_return: min=-0.01671334611219972, max=0.01807692672272437, mean=-0.00, median=-0.0007957815765080265
+target_log_return_next: min=-0.1386444483967515, max=0.1047184545507811, mean=-0.00, median=-0.0004552801920918448
+predicted_return: min=-0.042631901773694206, max=0.03919041496771588, mean=-0.00, median=-0.001505576329211728
 n_train: min=626, max=795, mean=707.12, median=704.0
 trade_threshold: min=0.003, max=0.003, mean=0.00, median=0.003
-position: min=0.0, max=1.0, mean=0.15, median=0.0
-turnover: min=0.0, max=1.0, mean=0.20, median=0.0
+position: min=0.0, max=1.0, mean=0.27, median=0.0
+turnover: min=0.0, max=1.0, mean=0.34, median=0.0
 transaction_cost: min=0.0, max=0.0005, mean=0.00, median=0.0
-strategy_log_return: min=-0.038672138662130984, max=0.02737802063894995, mean=0.00, median=-0.0
-benchmark_log_return: min=-0.04705158725929204, max=0.04091419471991031, mean=0.00, median=0.0004587613480366848
-cum_strategy_return: min=-0.07790436672785361, max=0.07324013247701933, mean=-0.01, median=-0.0074596142273398724
-cum_benchmark_return: min=-0.04075585041612628, max=0.15913636058971115, mean=0.05, median=0.050862385429549795
+strategy_log_return: min=-0.1391444483967515, max=0.1047184545507811, mean=-0.00, median=0.0
+benchmark_log_return: min=-0.1386444483967515, max=0.1047184545507811, mean=-0.00, median=-0.0004552801920918448
+cum_strategy_return: min=-0.3178399020577737, max=0.23882738294848926, mean=-0.01, median=0.007753249615289448
+cum_benchmark_return: min=-0.34284609660702303, max=0.028152700873305347, mean=-0.23, median=-0.27111456243377985
 ```
 
 ---
@@ -489,7 +495,7 @@ cum_benchmark_return: min=-0.04075585041612628, max=0.15913636058971115, mean=0.
 
 ## price_target_predictions.csv
 **Path:** `reports/price_target_predictions.csv`
-**Size:** 88735 bytes | **Type:** Csv | **Shape:** 700 rows × 13 columns
+**Size:** 359596 bytes | **Type:** Csv | **Shape:** 2,800 rows × 13 columns
 
 ### Columns
 ```
@@ -510,15 +516,15 @@ target_log_return_next                   String          (50.0% null)
 
 ### Sample Values (first 5 rows)
 ```
-Rows: 700
+Rows: 2800
 Columns: 13
 $ week                   <str> '2023-01-06', '2023-01-13', '2023-01-20', '2023-01-27', '2023-02-03'
 $ fold                   <i64> 0, 0, 0, 0, 0
 $ experiment             <str> 'return_regression', 'return_regression', 'return_regression', 'return_regression', 'return_regression'
-$ feature_set            <str> 'price_calendar', 'price_calendar', 'price_calendar', 'price_calendar', 'price_calendar'
+$ feature_set            <str> 'price_ai', 'price_ai', 'price_ai', 'price_ai', 'price_ai'
 $ model                  <str> 'price_only_ridge', 'price_only_ridge', 'price_only_ridge', 'price_only_ridge', 'price_only_ridge'
-$ y_true_return          <f64> 0.0024110656570526245, -0.007558729831937505, 0.04091419471991031, -0.00465628239000182, -0.0015193966698214822
-$ y_pred_return          <f64> -0.0026879685651374835, -0.002673485234279229, -0.0023521984721173233, -5.8082546002575716e-05, -0.001127041103793948
+$ y_true_return          <f64> 0.026637756991465977, -0.005271073667588055, 0.0018857687565256853, 0.0015059870145548437, 0.0030052586123381353
+$ y_pred_return          <f64> 0.0034024391760000706, -0.0022157332551042993, -0.000777280100868632, -0.00018789958747508426, -0.001984342289117705
 $ train_start            <str> '2011-01-07', '2011-01-07', '2011-01-07', '2011-01-07', '2011-01-07'
 $ train_end              <str> '2022-12-30', '2022-12-30', '2022-12-30', '2022-12-30', '2022-12-30'
 $ n_train                <i64> 626, 626, 626, 626, 626
@@ -530,8 +536,8 @@ $ target_log_return_next <str> null, null, null, null, null
 ### Numeric Column Statistics
 ```
 fold: min=0, max=13, mean=6.24, median=6.0
-y_true_return: min=-0.04705158725929204, max=0.04091419471991031, mean=0.00, median=0.0004587613480366848
-y_pred_return: min=-0.008114867796390077, max=0.004914865276110814, mean=-0.00, median=-0.0007107599942706166
+y_true_return: min=-0.1386444483967515, max=0.1047184545507811, mean=-0.00, median=-0.0004552801920918448
+y_pred_return: min=-0.030128189347007603, max=0.03919041496771588, mean=-0.00, median=-0.0014918937072026432
 n_train: min=626, max=795, mean=707.12, median=704.0
 ```
 
@@ -614,4 +620,60 @@ strategy_log_return: min=-0.01857012219783699, max=0.02552126719586595, mean=0.0
 benchmark_log_return: min=-0.04705158725929204, max=0.04091419471991031, mean=0.00, median=0.0004587613480366848
 cum_strategy_return: min=-0.019265152072670988, max=0.09072365321143483, mean=0.02, median=0.03084648100507159
 cum_benchmark_return: min=-0.04075585041612628, max=0.15913636058971115, mean=0.05, median=0.050862385429549795
+```
+
+---
+
+## volatility_predictions.csv
+**Path:** `reports/volatility_predictions.csv`
+**Size:** 470364 bytes | **Type:** Csv | **Shape:** 2,800 rows × 14 columns
+
+### Columns
+```
+week                                     String         
+fold                                     Int64          
+feature_set                              String         
+estimator                                String         
+model                                    String         
+target_log_return_next                   Float64        
+target_abs_return_next                   Float64        
+predicted_abs_return_next                Float64        
+high_vol_threshold                       Float64        
+y_true_high_vol                          Int64          
+y_pred_high_vol                          Int64          
+train_start                              String         
+train_end                                String         
+n_train                                  Int64          
+```
+
+### Sample Values (first 5 rows)
+```
+Rows: 2800
+Columns: 14
+$ week                      <str> '2023-01-06', '2023-01-13', '2023-01-20', '2023-01-27', '2023-02-03'
+$ fold                      <i64> 0, 0, 0, 0, 0
+$ feature_set               <str> 'price_ai_gdelt', 'price_ai_gdelt', 'price_ai_gdelt', 'price_ai_gdelt', 'price_ai_gdelt'
+$ estimator                 <str> 'hgb', 'hgb', 'hgb', 'hgb', 'hgb'
+$ model                     <str> 'price_ai_gdelt_hgb', 'price_ai_gdelt_hgb', 'price_ai_gdelt_hgb', 'price_ai_gdelt_hgb', 'price_ai_gdelt_hgb'
+$ target_log_return_next    <f64> 0.0024110656570526245, -0.007558729831937505, 0.04091419471991031, -0.00465628239000182, -0.0015193966698214822
+$ target_abs_return_next    <f64> 0.0024110656570526245, 0.007558729831937505, 0.04091419471991031, 0.00465628239000182, 0.0015193966698214822
+$ predicted_abs_return_next <f64> 0.01044648495481766, 0.010719116925302863, 0.01168537911713701, 0.011482403115315832, 0.012592687476475371
+$ high_vol_threshold        <f64> 0.0182262198375418, 0.0182262198375418, 0.0182262198375418, 0.0182262198375418, 0.0182262198375418
+$ y_true_high_vol           <i64> 0, 0, 1, 0, 0
+$ y_pred_high_vol           <i64> 0, 0, 0, 0, 0
+$ train_start               <str> '2011-01-07', '2011-01-07', '2011-01-07', '2011-01-07', '2011-01-07'
+$ train_end                 <str> '2022-12-30', '2022-12-30', '2022-12-30', '2022-12-30', '2022-12-30'
+$ n_train                   <i64> 626, 626, 626, 626, 626
+```
+
+### Numeric Column Statistics
+```
+fold: min=0, max=13, mean=6.24, median=6.0
+target_log_return_next: min=-0.04705158725929204, max=0.04091419471991031, mean=0.00, median=0.0004587613480366848
+target_abs_return_next: min=0.0002309886158760044, max=0.04705158725929204, mean=0.01, median=0.011295155480222974
+predicted_abs_return_next: min=0.003783356297469759, max=0.02743627110554362, mean=0.01, median=0.013828642894690952
+high_vol_threshold: min=0.01805487745517942, max=0.018246381393258734, mean=0.02, median=0.018133283173099635
+y_true_high_vol: min=0, max=1, mean=0.29, median=0.0
+y_pred_high_vol: min=0, max=1, mean=0.07, median=0.0
+n_train: min=626, max=795, mean=707.12, median=704.0
 ```

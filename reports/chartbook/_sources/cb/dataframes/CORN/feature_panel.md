@@ -315,7 +315,7 @@ $ gdelt_trade_policy_risk                         <f64> null
 | How is data pulled?            | Built by corn_forecast.cli build-features through pydoit.                                                    |
 | Data available up to (min)     | 2026-04-03 00:00:00                                                             |
 | Data available up to (max)     | 2026-05-15 00:00:00                                                             |
-| Dataframe Path                 | /private/tmp/FINM_33200_Group_8_three_inputs/data/processed/feature_panel.parquet                                                   |
+| Dataframe Path                 | /Users/Haruki/Library/Mobile Documents/com~apple~CloudDocs/Python/AIF/final/FINM_33200_Group_8/data/processed/feature_panel.parquet                                                   |
 
 
 **Linked Charts:**
@@ -331,8 +331,8 @@ $ gdelt_trade_policy_risk                         <f64> null
 | Lead Pipeline Developer         | FINM 33200 Group 8             |
 | Contributors                    | FINM 33200 Group 8           |
 | Git Repo URL                    | local                        |
-| Pipeline Web Page               | <a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page      |
-| Date of Last Code Update        | 2026-05-27 23:19:14           |
+| Pipeline Web Page               | <a href="file:///Users/Haruki/Library/Mobile Documents/com~apple~CloudDocs/Python/AIF/final/FINM_33200_Group_8/docs/index.html">Pipeline Web Page      |
+| Date of Last Code Update        | 2026-05-28 00:30:21           |
 | OS Compatibility                |  |
 | Linked Dataframes               |  [CORN:feature_panel](../../dataframes/CORN/feature_panel.md)<br>  [CORN:price_target_predictions](../../dataframes/CORN/price_target_predictions.md)<br>  [CORN:expected_return_predictions](../../dataframes/CORN/expected_return_predictions.md)<br>  [CORN:volatility_predictions](../../dataframes/CORN/volatility_predictions.md)<br>  [CORN:horizon_robustness_metrics](../../dataframes/CORN/horizon_robustness_metrics.md)<br>  [CORN:horizon_robustness_predictions](../../dataframes/CORN/horizon_robustness_predictions.md)<br>  [CORN:gdelt_weekly_scores](../../dataframes/CORN/gdelt_weekly_scores.md)<br>  |
 

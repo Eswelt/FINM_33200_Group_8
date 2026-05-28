@@ -67,8 +67,8 @@ apidocs/index
 | Lead Pipeline Developer         | FINM 33200 Group 8             |
 | Contributors                    | FINM 33200 Group 8           |
 | Git Repo URL                    | local                        |
-| Pipeline Web Page               | <a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page      |
-| Date of Last Code Update        | 2026-05-27 23:19:14           |
+| Pipeline Web Page               | <a href="file:///Users/Haruki/Library/Mobile Documents/com~apple~CloudDocs/Python/AIF/final/FINM_33200_Group_8/docs/index.html">Pipeline Web Page      |
+| Date of Last Code Update        | 2026-05-28 00:30:21           |
 | OS Compatibility                |  |
 | Linked Dataframes               |  [CORN:feature_panel](cb/dataframes/CORN/feature_panel.md)<br>  [CORN:price_target_predictions](cb/dataframes/CORN/price_target_predictions.md)<br>  [CORN:expected_return_predictions](cb/dataframes/CORN/expected_return_predictions.md)<br>  [CORN:volatility_predictions](cb/dataframes/CORN/volatility_predictions.md)<br>  [CORN:horizon_robustness_metrics](cb/dataframes/CORN/horizon_robustness_metrics.md)<br>  [CORN:horizon_robustness_predictions](cb/dataframes/CORN/horizon_robustness_predictions.md)<br>  [CORN:gdelt_weekly_scores](cb/dataframes/CORN/gdelt_weekly_scores.md)<br>  |
 

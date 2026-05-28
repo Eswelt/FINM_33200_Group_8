@@ -49,6 +49,10 @@ PERCENT_COLUMNS = {
     "turnover",
     "extreme_event_rate",
     "tradeable_event_rate",
+    "high_vol_accuracy",
+    "high_vol_balanced_accuracy",
+    "high_vol_rate_actual",
+    "high_vol_rate_predicted",
 }
 
 
@@ -89,6 +93,11 @@ DISPLAY_NAMES = {
     "rmse": "RMSE",
     "r2": "R2",
     "direction_accuracy": "direction acc",
+    "spearman_corr": "Spearman",
+    "high_vol_accuracy": "high-vol acc",
+    "high_vol_balanced_accuracy": "high-vol balanced acc",
+    "high_vol_rate_actual": "actual high-vol rate",
+    "high_vol_rate_predicted": "pred high-vol rate",
     "strategy_total_return": "strategy return",
     "strategy_sharpe": "Sharpe",
     "max_drawdown": "max drawdown",
@@ -233,6 +242,24 @@ def _source_map() -> pd.DataFrame:
     return pd.DataFrame(rows, columns=["area", "files", "role"])
 
 
+def _project_directory_map() -> pd.DataFrame:
+    rows = [
+        ("./", "README.md, pyproject.toml, dodo.py, chartbook.toml", "Project metadata, dependencies, task graph, and ChartBook configuration."),
+        ("src/corn_forecast/", "cli.py, features.py, models.py, strategy.py", "Forecasting package and command surface used by pydoit."),
+        ("src/corn_forecast/data/", "prices.py, weather.py, usda.py", "Data adapters for price, weather, and USDA release inputs."),
+        ("src/corn_forecast/text/", "wwcb*.py, ai_features.py", "Optional WWCB parsing and AI feature extraction helpers."),
+        ("scripts/", "build_project_notebook.py, run_horizon_robustness.py, WWCB scripts", "One-off report, robustness, and text-processing scripts."),
+        ("data/raw/", "prices_CORN.csv, usda_releases.csv", "Frozen raw inputs used by the default local workflow."),
+        ("data/interim/", "weather_weekly.parquet, ai_weekly.parquet, gdelt_weekly_scores.parquet", "Staged weekly feature blocks before the final modeling panel."),
+        ("data/processed/", "feature_panel.parquet", "Final weekly modeling panel consumed by all model tasks."),
+        ("experiments/", "*_results.md", "Experiment notes and robustness write-ups included in ChartBook."),
+        ("docs_src/", "project_workflow.md, final_report.md, data_glimpses.md, figures/", "Markdown and assets that ChartBook turns into the HTML site."),
+        ("reports/", "metrics, predictions, figures, notebooks, html, chartbook", "Generated model outputs, notebook, standalone HTML, and ChartBook site."),
+        ("tests/", "test_*.py", "Unit and smoke tests for adapters, feature engineering, models, and reports."),
+    ]
+    return pd.DataFrame(rows, columns=["directory", "contains", "role"])
+
+
 def _task_map() -> pd.DataFrame:
     rows = [
         ("baseline", "Current fixed 2 percent classification baseline", "price_target_tests.json, price_target_predictions.csv"),
@@ -244,6 +271,47 @@ def _task_map() -> pd.DataFrame:
         ("tests", "Project test suite", "37 tests"),
     ]
     return pd.DataFrame(rows, columns=["task", "purpose", "main outputs"])
+
+
+def _workflow_output_map() -> pd.DataFrame:
+    workflows = [
+        (
+            "research",
+            [
+                ROOT / "reports" / "price_target_tests.json",
+                ROOT / "reports" / "price_target_predictions.csv",
+                ROOT / "reports" / "expected_return_metrics.json",
+                ROOT / "reports" / "expected_return_predictions.csv",
+                ROOT / "reports" / "volatility_metrics.json",
+                ROOT / "reports" / "volatility_predictions.csv",
+                ROOT / "reports" / "threshold_selection.json",
+                ROOT / "reports" / "threshold_selection_predictions.csv",
+                DEFAULT_NOTEBOOK,
+            ],
+        ),
+        (
+            "docs",
+            [
+                DEFAULT_NOTEBOOK,
+                DEFAULT_HTML,
+                DEFAULT_REPORT_MD,
+                DOCS_SRC / "data_glimpses.md",
+                ROOT / "reports" / "chartbook" / "index.html",
+            ],
+        ),
+    ]
+    rows = []
+    for workflow, paths in workflows:
+        missing = [path for path in paths if not path.exists()]
+        rows.append(
+            {
+                "workflow": workflow,
+                "status": "ready" if not missing else "missing outputs",
+                "main outputs": ", ".join(str(path.relative_to(ROOT)) for path in paths[:5])
+                + (" ..." if len(paths) > 5 else ""),
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def _prediction_summary(path: Path) -> dict:
@@ -258,6 +326,7 @@ def _build_report_context() -> dict:
     feature_panel = _read_table(ROOT / "data" / "processed" / "feature_panel.parquet")
     price_metrics = _metrics_frame(_read_json(ROOT / "reports" / "price_target_tests.json"))
     expected_metrics = _metrics_frame(_read_json(ROOT / "reports" / "expected_return_metrics.json"))
+    volatility_metrics = _metrics_frame(_read_json(ROOT / "reports" / "volatility_metrics.json"))
     binary_metrics = _metrics_frame(_read_json(ROOT / "reports" / "metrics.json"))
     threshold_metrics = _metrics_frame(_read_json(ROOT / "reports" / "threshold_selection.json"))
 
@@ -297,6 +366,7 @@ def _build_report_context() -> dict:
     class_metrics = price_metrics[price_metrics.get("target", pd.Series(dtype=str)).astype(str).str.contains("3class", na=False)].copy()
     return_metrics = price_metrics[price_metrics.get("target", pd.Series(dtype=str)).astype(str).eq("next_week_log_return")].copy()
     expected_metrics = _sort_desc(expected_metrics, "strategy_sharpe")
+    volatility_metrics = _sort_desc(volatility_metrics, "r2")
     threshold_metrics = _sort_desc(threshold_metrics, "strategy_sharpe")
     binary_metrics = _sort_desc(binary_metrics, "strategy_sharpe")
     class_metrics = _sort_desc(class_metrics, "balanced_accuracy_present_classes")
@@ -305,6 +375,7 @@ def _build_report_context() -> dict:
     oos = _prediction_summary(ROOT / "reports" / "price_target_predictions.csv")
     best_class = class_metrics.iloc[0] if not class_metrics.empty else pd.Series(dtype=object)
     best_expected = expected_metrics.iloc[0] if not expected_metrics.empty else pd.Series(dtype=object)
+    best_volatility = volatility_metrics.iloc[0] if not volatility_metrics.empty else pd.Series(dtype=object)
     best_threshold = threshold_metrics.iloc[0] if not threshold_metrics.empty else pd.Series(dtype=object)
     best_binary = binary_metrics.iloc[0] if not binary_metrics.empty else pd.Series(dtype=object)
 
@@ -340,6 +411,17 @@ def _build_report_context() -> dict:
                     f"{_format_cell('strategy_total_return', _metric_float(best_expected, 'strategy_total_return'))}, "
                     f"Sharpe {_format_cell('strategy_sharpe', _metric_float(best_expected, 'strategy_sharpe'))}"
                     if not best_expected.empty
+                    else "not generated"
+                ),
+            },
+            {
+                "item": "Best volatility forecast",
+                "result": (
+                    f"{best_volatility.get('run', '')}: R2 "
+                    f"{_format_cell('r2', _metric_float(best_volatility, 'r2'))}, "
+                    f"high-vol balanced acc "
+                    f"{_format_cell('high_vol_balanced_accuracy', _metric_float(best_volatility, 'high_vol_balanced_accuracy'))}"
+                    if not best_volatility.empty
                     else "not generated"
                 ),
             },
@@ -394,7 +476,7 @@ def _build_report_context() -> dict:
         else pd.DataFrame()
     )
 
-    caveats = _build_caveats(class_metrics, expected_metrics, threshold_metrics, binary_metrics)
+    caveats = _build_caveats(class_metrics, expected_metrics, volatility_metrics, threshold_metrics, binary_metrics)
     return {
         "feature_panel": feature_panel,
         "artifact_shapes": artifact_shapes,
@@ -403,20 +485,24 @@ def _build_report_context() -> dict:
         "class_metrics": class_metrics,
         "return_metrics": return_metrics,
         "expected_metrics": expected_metrics,
+        "volatility_metrics": volatility_metrics,
         "threshold_metrics": threshold_metrics,
         "binary_metrics": binary_metrics,
         "cards": cards,
         "class_distribution": class_distribution,
         "strategy_comparison": strategy_comparison,
         "caveats": caveats,
+        "directory_map": _project_directory_map(),
         "source_map": _source_map(),
         "task_map": _task_map(),
+        "workflow_output_map": _workflow_output_map(),
     }
 
 
 def _build_caveats(
     class_metrics: pd.DataFrame,
     expected_metrics: pd.DataFrame,
+    volatility_metrics: pd.DataFrame,
     threshold_metrics: pd.DataFrame,
     binary_metrics: pd.DataFrame,
 ) -> List[str]:
@@ -443,6 +529,8 @@ def _build_caveats(
                 )
     if not expected_metrics.empty and expected_metrics["r2"].dropna().lt(0).all():
         caveats.append("All expected-return regressions have negative OOS R2, so trading metrics should be treated as fragile.")
+    if not volatility_metrics.empty and volatility_metrics["r2"].dropna().le(0).all():
+        caveats.append("The direct one-week volatility regressions have non-positive OOS R2 in this run.")
     if threshold_metrics.empty:
         caveats.append("Volatility-threshold selection outputs are missing; run `uv run --extra dev doit select_threshold`.")
     if not binary_metrics.empty:
@@ -460,6 +548,10 @@ def _build_final_report_markdown(context: dict, generated_at: str) -> str:
     expected_table = _display_frame(
         context["expected_metrics"],
         ["run", "feature_set", "estimator", "mae", "rmse", "r2", "direction_accuracy", "trade_frequency", "strategy_total_return", "strategy_sharpe", "max_drawdown"],
+    )
+    volatility_table = _display_frame(
+        context["volatility_metrics"],
+        ["run", "feature_set", "estimator", "mae", "rmse", "r2", "spearman_corr", "high_vol_balanced_accuracy", "high_vol_rate_actual", "high_vol_rate_predicted", "n_test", "n_folds"],
     )
     threshold_table = _display_frame(
         context["threshold_metrics"],
@@ -490,6 +582,14 @@ def _build_final_report_markdown(context: dict, generated_at: str) -> str:
         "",
         _markdown_table(_display_frame(context["cards"], ["item", "result"])),
         "",
+        "## Project Architecture And File Directory",
+        "",
+        _markdown_table(_display_frame(context["directory_map"], ["directory", "contains", "role"], max_rows=30)),
+        "",
+        "## Workflow Outputs Generated",
+        "",
+        _markdown_table(_display_frame(context["workflow_output_map"], ["workflow", "status", "main outputs"], max_rows=10)),
+        "",
         "## Strategy Ranking Snapshot",
         "",
         _markdown_table(_display_frame(context["strategy_comparison"], ["objective", "run", "strategy_total_return", "strategy_sharpe"], max_rows=10)),
@@ -499,6 +599,12 @@ def _build_final_report_markdown(context: dict, generated_at: str) -> str:
         _markdown_table(class_table),
         "",
         "Interpretation: the current fixed-band classifier is weak; the price-only baseline is stronger than price+calendar on balanced accuracy in this run.",
+        "",
+        "## Direct Volatility Forecast",
+        "",
+        _markdown_table(volatility_table),
+        "",
+        "Interpretation: the direct one-week volatility forecast is the risk-focused diagnostic; high-volatility balanced accuracy is more relevant than directional accuracy for this target.",
         "",
         "## Auxiliary Expected-Return Strategy",
         "",
@@ -787,6 +893,14 @@ The main comparison is `price_only` versus `price_calendar` under expanding walk
         ),
         _html_output_cell("Executive summary", _html_table(_display_frame(context["cards"], ["item", "result"]))),
         _html_output_cell(
+            "Project architecture and file directory",
+            _html_table(_display_frame(context["directory_map"], ["directory", "contains", "role"], max_rows=30)),
+        ),
+        _html_output_cell(
+            "Workflow outputs generated",
+            _html_table(_display_frame(context["workflow_output_map"], ["workflow", "status", "main outputs"], max_rows=10)),
+        ),
+        _html_output_cell(
             "OOS fixed-band class distribution",
             _html_bar_chart(context["class_distribution"], "class", "weeks", "OOS weeks by fixed 2 percent class"),
         ),
@@ -806,6 +920,15 @@ The main comparison is `price_only` versus `price_calendar` under expanding walk
         _html_output_cell(
             "Return-regression diagnostic inside target test",
             _html_table(_display_frame(context["return_metrics"], ["feature_set", "mae", "rmse", "r2", "direction_accuracy", "n_test", "n_folds"])),
+        ),
+        _html_output_cell(
+            "Direct volatility forecast",
+            _html_table(
+                _display_frame(
+                    context["volatility_metrics"],
+                    ["run", "feature_set", "estimator", "mae", "rmse", "r2", "spearman_corr", "high_vol_balanced_accuracy", "high_vol_rate_actual", "high_vol_rate_predicted", "n_test", "n_folds"],
+                )
+            ),
         ),
         _html_output_cell(
             "Auxiliary expected-return strategy",
