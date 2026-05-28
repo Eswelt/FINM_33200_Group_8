@@ -114,3 +114,11 @@ class ProjectConfig:
     @property
     def expected_return_predictions_path(self) -> Path:
         return self.root / "reports" / "expected_return_predictions.csv"
+
+    @property
+    def volatility_metrics_path(self) -> Path:
+        return self.root / "reports" / "volatility_metrics.json"
+
+    @property
+    def volatility_predictions_path(self) -> Path:
+        return self.root / "reports" / "volatility_predictions.csv"

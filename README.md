@@ -128,6 +128,18 @@ uv run python -m corn_forecast.cli return-strategy \
 
 The expected-return pipeline predicts next-week log return directly and trades only when the predicted return exceeds transaction costs plus a buffer. It is an auxiliary experiment; the current main target is the fixed 2% classification task.
 
+Run the auxiliary volatility pipeline:
+
+```bash
+uv run python -m corn_forecast.cli volatility \
+  --start 2011-01-01 \
+  --end 2026-05-15 \
+  --split-date 2022-12-31 \
+  --feature-sets price_only,price_calendar,price_calendar_ai
+```
+
+The volatility pipeline predicts `abs(next_week_log_return)` and reports both regression diagnostics and a high-volatility classification check based on each training window's 70th percentile absolute return.
+
 ## Project Documents
 
 - `step_by_step.md`: research design, target definition, time split, and validation logic
@@ -221,6 +233,7 @@ Evaluation:
 
 - Classification: accuracy, balanced accuracy, macro F1, confusion matrix
 - Strategy: total return, annualized return, volatility, Sharpe, max drawdown, turnover
+- Volatility: MAE, RMSE, R2, Spearman rank correlation, high-volatility balanced accuracy
 
 ## Useful CLI Options
 

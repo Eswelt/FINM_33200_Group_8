@@ -15,6 +15,7 @@ from corn_forecast.price_target_tests import run_price_only_target_tests
 from corn_forecast.reports import make_report_artifacts, save_metrics, save_predictions
 from corn_forecast.storage import read_table, table_exists, write_table
 from corn_forecast.threshold_selection import evaluate_volatility_thresholds
+from corn_forecast.volatility import evaluate_volatility_forecast
 
 
 def add_common_options(parser: argparse.ArgumentParser) -> None:
@@ -64,6 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
         "classify-move",
         "select-threshold",
         "return-strategy",
+        "volatility",
         "make-report",
         "all",
     ):
@@ -222,6 +224,25 @@ def run_return_strategy(config: ProjectConfig, demo: bool) -> None:
     print(f"Wrote expected-return predictions: {config.expected_return_predictions_path}")
 
 
+def run_volatility_forecast(config: ProjectConfig, demo: bool) -> None:
+    prices = load_prices_for_config(config, demo=demo)
+    panel = build_model_panel(config, prices)
+    feature_sets = [value.strip() for value in config.feature_sets.split(",") if value.strip()]
+    metrics, predictions = evaluate_volatility_forecast(
+        panel=panel,
+        feature_sets=feature_sets,
+        split_date=config.split_date,
+        test_window_weeks=config.test_window_weeks,
+        retrain_step_weeks=config.retrain_step_weeks,
+        validation_scheme=config.validation_scheme,
+        train_window_weeks=config.train_window_weeks,
+    )
+    save_metrics(metrics, config.volatility_metrics_path)
+    save_predictions(predictions, config.volatility_predictions_path)
+    print(f"Wrote volatility metrics: {config.volatility_metrics_path}")
+    print(f"Wrote volatility predictions: {config.volatility_predictions_path}")
+
+
 def make_report(config: ProjectConfig) -> None:
     make_report_artifacts(
         metrics_path=config.metrics_path,
@@ -254,6 +275,8 @@ def run(args: argparse.Namespace) -> int:
         select_threshold(config, demo=args.demo, threshold_grid=args.threshold_grid)
     elif args.command == "return-strategy":
         run_return_strategy(config, demo=args.demo)
+    elif args.command == "volatility":
+        run_volatility_forecast(config, demo=args.demo)
     elif args.command == "make-report":
         make_report(config)
     elif args.command == "all":

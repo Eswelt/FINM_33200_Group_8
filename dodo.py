@@ -14,6 +14,7 @@ START = "2011-01-01"
 END = "2026-05-15"
 SPLIT_DATE = "2022-12-31"
 FEATURE_SETS = "price_only,price_calendar"
+THREE_INPUT_FEATURE_SETS = "price_only,price_calendar,price_calendar_ai"
 FIXED_RETURN_THRESHOLD = "0.02"
 TRANSACTION_COST_BPS = "5"
 BUFFER_BPS = "25"
@@ -157,6 +158,22 @@ def task_return_strategy():
         ],
         "file_dep": [_path(DATA_RAW / "prices_CORN.csv")],
         "targets": [_path(REPORTS / "expected_return_metrics.json"), _path(REPORTS / "expected_return_predictions.csv")],
+    }
+
+
+def task_volatility():
+    """Run the auxiliary next-week absolute-return volatility forecast."""
+    return {
+        "actions": [
+            _cli(
+                "volatility",
+                *COMMON_ARGS,
+                "--feature-sets",
+                THREE_INPUT_FEATURE_SETS,
+            )
+        ],
+        "file_dep": [_path(DATA_RAW / "prices_CORN.csv")],
+        "targets": [_path(REPORTS / "volatility_metrics.json"), _path(REPORTS / "volatility_predictions.csv")],
     }
 
 
@@ -321,7 +338,7 @@ def task_core():
 def task_research():
     """Run the main research experiments without rebuilding ChartBook."""
     return {
-        "task_dep": ["classify_move", "return_strategy", "select_threshold", "notebook"],
+        "task_dep": ["classify_move", "return_strategy", "volatility", "select_threshold", "notebook"],
         "actions": None,
     }
 
