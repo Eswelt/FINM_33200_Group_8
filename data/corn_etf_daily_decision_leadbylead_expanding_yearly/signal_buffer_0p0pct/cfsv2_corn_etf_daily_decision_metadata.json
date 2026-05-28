@@ -1,0 +1,63 @@
+{
+  "cfsv2_root": "/glade/work/jiachengye/33200/cfsv2/validtime_yearly",
+  "climatology_mode": "expanding",
+  "climatology_window_days": 10,
+  "created_utc": "2026-05-28T12:23:20.820474+00:00",
+  "cv_splits": 5,
+  "end_year": 2025,
+  "era5_path": "/glade/work/jiachengye/33200/era5_daily_surface_stats_2011_2025_n49_w104_s37_e80.nc",
+  "gpcp_path": "/glade/work/jiachengye/33200/gpcp/stats/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.nc",
+  "horizon_trading_days": 5,
+  "init_obs_window_days": 7,
+  "lead_days": [
+    7,
+    14,
+    21,
+    28,
+    30
+  ],
+  "min_climatology_count": 5,
+  "min_train_days": 756,
+  "outputs": {
+    "regression_metrics": "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/cfsv2_corn_etf_daily_decision_regression_metrics.csv",
+    "regression_predictions": "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/cfsv2_corn_etf_daily_decision_regression_predictions.csv"
+  },
+  "plots": [
+    "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/lead_07_daily_rebalanced_equity.png",
+    "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/lead_14_daily_rebalanced_equity.png",
+    "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/lead_21_daily_rebalanced_equity.png",
+    "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/lead_28_daily_rebalanced_equity.png",
+    "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/lead_30_daily_rebalanced_equity.png",
+    "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/daily_decision_oos_r2_summary.png",
+    "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/daily_decision_sharpe_summary.png",
+    "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/daily_decision_total_return_summary.png"
+  ],
+  "postprocess_note": "Regression predictions and OOS R2 are unchanged; only long/short/cash positions, strategy returns, Sharpe, and plots were recomputed with this signal buffer.",
+  "postprocessed_from_predictions": "/Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/scripts/corn_etf_daily_decision_leadbylead_expanding_yearly/cfsv2_corn_etf_daily_decision_regression_predictions.csv",
+  "price_csv": null,
+  "retrain_step_days": 63,
+  "ridge_alphas": [
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "sample_note": "Regression training and OOS evaluation rows are restricted by decision_date to the inclusive season window. Price lags, weather climatology, and initial observed rolling weather features are computed before this seasonal row filter.",
+  "season_end": "12-31",
+  "season_start": "01-01",
+  "signal_buffer": 0.0,
+  "signal_buffer_label": "0.0%",
+  "split_date": "2022-12-31",
+  "start_year": 2011,
+  "strategy_note": "Daily equity curves use daily-rebalanced one-day realized returns with the sign of the N-trading-day predicted return. signal_5td_proxy metrics compound overlapping N-trading-day signal returns and should be interpreted as a signal diagnostic, not a directly investable portfolio.",
+  "symbol": "CORN",
+  "target_note": "Regression target is future N-trading-day CORN ETF return for each daily decision date.",
+  "test_end_year": 2025,
+  "test_start_year": 2022,
+  "test_window_days": 63,
+  "train_end_year": "test_year_minus_1",
+  "train_start_year": 2011,
+  "training_note": "For each test year Y and each lead/model, Ridge alpha is selected by time-series cross-validation within rows from train_start_year through Y-1. The final pipeline is then refit on that full expanding training window and evaluated on year Y.",
+  "transaction_cost_bps": 5.0
+}
