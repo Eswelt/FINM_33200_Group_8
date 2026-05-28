@@ -101,6 +101,108 @@
       ]
     ]
   },
+  "price_gdelt_return_regression": {
+    "target": "next_week_log_return",
+    "model": "price_only_ridge",
+    "feature_set": "price_gdelt",
+    "n_test": 175,
+    "n_folds": 14,
+    "mae": 0.017625839661048623,
+    "rmse": 0.024627187122323674,
+    "r2": -0.04943429492546536,
+    "direction_accuracy": 0.5257142857142857,
+    "mean_actual_return": -0.001920054479809364,
+    "mean_predicted_return": -0.0009369179112477279
+  },
+  "price_gdelt_three_class_fixed": {
+    "target": "next_week_log_return_3class_2.0%_bands",
+    "model": "price_only_logit",
+    "feature_set": "price_gdelt",
+    "threshold": 0.02,
+    "n_test": 175,
+    "n_folds": 14,
+    "accuracy": 0.4514285714285714,
+    "balanced_accuracy_present_classes": 0.32242063492063494,
+    "macro_f1": 0.319047619047619,
+    "n_down": 32,
+    "n_flat": 119,
+    "n_up": 24,
+    "extreme_event_rate": 0.32,
+    "has_both_extreme_classes": true,
+    "confusion_matrix_labels": [
+      -1,
+      0,
+      1
+    ],
+    "confusion_matrix": [
+      [
+        6,
+        22,
+        4
+      ],
+      [
+        28,
+        68,
+        23
+      ],
+      [
+        4,
+        15,
+        5
+      ]
+    ]
+  },
+  "price_ai_gdelt_return_regression": {
+    "target": "next_week_log_return",
+    "model": "price_only_ridge",
+    "feature_set": "price_ai_gdelt",
+    "n_test": 175,
+    "n_folds": 14,
+    "mae": 0.018235838774708014,
+    "rmse": 0.025438692135335537,
+    "r2": -0.11973483909362082,
+    "direction_accuracy": 0.52,
+    "mean_actual_return": -0.001920054479809364,
+    "mean_predicted_return": -0.0004366229160878423
+  },
+  "price_ai_gdelt_three_class_fixed": {
+    "target": "next_week_log_return_3class_2.0%_bands",
+    "model": "price_only_logit",
+    "feature_set": "price_ai_gdelt",
+    "threshold": 0.02,
+    "n_test": 175,
+    "n_folds": 14,
+    "accuracy": 0.46285714285714286,
+    "balanced_accuracy_present_classes": 0.32107843137254904,
+    "macro_f1": 0.3199075699075699,
+    "n_down": 32,
+    "n_flat": 119,
+    "n_up": 24,
+    "extreme_event_rate": 0.32,
+    "has_both_extreme_classes": true,
+    "confusion_matrix_labels": [
+      -1,
+      0,
+      1
+    ],
+    "confusion_matrix": [
+      [
+        8,
+        20,
+        4
+      ],
+      [
+        24,
+        70,
+        25
+      ],
+      [
+        10,
+        11,
+        3
+      ]
+    ]
+  },
   "price_calendar_return_regression": {
     "target": "next_week_log_return",
     "model": "price_only_ridge",
@@ -200,6 +302,108 @@
         5,
         15,
         4
+      ]
+    ]
+  },
+  "price_calendar_gdelt_return_regression": {
+    "target": "next_week_log_return",
+    "model": "price_only_ridge",
+    "feature_set": "price_calendar_gdelt",
+    "n_test": 175,
+    "n_folds": 14,
+    "mae": 0.01737827871020328,
+    "rmse": 0.024276160560616513,
+    "r2": -0.019731029088332797,
+    "direction_accuracy": 0.5371428571428571,
+    "mean_actual_return": -0.001920054479809364,
+    "mean_predicted_return": -0.0014811140212245113
+  },
+  "price_calendar_gdelt_three_class_fixed": {
+    "target": "next_week_log_return_3class_2.0%_bands",
+    "model": "price_only_logit",
+    "feature_set": "price_calendar_gdelt",
+    "threshold": 0.02,
+    "n_test": 175,
+    "n_folds": 14,
+    "accuracy": 0.38857142857142857,
+    "balanced_accuracy_present_classes": 0.30751050420168063,
+    "macro_f1": 0.29347030364245824,
+    "n_down": 32,
+    "n_flat": 119,
+    "n_up": 24,
+    "extreme_event_rate": 0.32,
+    "has_both_extreme_classes": true,
+    "confusion_matrix_labels": [
+      -1,
+      0,
+      1
+    ],
+    "confusion_matrix": [
+      [
+        11,
+        15,
+        6
+      ],
+      [
+        45,
+        54,
+        20
+      ],
+      [
+        10,
+        11,
+        3
+      ]
+    ]
+  },
+  "price_calendar_ai_gdelt_return_regression": {
+    "target": "next_week_log_return",
+    "model": "price_only_ridge",
+    "feature_set": "price_calendar_ai_gdelt",
+    "n_test": 175,
+    "n_folds": 14,
+    "mae": 0.017899603340792228,
+    "rmse": 0.025256208658960905,
+    "r2": -0.1037277097060878,
+    "direction_accuracy": 0.5542857142857143,
+    "mean_actual_return": -0.001920054479809364,
+    "mean_predicted_return": -0.0005690677712809301
+  },
+  "price_calendar_ai_gdelt_three_class_fixed": {
+    "target": "next_week_log_return_3class_2.0%_bands",
+    "model": "price_only_logit",
+    "feature_set": "price_calendar_ai_gdelt",
+    "threshold": 0.02,
+    "n_test": 175,
+    "n_folds": 14,
+    "accuracy": 0.4,
+    "balanced_accuracy_present_classes": 0.2978816526610644,
+    "macro_f1": 0.29122658950245156,
+    "n_down": 32,
+    "n_flat": 119,
+    "n_up": 24,
+    "extreme_event_rate": 0.32,
+    "has_both_extreme_classes": true,
+    "confusion_matrix_labels": [
+      -1,
+      0,
+      1
+    ],
+    "confusion_matrix": [
+      [
+        9,
+        17,
+        6
+      ],
+      [
+        39,
+        58,
+        22
+      ],
+      [
+        7,
+        14,
+        3
       ]
     ]
   }

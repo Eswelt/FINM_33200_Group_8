@@ -10,12 +10,15 @@ Y =  0 if -2% < next_week_return < +2%
 Y = -1 if next_week_return <= -2%
 ```
 
-The current baseline compares:
+The current experiments compare:
 
 - `price_only`: historical price features
+- `price_ai`: historical price features plus USDA/GLM scores
+- `price_gdelt`: historical price features plus GDELT news scores
 - `price_calendar`: historical price features plus agricultural seasonality
+- combined calendar, USDA/GLM, and GDELT feature sets
 
-The pipeline is designed so that weekly weather, text, and AI-extracted features can be added later through standard feature tables. See `pipeline_contract.md` for the data interface.
+The pipeline is designed so that weekly weather and additional text features can be added through standard feature tables. See `pipeline_contract.md` for the data interface.
 
 ## Quick Start
 
@@ -153,12 +156,13 @@ The volatility pipeline predicts `abs(next_week_log_return)` and reports both re
 
 Price data are pulled from Yahoo Finance through `yfinance`.
 
-Optional weekly feature tables can be added under `data/interim/`:
+Weekly feature tables can be added under `data/interim/`:
 
 ```text
 data/interim/weather_weekly.parquet
 data/interim/text_weekly.parquet
 data/interim/ai_weekly.parquet
+data/interim/gdelt_weekly_scores.parquet
 ```
 
 CSV files with the same stems are also accepted.
@@ -187,7 +191,11 @@ price_calendar_weather
 price_calendar_text
 price_calendar_weather_text
 price_ai
+price_gdelt
+price_ai_gdelt
 price_calendar_ai
+price_calendar_gdelt
+price_calendar_ai_gdelt
 price_calendar_weather_ai
 price_calendar_weather_text_ai
 ```

@@ -223,6 +223,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../data_glimpses.html">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gdelt_integration.html">GDELT Integration Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../volatility_results.html">Volatility Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../horizon_robustness.html">Horizon Robustness Results</a></li>
 </ul>
@@ -746,7 +747,7 @@ open<span class="w"> </span>reports/html/corn_forecast_workflow.html
 <section id="dataframe-glimpse">
 <h2>DataFrame Glimpse<a class="headerlink" href="#dataframe-glimpse" title="Link to this heading">#</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 802
-Columns: 33
+Columns: 39
 $ close                                           &lt;f64&gt; 18.530000686645508
 $ volume                                          &lt;i64&gt; 2491300
 $ week                                   &lt;datetime[μs]&gt; 2026-05-15 00:00:00
@@ -780,6 +781,12 @@ $ ai_planting_delay_risk                          &lt;f64&gt; 1.0
 $ ai_harvest_delay_risk                           &lt;f64&gt; 0.0
 $ ai_yield_risk                                   &lt;f64&gt; 0.0
 $ ai_crop_condition_trend                         &lt;f64&gt; 0.0
+$ gdelt_relevance_score                           &lt;f64&gt; null
+$ gdelt_yield_supply_risk                         &lt;f64&gt; null
+$ gdelt_inventory_supply_tightness                &lt;f64&gt; null
+$ gdelt_demand_strength                           &lt;f64&gt; null
+$ gdelt_ethanol_export_signal                     &lt;f64&gt; null
+$ gdelt_trade_policy_risk                         &lt;f64&gt; null
 
 
 </pre></div>
@@ -798,10 +805,10 @@ $ ai_crop_condition_trend                         &lt;f64&gt; 0.0
 <td><p><a class="reference internal" href="#../dataframes/CORN/feature_panel.md"><span class="xref myst">feature_panel</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Data Sources</p></td>
-<td><p>Yahoo Finance, USDA ESMIS, Optional teammate feature tables</p></td>
+<td><p>Yahoo Finance, USDA ESMIS, GDELT, Optional teammate feature tables</p></td>
 </tr>
 <tr class="row-even"><td><p>Data Providers</p></td>
-<td><p>yfinance, USDA, FINM 33200 Group 8</p></td>
+<td><p>yfinance, USDA, GDELT, FINM 33200 Group 8</p></td>
 </tr>
 <tr class="row-odd"><td><p>Links to Providers</p></td>
 <td><p></p></td>
@@ -816,7 +823,7 @@ $ ai_crop_condition_trend                         &lt;f64&gt; 0.0
 <td><p>Built by corn_forecast.cli build-features through pydoit.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Data available up to (min)</p></td>
-<td><p>2026-05-08 00:00:00</p></td>
+<td><p>2026-04-03 00:00:00</p></td>
 </tr>
 <tr class="row-even"><td><p>Data available up to (max)</p></td>
 <td><p>2026-05-15 00:00:00</p></td>
@@ -857,7 +864,7 @@ $ ai_crop_condition_trend                         &lt;f64&gt; 0.0
 <td><p><a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page</p></td>
 </tr>
 <tr class="row-odd"><td><p>Date of Last Code Update</p></td>
-<td><p>2026-05-27 22:01:14</p></td>
+<td><p>2026-05-27 22:39:20</p></td>
 </tr>
 <tr class="row-even"><td><p>OS Compatibility</p></td>
 <td><p></p></td>

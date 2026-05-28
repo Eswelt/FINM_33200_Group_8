@@ -257,7 +257,7 @@ For the most compact submission-ready summary, open `reports/chartbook/cb/final_
 ## DataFrame Glimpse
 
 ```
-Rows: 1400
+Rows: 2800
 Columns: 13
 $ week                   <str> '2026-05-08'
 $ fold                   <i64> 13
@@ -306,7 +306,7 @@ $ target_log_return_next <str> '-0.004308026097975315'
 | Contributors                    | FINM 33200 Group 8           |
 | Git Repo URL                    | local                        |
 | Pipeline Web Page               | <a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page      |
-| Date of Last Code Update        | 2026-05-27 22:01:14           |
+| Date of Last Code Update        | 2026-05-27 22:39:20           |
 | OS Compatibility                |  |
 | Linked Dataframes               |  [CORN:feature_panel](../../dataframes/CORN/feature_panel.md)<br>  [CORN:price_target_predictions](../../dataframes/CORN/price_target_predictions.md)<br>  [CORN:expected_return_predictions](../../dataframes/CORN/expected_return_predictions.md)<br>  [CORN:volatility_predictions](../../dataframes/CORN/volatility_predictions.md)<br>  [CORN:horizon_robustness_metrics](../../dataframes/CORN/horizon_robustness_metrics.md)<br>  [CORN:horizon_robustness_predictions](../../dataframes/CORN/horizon_robustness_predictions.md)<br>  [CORN:gdelt_weekly_scores](../../dataframes/CORN/gdelt_weekly_scores.md)<br>  |
 

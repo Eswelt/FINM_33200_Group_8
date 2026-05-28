@@ -14,7 +14,10 @@ START = "2011-01-01"
 END = "2026-05-15"
 SPLIT_DATE = "2022-12-31"
 FEATURE_SETS = "price_only,price_calendar"
-THREE_INPUT_FEATURE_SETS = "price_only,price_calendar,price_calendar_ai"
+FULL_FEATURE_SETS = (
+    "price_only,price_ai,price_gdelt,price_ai_gdelt,"
+    "price_calendar,price_calendar_ai,price_calendar_gdelt,price_calendar_ai_gdelt"
+)
 FIXED_RETURN_THRESHOLD = "0.02"
 TRANSACTION_COST_BPS = "5"
 BUFFER_BPS = "25"
@@ -125,7 +128,7 @@ def task_classify_move():
                 "--fixed-return-threshold",
                 FIXED_RETURN_THRESHOLD,
                 "--feature-sets",
-                FEATURE_SETS,
+                FULL_FEATURE_SETS,
             )
         ],
         "file_dep": [_path(DATA_RAW / "prices_CORN.csv")],
@@ -149,7 +152,7 @@ def task_return_strategy():
                 "return-strategy",
                 *COMMON_ARGS,
                 "--feature-sets",
-                FEATURE_SETS,
+                FULL_FEATURE_SETS,
                 "--transaction-cost-bps",
                 TRANSACTION_COST_BPS,
                 "--buffer-bps",
@@ -169,7 +172,7 @@ def task_volatility():
                 "volatility",
                 *COMMON_ARGS,
                 "--feature-sets",
-                THREE_INPUT_FEATURE_SETS,
+                FULL_FEATURE_SETS,
             )
         ],
         "file_dep": [_path(DATA_RAW / "prices_CORN.csv")],

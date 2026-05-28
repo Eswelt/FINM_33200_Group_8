@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Chart List &#8212; CORN ETF Trading Signal Pipeline</title>
+    <title>GDELT Integration Results &#8212; CORN ETF Trading Signal Pipeline</title>
   
   
   
@@ -51,14 +51,14 @@
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'cb/charts';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cb/gdelt_integration';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Dataframe: CORN:expected_return_predictions - Expected Return Strategy Predictions" href="dataframes/CORN/expected_return_predictions.html" />
-    <link rel="prev" title="Horizon Robustness Results" href="horizon_robustness.html" /> 
+    <link rel="next" title="Volatility Pipeline Results" href="volatility_results.html" />
+    <link rel="prev" title="Price Plus GLM Ablation Results" href="price_ai_ablation.html" /> 
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -146,6 +146,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -213,19 +217,19 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks/CORN/corn_forecast_workflow.html">CORN Forecast Workflow Report</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="workflow.html">CORN ETF Trading Signal Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="final_report.html">Current Write-up: CORN ETF Trading Signal Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_glimpses.html">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gdelt_integration.html">GDELT Integration Results</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">GDELT Integration Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="volatility_results.html">Volatility Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="horizon_robustness.html">Horizon Robustness Results</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pipeline Charts 📈</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chart List</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="charts.html">Chart List</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pipeline Dataframes 📊</span></p>
 <ul class="nav bd-sidenav">
@@ -302,7 +306,7 @@
       
       
       
-      <li><a href="../_sources/cb/charts.md" target="_blank"
+      <li><a href="../_sources/cb/gdelt_integration.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -372,7 +376,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -383,11 +389,22 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Chart List</h1>
+    <h1>GDELT Integration Results</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-week-direction">One-week Direction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-week-expected-return">One-week Expected Return</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility">Volatility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaway">Takeaway</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -396,10 +413,164 @@
                 
 <div id="searchbox"></div>
                 <article class="bd-article">
-                   <section class="tex2jax_ignore mathjax_ignore" id="chart-list">
-<h1>Chart List<a class="headerlink" href="#chart-list" title="Link to this heading">#</a></h1>
-<ul class="postlist-style-circle postlist simple">
+                   <section class="tex2jax_ignore mathjax_ignore" id="gdelt-integration-results">
+<h1>GDELT Integration Results<a class="headerlink" href="#gdelt-integration-results" title="Link to this heading">#</a></h1>
+<p>Run date: 2026-05-28.</p>
+<p>This run adds GDELT weekly corn-market news scores to the existing no-weather feature grid. The tested input sets are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_gdelt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_ai_gdelt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></li>
 </ul>
+<p>GDELT weekly dates were aligned to the Friday weekly prediction calendar before merging into the feature panel.</p>
+<section id="one-week-direction">
+<h2>One-week Direction<a class="headerlink" href="#one-week-direction" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>input set</p></th>
+<th class="head text-right"><p>accuracy</p></th>
+<th class="head text-right"><p>balanced accuracy</p></th>
+<th class="head text-right"><p>macro F1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
+<td class="text-right"><p>49.7%</p></td>
+<td class="text-right"><p>32.6%</p></td>
+<td class="text-right"><p>32.6%</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_gdelt</span></code></p></td>
+<td class="text-right"><p>45.1%</p></td>
+<td class="text-right"><p>32.2%</p></td>
+<td class="text-right"><p>31.9%</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai_gdelt</span></code></p></td>
+<td class="text-right"><p>46.3%</p></td>
+<td class="text-right"><p>32.1%</p></td>
+<td class="text-right"><p>32.0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code></p></td>
+<td class="text-right"><p>46.9%</p></td>
+<td class="text-right"><p>31.9%</p></td>
+<td class="text-right"><p>31.4%</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
+<td class="text-right"><p>42.3%</p></td>
+<td class="text-right"><p>30.9%</p></td>
+<td class="text-right"><p>30.4%</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code></p></td>
+<td class="text-right"><p>38.9%</p></td>
+<td class="text-right"><p>30.8%</p></td>
+<td class="text-right"><p>29.3%</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
+<td class="text-right"><p>42.9%</p></td>
+<td class="text-right"><p>30.0%</p></td>
+<td class="text-right"><p>30.0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
+<td class="text-right"><p>40.0%</p></td>
+<td class="text-right"><p>29.8%</p></td>
+<td class="text-right"><p>29.1%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>GDELT does not improve the one-week fixed-band direction classifier once calendar and GLM features are included. The best one-week direction model remains <code class="docutils literal notranslate"><span class="pre">price_ai</span></code>.</p>
+</section>
+<section id="one-week-expected-return">
+<h2>One-week Expected Return<a class="headerlink" href="#one-week-expected-return" title="Link to this heading">#</a></h2>
+<p>Best runs by trading Sharpe:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>input set</p></th>
+<th class="head"><p>model</p></th>
+<th class="head text-right"><p>R2</p></th>
+<th class="head text-right"><p>direction accuracy</p></th>
+<th class="head text-right"><p>strategy return</p></th>
+<th class="head text-right"><p>Sharpe</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
+<td><p>HGB</p></td>
+<td class="text-right"><p>-0.0279</p></td>
+<td class="text-right"><p>54.9%</p></td>
+<td class="text-right"><p>18.3%</p></td>
+<td class="text-right"><p>0.481</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code></p></td>
+<td><p>Ridge</p></td>
+<td class="text-right"><p>-0.1037</p></td>
+<td class="text-right"><p>55.4%</p></td>
+<td class="text-right"><p>14.2%</p></td>
+<td class="text-right"><p>0.406</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
+<td><p>Ridge</p></td>
+<td class="text-right"><p>-0.1018</p></td>
+<td class="text-right"><p>53.7%</p></td>
+<td class="text-right"><p>10.7%</p></td>
+<td class="text-right"><p>0.322</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>GDELT improves the best one-week trading result when combined with calendar and GLM scores. The return R2 is still negative, so this should be framed as a trading-filter result rather than a precise return-forecasting result.</p>
+</section>
+<section id="volatility">
+<h2>Volatility<a class="headerlink" href="#volatility" title="Link to this heading">#</a></h2>
+<p>Best volatility runs by horizon:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>horizon</p></th>
+<th class="head"><p>best run</p></th>
+<th class="head text-right"><p>R2</p></th>
+<th class="head text-right"><p>Spearman</p></th>
+<th class="head text-right"><p>high-vol balanced accuracy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1 week</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_gdelt</span></code> + HGB</p></td>
+<td class="text-right"><p>0.083</p></td>
+<td class="text-right"><p>0.211</p></td>
+<td class="text-right"><p>58.3%</p></td>
+</tr>
+<tr class="row-odd"><td><p>4 weeks</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code> + Ridge</p></td>
+<td class="text-right"><p>0.233</p></td>
+<td class="text-right"><p>0.420</p></td>
+<td class="text-right"><p>68.6%</p></td>
+</tr>
+<tr class="row-even"><td><p>13 weeks</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai_gdelt</span></code> + HGB</p></td>
+<td class="text-right"><p>0.266</p></td>
+<td class="text-right"><p>0.687</p></td>
+<td class="text-right"><p>69.9%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>GDELT helps most clearly in the one-week and 13-week volatility settings when used with calendar features. The 4-week volatility result is still led by calendar-only features, suggesting that crop-season timing remains the main volatility signal.</p>
+</section>
+<section id="takeaway">
+<h2>Takeaway<a class="headerlink" href="#takeaway" title="Link to this heading">#</a></h2>
+<p>GDELT is not a standalone replacement for crop-season controls or USDA/GLM scores. Its value appears in combined models:</p>
+<ul class="simple">
+<li><p>It improves the best one-week expected-return trading result.</p></li>
+<li><p>It improves the best one-week volatility R2.</p></li>
+<li><p>It improves the best 13-week volatility R2.</p></li>
+<li><p>It improves the best 4-week direction classifier when combined with calendar and GLM.</p></li>
+</ul>
+<p>The current story is therefore: calendar features provide the main crop-cycle structure, GLM USDA scores add crop-condition risk signals, and GDELT adds a market-news layer that is useful in some combined models.</p>
+</section>
 </section>
 
 <div class="section ablog__blog_comments">
@@ -417,20 +588,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="horizon_robustness.html"
+       href="price_ai_ablation.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Horizon Robustness Results</p>
+        <p class="prev-next-title">Price Plus GLM Ablation Results</p>
       </div>
     </a>
     <a class="right-next"
-       href="dataframes/CORN/expected_return_predictions.html"
+       href="volatility_results.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:expected_return_predictions</span></code> - Expected Return Strategy Predictions</p>
+        <p class="prev-next-title">Volatility Pipeline Results</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -440,6 +611,25 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-week-direction">One-week Direction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-week-expected-return">One-week Expected Return</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility">Volatility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaway">Takeaway</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

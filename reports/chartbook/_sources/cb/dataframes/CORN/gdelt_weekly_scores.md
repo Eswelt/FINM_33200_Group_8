@@ -1,3 +1,5 @@
+# Dataframe: `CORN:gdelt_weekly_scores` - GDELT Weekly News Scores
+
 # Current Write-up: CORN ETF Trading Signal Pipeline
 
 Updated: `2026-05-28`.
@@ -211,3 +213,57 @@ ChartBook build:
 PYTHONPATH=src uv run --extra docs chartbook build reports/chartbook -f --project-dir .
 PYTHONPATH=src uv run python scripts/fix_chartbook_assets.py
 ```
+
+
+
+## DataFrame Glimpse
+
+```
+Rows: 577
+Columns: 7
+$ week                       <str> '2026-03-30'
+$ relevance_score            <f64> 1.9090909090909092
+$ yield_supply_risk          <f64> 0.8888888888888888
+$ inventory_supply_tightness <f64> 0.42857142857142855
+$ demand_strength            <f64> 1.0317460317460319
+$ ethanol_export_signal      <f64> 1.0793650793650793
+$ trade_policy_risk          <f64> 0.015873015873015872
+
+
+```
+
+## Dataframe Manifest
+
+| Dataframe Name                 | GDELT Weekly News Scores                                                   |
+|--------------------------------|--------------------------------------------------------------------------------------|
+| Dataframe ID                   | [gdelt_weekly_scores](../dataframes/CORN/gdelt_weekly_scores.md)                                       |
+| Data Sources                   | GDELT                                        |
+| Data Providers                 | FINM 33200 Group 8                                      |
+| Links to Providers             |                              |
+| Topic Tags                     | Gdelt, News, Corn, Integrated Feature Block                                          |
+| Type of Data Access            |                                   |
+| How is data pulled?            | Prepared by teammate feature pipeline and staged under data/interim.                                                    |
+| Data available up to (min)     | N/A                                                             |
+| Data available up to (max)     | N/A                                                             |
+| Dataframe Path                 | /private/tmp/FINM_33200_Group_8_three_inputs/data/interim/gdelt_weekly_scores.parquet                                                   |
+
+
+**Linked Charts:**
+
+- None
+
+
+## Pipeline Manifest
+
+| Pipeline Name                   | CORN ETF Trading Signal Pipeline                       |
+|---------------------------------|--------------------------------------------------------|
+| Pipeline ID                     | [CORN](../../../index.md)              |
+| Lead Pipeline Developer         | FINM 33200 Group 8             |
+| Contributors                    | FINM 33200 Group 8           |
+| Git Repo URL                    | local                        |
+| Pipeline Web Page               | <a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page      |
+| Date of Last Code Update        | 2026-05-27 22:39:20           |
+| OS Compatibility                |  |
+| Linked Dataframes               |  [CORN:feature_panel](../../dataframes/CORN/feature_panel.md)<br>  [CORN:price_target_predictions](../../dataframes/CORN/price_target_predictions.md)<br>  [CORN:expected_return_predictions](../../dataframes/CORN/expected_return_predictions.md)<br>  [CORN:volatility_predictions](../../dataframes/CORN/volatility_predictions.md)<br>  [CORN:horizon_robustness_metrics](../../dataframes/CORN/horizon_robustness_metrics.md)<br>  [CORN:horizon_robustness_predictions](../../dataframes/CORN/horizon_robustness_predictions.md)<br>  [CORN:gdelt_weekly_scores](../../dataframes/CORN/gdelt_weekly_scores.md)<br>  |
+
+

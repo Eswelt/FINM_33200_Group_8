@@ -55,6 +55,7 @@ def test_pipeline_feature_sets_pick_up_weather_text_and_ai_columns():
             "text_drought_score": [1.0],
             "report_text": ["dry weather"],
             "ai_bullish_score": [0.4],
+            "gdelt_yield_supply_risk": [0.7],
         }
     )
 
@@ -71,4 +72,11 @@ def test_pipeline_feature_sets_pick_up_weather_text_and_ai_columns():
     assert "price_lag_return_1w" in numeric
     assert "ai_bullish_score" in numeric
     assert "calendar_week_sin" not in numeric
+    assert text_column is None
+
+    numeric, text_column = pipeline_feature_columns(panel, "price_calendar_ai_gdelt")
+    assert "price_lag_return_1w" in numeric
+    assert "calendar_week_sin" in numeric
+    assert "ai_bullish_score" in numeric
+    assert "gdelt_yield_supply_risk" in numeric
     assert text_column is None

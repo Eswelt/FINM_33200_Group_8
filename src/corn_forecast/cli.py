@@ -132,13 +132,23 @@ def build_model_panel(config: ProjectConfig, prices):
     weather = read_table(config.weather_path) if table_exists(config.weather_path) else None
     usda = read_table(config.raw_usda_path) if table_exists(config.raw_usda_path) else None
     panel = build_feature_panel(prices=prices, weather=weather, usda_releases=usda)
-    for extra_path in (config.text_features_path, config.ai_features_path):
+    for extra_path in (config.text_features_path, config.ai_features_path, config.gdelt_features_path):
         if table_exists(extra_path):
             extra = read_table(extra_path)
             if "week" not in extra.columns:
                 raise ValueError(f"Weekly feature table must include a week column: {extra_path}")
             extra = extra.copy()
-            extra["week"] = extra["week"].dt.normalize()
+            if extra_path == config.gdelt_features_path:
+                extra["week"] = pd.to_datetime(extra["week"]).dt.to_period("W-FRI").dt.end_time.dt.normalize()
+                extra = extra.rename(
+                    columns={
+                        column: f"gdelt_{column}"
+                        for column in extra.columns
+                        if column != "week" and not column.startswith("gdelt_")
+                    }
+                )
+            else:
+                extra["week"] = pd.to_datetime(extra["week"]).dt.normalize()
             panel = panel.merge(extra, on="week", how="left")
     return panel
 

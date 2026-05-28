@@ -224,6 +224,7 @@
 <li class="toctree-l1"><a class="reference internal" href="cb/data_glimpses.html">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cb/gdelt_integration.html">GDELT Integration Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/volatility_results.html">Volatility Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/horizon_robustness.html">Horizon Robustness Results</a></li>
 </ul>
@@ -423,7 +424,7 @@
                 <article class="bd-article">
                    <section class="tex2jax_ignore mathjax_ignore" id="corn-etf-trading-signal-pipeline">
 <h1>CORN ETF Trading Signal Pipeline<a class="headerlink" href="#corn-etf-trading-signal-pipeline" title="Link to this heading">#</a></h1>
-<p>Last updated: May 28, 2026, 3:01:22 AM</p>
+<p>Last updated: May 28, 2026, 3:39:29 AM</p>
 <section id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
@@ -440,6 +441,7 @@
 <li class="toctree-l1"><a class="reference internal" href="cb/data_glimpses.html">Data Glimpses Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/three_input_results.html">Three Input Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cb/gdelt_integration.html">GDELT Integration Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/volatility_results.html">Volatility Pipeline Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cb/horizon_robustness.html">Horizon Robustness Results</a></li>
 </ul>
@@ -499,7 +501,7 @@
 <td><p><a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page</p></td>
 </tr>
 <tr class="row-odd"><td><p>Date of Last Code Update</p></td>
-<td><p>2026-05-27 22:01:14</p></td>
+<td><p>2026-05-27 22:39:20</p></td>
 </tr>
 <tr class="row-even"><td><p>OS Compatibility</p></td>
 <td><p></p></td>
@@ -517,12 +519,15 @@ Y =  0 if -2% &lt; next_week_return &lt; +2%
 Y = -1 if next_week_return &lt;= -2%
 </pre></div>
 </div>
-<p>The current baseline compares:</p>
+<p>The current experiments compare:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code>: historical price features</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code>: historical price features plus USDA/GLM scores</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">price_gdelt</span></code>: historical price features plus GDELT news scores</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code>: historical price features plus agricultural seasonality</p></li>
+<li><p>combined calendar, USDA/GLM, and GDELT feature sets</p></li>
 </ul>
-<p>The pipeline is designed so that weekly weather, text, and AI-extracted features can be added later through standard feature tables. See <code class="docutils literal notranslate"><span class="pre">pipeline_contract.md</span></code> for the data interface.</p>
+<p>The pipeline is designed so that weekly weather and additional text features can be added through standard feature tables. See <code class="docutils literal notranslate"><span class="pre">pipeline_contract.md</span></code> for the data interface.</p>
 </section>
 <section id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
@@ -631,10 +636,11 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 <section id="data-interface">
 <h2>Data Interface<a class="headerlink" href="#data-interface" title="Link to this heading">#</a></h2>
 <p>Price data are pulled from Yahoo Finance through <code class="docutils literal notranslate"><span class="pre">yfinance</span></code>.</p>
-<p>Optional weekly feature tables can be added under <code class="docutils literal notranslate"><span class="pre">data/interim/</span></code>:</p>
+<p>Weekly feature tables can be added under <code class="docutils literal notranslate"><span class="pre">data/interim/</span></code>:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data/interim/weather_weekly.parquet
 data/interim/text_weekly.parquet
 data/interim/ai_weekly.parquet
+data/interim/gdelt_weekly_scores.parquet
 </pre></div>
 </div>
 <p>CSV files with the same stems are also accepted.</p>
@@ -656,7 +662,11 @@ price_calendar_weather
 price_calendar_text
 price_calendar_weather_text
 price_ai
+price_gdelt
+price_ai_gdelt
 price_calendar_ai
+price_calendar_gdelt
+price_calendar_ai_gdelt
 price_calendar_weather_ai
 price_calendar_weather_text_ai
 </pre></div>

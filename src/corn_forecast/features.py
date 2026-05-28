@@ -121,6 +121,10 @@ def ai_feature_columns(panel: pd.DataFrame) -> list:
     return [column for column in panel.columns if column.startswith("ai_")]
 
 
+def gdelt_feature_columns(panel: pd.DataFrame) -> list:
+    return [column for column in panel.columns if column.startswith("gdelt_")]
+
+
 def pipeline_feature_columns(panel: pd.DataFrame, feature_set: str) -> tuple:
     """Return numeric and optional free-text columns for modular prediction pipelines."""
     price_columns = price_feature_columns(panel)
@@ -128,11 +132,16 @@ def pipeline_feature_columns(panel: pd.DataFrame, feature_set: str) -> tuple:
     weather_columns = weather_feature_columns(panel)
     text_columns = text_numeric_feature_columns(panel)
     ai_columns = ai_feature_columns(panel)
+    gdelt_columns = gdelt_feature_columns(panel)
 
     if feature_set == "price_only":
         return price_columns, None
+    if feature_set == "price_gdelt":
+        return price_columns + gdelt_columns, None
     if feature_set == "price_calendar":
         return price_columns + calendar_columns, None
+    if feature_set == "price_calendar_gdelt":
+        return price_columns + calendar_columns + gdelt_columns, None
     if feature_set == "price_calendar_weather":
         return price_columns + calendar_columns + weather_columns, None
     if feature_set == "price_calendar_text":
@@ -141,8 +150,12 @@ def pipeline_feature_columns(panel: pd.DataFrame, feature_set: str) -> tuple:
         return price_columns + calendar_columns + weather_columns + text_columns, "report_text"
     if feature_set == "price_ai":
         return price_columns + ai_columns, None
+    if feature_set == "price_ai_gdelt":
+        return price_columns + ai_columns + gdelt_columns, None
     if feature_set == "price_calendar_ai":
         return price_columns + calendar_columns + ai_columns, None
+    if feature_set == "price_calendar_ai_gdelt":
+        return price_columns + calendar_columns + ai_columns + gdelt_columns, None
     if feature_set == "price_calendar_weather_ai":
         return price_columns + calendar_columns + weather_columns + ai_columns, None
     if feature_set == "price_calendar_weather_text_ai":

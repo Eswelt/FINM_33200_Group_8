@@ -72,6 +72,10 @@ class ProjectConfig:
         return self.root / "data" / "interim" / "ai_weekly.parquet"
 
     @property
+    def gdelt_features_path(self) -> Path:
+        return self.root / "data" / "interim" / "gdelt_weekly_scores.parquet"
+
+    @property
     def weather_catalog_path(self) -> Path:
         return self.root / "data" / "interim" / "weather_request_catalog.csv"
 

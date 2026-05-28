@@ -258,7 +258,7 @@ For the most compact submission-ready summary, open `reports/chartbook/cb/final_
 
 ```
 Rows: 802
-Columns: 33
+Columns: 39
 $ close                                           <f64> 18.530000686645508
 $ volume                                          <i64> 2491300
 $ week                                   <datetime[μs]> 2026-05-15 00:00:00
@@ -292,6 +292,12 @@ $ ai_planting_delay_risk                          <f64> 1.0
 $ ai_harvest_delay_risk                           <f64> 0.0
 $ ai_yield_risk                                   <f64> 0.0
 $ ai_crop_condition_trend                         <f64> 0.0
+$ gdelt_relevance_score                           <f64> null
+$ gdelt_yield_supply_risk                         <f64> null
+$ gdelt_inventory_supply_tightness                <f64> null
+$ gdelt_demand_strength                           <f64> null
+$ gdelt_ethanol_export_signal                     <f64> null
+$ gdelt_trade_policy_risk                         <f64> null
 
 
 ```
@@ -301,13 +307,13 @@ $ ai_crop_condition_trend                         <f64> 0.0
 | Dataframe Name                 | Weekly Feature Panel                                                   |
 |--------------------------------|--------------------------------------------------------------------------------------|
 | Dataframe ID                   | [feature_panel](../dataframes/CORN/feature_panel.md)                                       |
-| Data Sources                   | Yahoo Finance, USDA ESMIS, Optional teammate feature tables                                        |
-| Data Providers                 | yfinance, USDA, FINM 33200 Group 8                                      |
+| Data Sources                   | Yahoo Finance, USDA ESMIS, GDELT, Optional teammate feature tables                                        |
+| Data Providers                 | yfinance, USDA, GDELT, FINM 33200 Group 8                                      |
 | Links to Providers             |                              |
 | Topic Tags                     | Corn, Etf, Trading Signal, Weekly Forecast                                          |
 | Type of Data Access            |                                   |
 | How is data pulled?            | Built by corn_forecast.cli build-features through pydoit.                                                    |
-| Data available up to (min)     | 2026-05-08 00:00:00                                                             |
+| Data available up to (min)     | 2026-04-03 00:00:00                                                             |
 | Data available up to (max)     | 2026-05-15 00:00:00                                                             |
 | Dataframe Path                 | /private/tmp/FINM_33200_Group_8_three_inputs/data/processed/feature_panel.parquet                                                   |
 
@@ -326,7 +332,7 @@ $ ai_crop_condition_trend                         <f64> 0.0
 | Contributors                    | FINM 33200 Group 8           |
 | Git Repo URL                    | local                        |
 | Pipeline Web Page               | <a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page      |
-| Date of Last Code Update        | 2026-05-27 22:01:14           |
+| Date of Last Code Update        | 2026-05-27 22:39:20           |
 | OS Compatibility                |  |
 | Linked Dataframes               |  [CORN:feature_panel](../../dataframes/CORN/feature_panel.md)<br>  [CORN:price_target_predictions](../../dataframes/CORN/price_target_predictions.md)<br>  [CORN:expected_return_predictions](../../dataframes/CORN/expected_return_predictions.md)<br>  [CORN:volatility_predictions](../../dataframes/CORN/volatility_predictions.md)<br>  [CORN:horizon_robustness_metrics](../../dataframes/CORN/horizon_robustness_metrics.md)<br>  [CORN:horizon_robustness_predictions](../../dataframes/CORN/horizon_robustness_predictions.md)<br>  [CORN:gdelt_weekly_scores](../../dataframes/CORN/gdelt_weekly_scores.md)<br>  |
 

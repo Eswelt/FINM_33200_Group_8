@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="en" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Current Write-up: CORN ETF Trading Signal Pipeline &#8212; CORN ETF Trading Signal Pipeline</title>
+    <title>Dataframe: CORN:gdelt_weekly_scores - GDELT Weekly News Scores &#8212; CORN ETF Trading Signal Pipeline</title>
   
   
   
@@ -27,46 +27,46 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=206a6f58" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=206a6f58" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../_static/documentation_options.js?v=b9472d72"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'cb/final_report';</script>
+    <script src="../../../_static/documentation_options.js?v=b9472d72"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cb/dataframes/CORN/gdelt_weekly_scores';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <link rel="icon" href="../_static/favicon.ico"/>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Data Glimpses Report" href="data_glimpses.html" />
-    <link rel="prev" title="CORN ETF Trading Signal Workflow" href="workflow.html" /> 
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Dataframe: CORN:horizon_robustness_metrics - Horizon Robustness Metrics" href="horizon_robustness_metrics.html" />
+    <link rel="prev" title="Dataframe: CORN:feature_panel - Weekly Feature Panel" href="feature_panel.html" /> 
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
   
     
-    <script src="../_static/searchtools.js"></script>
-    <script src="../_static/language_data.js"></script>
-    <script src="../searchindex.js"></script>
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
      
   </head>
   <body data-default-mode="">
@@ -86,7 +86,7 @@
   <dialog id="pst-search-dialog">
     
 <form class="bd-search d-flex align-items-center"
-      action="../search.html"
+      action="../../../search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -179,7 +179,7 @@
     
   
 
-<a class="navbar-brand logo" href="../index.html">
+<a class="navbar-brand logo" href="../../../index.html">
   
   
   
@@ -190,8 +190,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="CORN ETF Trading Signal Pipeline - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="CORN ETF Trading Signal Pipeline - Home"/>
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="CORN ETF Trading Signal Pipeline - Home"/>
+    <img src="../../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="CORN ETF Trading Signal Pipeline - Home"/>
   
   
 </a></div>
@@ -207,45 +207,45 @@
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
-                <a class="reference internal" href="../index.html">
+                <a class="reference internal" href="../../../index.html">
                     CORN ETF Trading Signal Pipeline
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks 📖</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="notebooks/CORN/corn_forecast_workflow.html">CORN Forecast Workflow Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/CORN/corn_forecast_workflow.html">CORN Forecast Workflow Report</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="workflow.html">CORN ETF Trading Signal Workflow</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Current Write-up: CORN ETF Trading Signal Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data_glimpses.html">Data Glimpses Report</a></li>
-<li class="toctree-l1"><a class="reference internal" href="three_input_results.html">Three Input Pipeline Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gdelt_integration.html">GDELT Integration Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="volatility_results.html">Volatility Pipeline Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="horizon_robustness.html">Horizon Robustness Results</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">CORN ETF Trading Signal Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../final_report.html">Current Write-up: CORN ETF Trading Signal Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_glimpses.html">Data Glimpses Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../three_input_results.html">Three Input Pipeline Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gdelt_integration.html">GDELT Integration Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../volatility_results.html">Volatility Pipeline Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../horizon_robustness.html">Horizon Robustness Results</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pipeline Charts 📈</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="charts.html">Chart List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../charts.html">Chart List</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pipeline Dataframes 📊</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/expected_return_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:expected_return_predictions</span></code> - Expected Return Strategy Predictions</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="expected_return_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:expected_return_predictions</span></code> - Expected Return Strategy Predictions</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/feature_panel.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:feature_panel</span></code> - Weekly Feature Panel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_panel.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:feature_panel</span></code> - Weekly Feature Panel</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/gdelt_weekly_scores.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/horizon_robustness_metrics.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_metrics</span></code> - Horizon Robustness Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="horizon_robustness_metrics.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_metrics</span></code> - Horizon Robustness Metrics</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/horizon_robustness_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_predictions</span></code> - Horizon Robustness Predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="horizon_robustness_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_predictions</span></code> - Horizon Robustness Predictions</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/price_target_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:price_target_predictions</span></code> - Fixed Threshold Classification Predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="price_target_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:price_target_predictions</span></code> - Fixed Threshold Classification Predictions</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/volatility_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:volatility_predictions</span></code> - Volatility Forecast Predictions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="volatility_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:volatility_predictions</span></code> - Volatility Forecast Predictions</a></li>
 
 </ul>
 
@@ -306,7 +306,7 @@
       
       
       
-      <li><a href="../_sources/cb/final_report.md" target="_blank"
+      <li><a href="../../../_sources/cb/dataframes/CORN/gdelt_weekly_scores.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -389,7 +389,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Current Write-up: CORN ETF Trading Signal Pipeline</h1>
+    <h1>Dataframe: CORN:gdelt_weekly_scores - GDELT Weekly News Scores</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -399,6 +399,8 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#current-write-up-corn-etf-trading-signal-pipeline">Current Write-up: CORN ETF Trading Signal Pipeline</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary">Executive Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-question">Research Question</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-design">Validation Design</a></li>
@@ -417,7 +419,13 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-limitations">Current Limitations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-glimpse">DataFrame Glimpse</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-manifest">Dataframe Manifest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-manifest">Pipeline Manifest</a></li>
 </ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -427,7 +435,10 @@
                 
 <div id="searchbox"></div>
                 <article class="bd-article">
-                   <section class="tex2jax_ignore mathjax_ignore" id="current-write-up-corn-etf-trading-signal-pipeline">
+                   <section class="tex2jax_ignore mathjax_ignore" id="dataframe-corn-gdelt-weekly-scores-gdelt-weekly-news-scores">
+<h1>Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores<a class="headerlink" href="#dataframe-corn-gdelt-weekly-scores-gdelt-weekly-news-scores" title="Link to this heading">#</a></h1>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="current-write-up-corn-etf-trading-signal-pipeline">
 <h1>Current Write-up: CORN ETF Trading Signal Pipeline<a class="headerlink" href="#current-write-up-corn-etf-trading-signal-pipeline" title="Link to this heading">#</a></h1>
 <p>Updated: <code class="docutils literal notranslate"><span class="pre">2026-05-28</span></code>.</p>
 <section id="executive-summary">
@@ -779,6 +790,106 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </pre></div>
 </div>
 </section>
+<section id="dataframe-glimpse">
+<h2>DataFrame Glimpse<a class="headerlink" href="#dataframe-glimpse" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Rows: 577
+Columns: 7
+$ week                       &lt;str&gt; &#39;2026-03-30&#39;
+$ relevance_score            &lt;f64&gt; 1.9090909090909092
+$ yield_supply_risk          &lt;f64&gt; 0.8888888888888888
+$ inventory_supply_tightness &lt;f64&gt; 0.42857142857142855
+$ demand_strength            &lt;f64&gt; 1.0317460317460319
+$ ethanol_export_signal      &lt;f64&gt; 1.0793650793650793
+$ trade_policy_risk          &lt;f64&gt; 0.015873015873015872
+
+
+</pre></div>
+</div>
+</section>
+<section id="dataframe-manifest">
+<h2>Dataframe Manifest<a class="headerlink" href="#dataframe-manifest" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Dataframe Name</p></th>
+<th class="head"><p>GDELT Weekly News Scores</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Dataframe ID</p></td>
+<td><p><a class="reference internal" href="#../dataframes/CORN/gdelt_weekly_scores.md"><span class="xref myst">gdelt_weekly_scores</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Data Sources</p></td>
+<td><p>GDELT</p></td>
+</tr>
+<tr class="row-even"><td><p>Data Providers</p></td>
+<td><p>FINM 33200 Group 8</p></td>
+</tr>
+<tr class="row-odd"><td><p>Links to Providers</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>Topic Tags</p></td>
+<td><p>Gdelt, News, Corn, Integrated Feature Block</p></td>
+</tr>
+<tr class="row-odd"><td><p>Type of Data Access</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>How is data pulled?</p></td>
+<td><p>Prepared by teammate feature pipeline and staged under data/interim.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data available up to (min)</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Data available up to (max)</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dataframe Path</p></td>
+<td><p>/private/tmp/FINM_33200_Group_8_three_inputs/data/interim/gdelt_weekly_scores.parquet</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Linked Charts:</strong></p>
+<ul class="simple">
+<li><p>None</p></li>
+</ul>
+</section>
+<section id="pipeline-manifest">
+<h2>Pipeline Manifest<a class="headerlink" href="#pipeline-manifest" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pipeline Name</p></th>
+<th class="head"><p>CORN ETF Trading Signal Pipeline</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pipeline ID</p></td>
+<td><p><a class="reference internal" href="../../../index.html"><span class="std std-doc">CORN</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Lead Pipeline Developer</p></td>
+<td><p>FINM 33200 Group 8</p></td>
+</tr>
+<tr class="row-even"><td><p>Contributors</p></td>
+<td><p>FINM 33200 Group 8</p></td>
+</tr>
+<tr class="row-odd"><td><p>Git Repo URL</p></td>
+<td><p>local</p></td>
+</tr>
+<tr class="row-even"><td><p>Pipeline Web Page</p></td>
+<td><p><a href="file:///private/tmp/FINM_33200_Group_8_three_inputs/docs/index.html">Pipeline Web Page</p></td>
+</tr>
+<tr class="row-odd"><td><p>Date of Last Code Update</p></td>
+<td><p>2026-05-27 22:39:20</p></td>
+</tr>
+<tr class="row-even"><td><p>OS Compatibility</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Linked Dataframes</p></td>
+<td><p><a class="reference internal" href="feature_panel.html"><span class="std std-doc">CORN:feature_panel</span></a><br>  <a class="reference internal" href="price_target_predictions.html"><span class="std std-doc">CORN:price_target_predictions</span></a><br>  <a class="reference internal" href="expected_return_predictions.html"><span class="std std-doc">CORN:expected_return_predictions</span></a><br>  <a class="reference internal" href="volatility_predictions.html"><span class="std std-doc">CORN:volatility_predictions</span></a><br>  <a class="reference internal" href="horizon_robustness_metrics.html"><span class="std std-doc">CORN:horizon_robustness_metrics</span></a><br>  <a class="reference internal" href="horizon_robustness_predictions.html"><span class="std std-doc">CORN:horizon_robustness_predictions</span></a><br>  <a class="reference internal" href="#"><span class="std std-doc">CORN:gdelt_weekly_scores</span></a><br></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 
 <div class="section ablog__blog_comments">
@@ -796,20 +907,20 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="workflow.html"
+       href="feature_panel.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">CORN ETF Trading Signal Workflow</p>
+        <p class="prev-next-title">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:feature_panel</span></code> - Weekly Feature Panel</p>
       </div>
     </a>
     <a class="right-next"
-       href="data_glimpses.html"
+       href="horizon_robustness_metrics.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Data Glimpses Report</p>
+        <p class="prev-next-title">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_metrics</span></code> - Horizon Robustness Metrics</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -830,6 +941,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#current-write-up-corn-etf-trading-signal-pipeline">Current Write-up: CORN ETF Trading Signal Pipeline</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary">Executive Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-question">Research Question</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-design">Validation Design</a></li>
@@ -848,7 +961,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-limitations">Current Limitations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-glimpse">DataFrame Glimpse</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataframe-manifest">Dataframe Manifest</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-manifest">Pipeline Manifest</a></li>
 </ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>
@@ -896,8 +1015,8 @@ By FINM 33200 Group 8
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -1,39 +1,40 @@
 # Current Write-up: CORN ETF Trading Signal Pipeline
 
-Updated: `2026-05-27`.
+Updated: `2026-05-28`.
 
 ## Executive Summary
 
-This project studies whether structured agricultural information can improve CORN ETF trading-signal research. The current model results use three completed data blocks:
+This project studies whether structured agricultural information can improve CORN ETF trading-signal research. The current model results use four completed data blocks:
 
 - Historical CORN ETF prices from Yahoo Finance.
 - Deterministic corn-season calendar features.
 - USDA Weekly Weather and Crop Bulletin text parsed from PDFs and scored with GLM into seven crop-risk features.
-
-One additional data block has been uploaded but is not yet integrated into the model comparison:
-
-- GDELT weekly news scores.
+- GDELT weekly corn-market news scores.
 
 One planned data block is still pending from teammates:
 
 - Weather features.
 
-The main finding so far is that USDA/seasonal information is more useful for risk and horizon-regime analysis than for precise one-week return prediction. One-week return forecasts remain weak, but 4-week and 13-week volatility forecasts improve materially when crop-season features are included. The next model iteration should add GDELT and weather as explicit input blocks.
+The main finding so far is that USDA, GDELT, and seasonal information are more useful for risk and horizon-regime analysis than for precise one-week return prediction. One-week return forecasts remain weak statistically, but GDELT improves the best one-week trading result and improves several volatility/risk-regime tests. The next model iteration should add weather as the remaining explicit input block.
 
 ## Research Question
 
 The project asks whether agricultural information can improve trading decisions for `CORN`, the Teucrium Corn ETF. We frame this as a trading-signal problem rather than a raw price-level prediction problem.
 
-The completed experiments compare four input sets:
+The completed experiments compare eight input sets:
 
 | input set | description |
 | --- | --- |
 | `price_only` | Historical CORN ETF price features. |
 | `price_ai` | Price features plus GLM-extracted USDA report scores. |
 | `price_calendar` | Price features plus deterministic crop-season calendar controls. |
+| `price_gdelt` | Price features plus GDELT weekly news scores. |
+| `price_ai_gdelt` | Price features plus GLM USDA scores and GDELT news scores. |
 | `price_calendar_ai` | Price, calendar, and GLM USDA scores. |
+| `price_calendar_gdelt` | Price, calendar, and GDELT news scores. |
+| `price_calendar_ai_gdelt` | Price, calendar, GLM USDA scores, and GDELT news scores. |
 
-The GLM scores are derived from parsed USDA Weekly Weather and Crop Bulletin text. They measure moisture stress, heat stress, excess rain risk, planting delay risk, harvest delay risk, yield risk, and crop condition trend.
+The GLM scores are derived from parsed USDA Weekly Weather and Crop Bulletin text. They measure moisture stress, heat stress, excess rain risk, planting delay risk, harvest delay risk, yield risk, and crop condition trend. The GDELT scores summarize relevance, yield/supply risk, inventory tightness, demand strength, ethanol/export signals, and trade policy risk.
 
 ## Validation Design
 
@@ -80,20 +81,24 @@ Y = -1 if forward return <= -2%
 | --- | ---: | ---: | ---: |
 | `price_only` | 46.9% | 31.9% | 31.4% |
 | `price_ai` | 49.7% | 32.6% | 32.6% |
+| `price_gdelt` | 45.1% | 32.2% | 31.9% |
+| `price_ai_gdelt` | 46.3% | 32.1% | 32.0% |
 | `price_calendar` | 42.3% | 30.9% | 30.4% |
+| `price_calendar_gdelt` | 38.9% | 30.8% | 29.3% |
 | `price_calendar_ai` | 42.9% | 30.0% | 30.0% |
+| `price_calendar_ai_gdelt` | 40.0% | 29.8% | 29.1% |
 
-For the one-week direction task, `price_ai` is the best of the tested inputs, but the improvement is modest. This is evidence that USDA/GLM scores contain some directional information, but the one-week fixed-band classification task remains hard.
+For the one-week direction task, `price_ai` is still the best of the tested inputs. GDELT alone is competitive with `price_only`, but adding GDELT does not improve the one-week fixed-band classifier once calendar and GLM features are included.
 
 ### Horizon robustness for direction
 
 | horizon | best input set | balanced accuracy | macro F1 |
 | --- | --- | ---: | ---: |
 | 1 week | `price_ai` | 32.6% | 32.6% |
-| 4 weeks | `price_calendar_ai` | 43.5% | 43.0% |
+| 4 weeks | `price_calendar_ai_gdelt` | 46.0% | 44.8% |
 | 13 weeks | `price_calendar` | 46.6% | 44.8% |
 
-The direction task improves when the target horizon is extended. This is economically plausible: crop reports and seasonal risk windows may not move the ETF immediately in the next week, but they can matter over a 4-week or 13-week horizon.
+The direction task improves when the target horizon is extended. GDELT is most helpful at the 4-week horizon when combined with calendar and GLM features. This is economically plausible: crop reports, news, and seasonal risk windows may not move the ETF immediately in the next week, but they can matter over a multi-week horizon.
 
 ## Pipeline 2: Expected Return
 
@@ -103,9 +108,9 @@ The one-week expected-return results are weak statistically:
 
 | best one-week run | strategy return | Sharpe | R2 |
 | --- | ---: | ---: | ---: |
-| `price_calendar_ai` + Ridge | 10.7% | 0.322 | -0.102 |
+| `price_calendar_ai_gdelt` + HGB | 18.3% | 0.481 | -0.028 |
 
-The trading outcome is positive for that run, but the return forecast R2 remains negative. The 4-week and 13-week expected-return runs also have negative R2 and poor strategy Sharpe. We therefore do not treat expected-return forecasting as the main project result.
+GDELT improves the best one-week trading result, especially when combined with calendar and GLM features. However, the return forecast R2 remains negative. The 4-week and 13-week expected-return runs also have negative R2 and poor strategy Sharpe. We therefore do not treat expected-return forecasting as the main project result.
 
 Interpretation:
 
@@ -126,9 +131,9 @@ It also classifies high-volatility periods using each training window's 70th per
 
 | horizon | best R2 run | R2 | Spearman | high-vol balanced accuracy |
 | --- | --- | ---: | ---: | ---: |
-| 1 week | `price_calendar` + Ridge | 0.041 | 0.160 | 59.0% |
+| 1 week | `price_calendar_gdelt` + HGB | 0.083 | 0.211 | 58.3% |
 | 4 weeks | `price_calendar` + Ridge | 0.233 | 0.420 | 68.6% |
-| 13 weeks | `price_calendar` + HGB | 0.241 | 0.687 | 70.6% |
+| 13 weeks | `price_calendar_ai_gdelt` + HGB | 0.266 | 0.687 | 69.9% |
 
 The volatility pipeline is the strongest current result. Forecast quality improves at 4-week and 13-week horizons, especially when crop-season calendar features are included.
 
@@ -138,10 +143,13 @@ The volatility pipeline is the strongest current result. Forecast quality improv
 | --- | --- |
 | `price_only` | Weak baseline; limited volatility predictability. |
 | `price_ai` | GLM scores alone do not materially improve volatility forecasting. |
+| `price_gdelt` | GDELT alone is weak, but it improves several combined feature sets. |
 | `price_calendar` | Most stable volatility signal; seasonality is the main driver. |
 | `price_calendar_ai` | Competitive with calendar and sometimes better for high-volatility flags, but not consistently better than calendar alone. |
+| `price_calendar_gdelt` | Best one-week volatility R2 after adding GDELT. |
+| `price_calendar_ai_gdelt` | Best 13-week volatility R2 and best 4-week direction classifier. |
 
-This suggests that USDA/GLM scores are best interpreted inside the crop calendar. A report about planting delay, heat stress, or harvest disruption has different meaning depending on the crop stage.
+This suggests that USDA/GLM and GDELT scores are best interpreted inside the crop calendar. A report about planting delay, heat stress, export demand, or trade policy has different meaning depending on the crop stage.
 
 ## Why Volatility Is More Predictable Than Return
 
@@ -162,7 +170,6 @@ For investors, the volatility model is useful as a risk overlay:
 
 ## Current Limitations
 
-- GDELT weekly news scores have been uploaded but are not yet included in the reported model runs.
 - Weather features are not yet included.
 - Multi-week horizon results use overlapping targets, so they should not be treated as independent quarterly observations.
 - Expected-return R2 remains negative across horizons.
@@ -173,9 +180,8 @@ For investors, the volatility model is useful as a risk overlay:
 
 The next iteration should add:
 
-1. GDELT news features as a separate input block.
-2. Weather features as a separate input block.
-3. A final comparison table:
+1. Weather features as a separate input block.
+2. A final comparison table:
    - price only
    - price + GLM
    - price + calendar
@@ -183,7 +189,7 @@ The next iteration should add:
    - price + calendar + GLM + GDELT
    - price + calendar + GLM + weather
    - full model
-4. A concise final conclusion focused on whether new information improves:
+3. A concise final conclusion focused on whether new information improves:
    - direction classification,
    - expected-return trading,
    - volatility/risk-regime forecasting.

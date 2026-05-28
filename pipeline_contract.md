@@ -1,6 +1,6 @@
 # Modular Prediction Pipelines
 
-This repository now has two prediction pipelines that share the same weekly feature panel.
+This repository now has three prediction pipelines that share the same weekly feature panel.
 
 ## Shared Input Contract
 
@@ -17,6 +17,7 @@ Place optional teammate outputs here:
 data/interim/weather_weekly.parquet
 data/interim/text_weekly.parquet
 data/interim/ai_weekly.parquet
+data/interim/gdelt_weekly_scores.parquet
 ```
 
 CSV fallback with the same stem is also accepted, for example:
@@ -37,6 +38,7 @@ Column naming contract:
 weather_*   weather features, anomalies, forecasts, reforecast summaries
 text_*      numeric text features such as keyword counts or sentiment scores
 ai_*        LLM-extracted structured scores
+gdelt_*     GDELT-derived news scores
 report_text optional free-text report field for TF-IDF
 ```
 
@@ -76,7 +78,11 @@ price_calendar_weather
 price_calendar_text
 price_calendar_weather_text
 price_ai
+price_gdelt
+price_ai_gdelt
 price_calendar_ai
+price_calendar_gdelt
+price_calendar_ai_gdelt
 price_calendar_weather_ai
 price_calendar_weather_text_ai
 ```

@@ -13,7 +13,16 @@ from corn_forecast.volatility import add_horizon_targets, evaluate_volatility_fo
 
 
 HORIZONS = (1, 4, 13)
-FEATURE_SETS = ("price_only", "price_ai", "price_calendar", "price_calendar_ai")
+FEATURE_SETS = (
+    "price_only",
+    "price_ai",
+    "price_gdelt",
+    "price_ai_gdelt",
+    "price_calendar",
+    "price_calendar_ai",
+    "price_calendar_gdelt",
+    "price_calendar_ai_gdelt",
+)
 OUTPUT_DIR = Path("reports")
 EXPERIMENT_DIR = Path("experiments")
 
@@ -67,8 +76,12 @@ def write_markdown(summary: pd.DataFrame, path: Path) -> None:
         "",
         "- `price_only`",
         "- `price_ai`",
+        "- `price_gdelt`",
+        "- `price_ai_gdelt`",
         "- `price_calendar`",
         "- `price_calendar_ai`",
+        "- `price_calendar_gdelt`",
+        "- `price_calendar_ai_gdelt`",
         "",
         "## Direction Pipeline",
         "",

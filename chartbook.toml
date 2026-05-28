@@ -10,7 +10,7 @@ copyright = "2026, FINM 33200 Group 8"
 [pipeline]
 id = "CORN"
 pipeline_name = "CORN ETF Trading Signal Pipeline"
-pipeline_description = "Weekly CORN ETF trading-signal research pipeline with price, calendar, weather, text, and AI feature hooks."
+pipeline_description = "Weekly CORN ETF trading-signal research pipeline with price, calendar, USDA/GLM, GDELT, weather, and text feature hooks."
 lead_pipeline_developer = "FINM 33200 Group 8"
 contributors = ["FINM 33200 Group 8"]
 runs_on_grid_or_windows_or_other = "MacOS/Linux/Windows"
@@ -21,9 +21,9 @@ README_file_path = "./README.md"
 
 [dataframes.feature_panel]
 dataframe_name = "Weekly Feature Panel"
-short_description_df = "Point-in-time weekly modeling panel with price, calendar, optional weather/text/AI features, and next-week targets."
-data_sources = ["Yahoo Finance", "USDA ESMIS", "Optional teammate feature tables"]
-data_providers = ["yfinance", "USDA", "FINM 33200 Group 8"]
+short_description_df = "Point-in-time weekly modeling panel with price, calendar, USDA/GLM, GDELT, optional weather/text features, and next-week targets."
+data_sources = ["Yahoo Finance", "USDA ESMIS", "GDELT", "Optional teammate feature tables"]
+data_providers = ["yfinance", "USDA", "GDELT", "FINM 33200 Group 8"]
 topic_tags = ["CORN", "ETF", "Trading Signal", "Weekly Forecast"]
 data_frequency = "Weekly"
 observation_period = "Friday close"
@@ -98,10 +98,10 @@ dataframe_docs_path = "./experiments/horizon_robustness_results.md"
 
 [dataframes.gdelt_weekly_scores]
 dataframe_name = "GDELT Weekly News Scores"
-short_description_df = "Weekly GDELT-derived corn market news scores uploaded for the next modeling iteration."
+short_description_df = "Weekly GDELT-derived corn market news scores integrated into the current model panel."
 data_sources = ["GDELT"]
 data_providers = ["FINM 33200 Group 8"]
-topic_tags = ["GDELT", "News", "CORN", "Pending Feature Block"]
+topic_tags = ["GDELT", "News", "CORN", "Integrated Feature Block"]
 data_frequency = "Weekly"
 observation_period = "Weekly aggregation"
 how_is_pulled = "Prepared by teammate feature pipeline and staged under data/interim."
@@ -125,6 +125,9 @@ path_to_markdown_file = "./experiments/three_input_pipeline_results.md"
 
 [notes.price_ai_ablation]
 path_to_markdown_file = "./experiments/price_ai_ablation_results.md"
+
+[notes.gdelt_integration]
+path_to_markdown_file = "./experiments/gdelt_integration_results.md"
 
 [notes.volatility_results]
 path_to_markdown_file = "./experiments/volatility_pipeline_results.md"
