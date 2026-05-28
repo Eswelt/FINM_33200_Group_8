@@ -50,6 +50,57 @@
       ]
     ]
   },
+  "price_ai_return_regression": {
+    "target": "next_week_log_return",
+    "model": "price_only_ridge",
+    "feature_set": "price_ai",
+    "n_test": 175,
+    "n_folds": 14,
+    "mae": 0.01819599262901751,
+    "rmse": 0.025397693246866433,
+    "r2": -0.11612845168511865,
+    "direction_accuracy": 0.4857142857142857,
+    "mean_actual_return": -0.001920054479809364,
+    "mean_predicted_return": -0.0003664383881238413
+  },
+  "price_ai_three_class_fixed": {
+    "target": "next_week_log_return_3class_2.0%_bands",
+    "model": "price_only_logit",
+    "feature_set": "price_ai",
+    "threshold": 0.02,
+    "n_test": 175,
+    "n_folds": 14,
+    "accuracy": 0.49714285714285716,
+    "balanced_accuracy_present_classes": 0.3261262838468721,
+    "macro_f1": 0.3256764069264069,
+    "n_down": 32,
+    "n_flat": 119,
+    "n_up": 24,
+    "extreme_event_rate": 0.32,
+    "has_both_extreme_classes": true,
+    "confusion_matrix_labels": [
+      -1,
+      0,
+      1
+    ],
+    "confusion_matrix": [
+      [
+        5,
+        22,
+        5
+      ],
+      [
+        19,
+        78,
+        22
+      ],
+      [
+        8,
+        12,
+        4
+      ]
+    ]
+  },
   "price_calendar_return_regression": {
     "target": "next_week_log_return",
     "model": "price_only_ridge",

@@ -2,9 +2,10 @@
 
 Run date: 2026-05-27.
 
-This run compares three point-in-time input sets under the same frozen sample, split, and walk-forward schedule:
+This run compares point-in-time input sets under the same frozen sample, split, and walk-forward schedule:
 
 - `price_only`: historical CORN ETF price features.
+- `price_ai`: historical price features plus GLM-extracted USDA Weekly Weather and Crop Bulletin scores.
 - `price_calendar`: historical price features plus corn-season calendar features.
 - `price_calendar_ai`: historical price features, calendar features, and GLM-extracted USDA Weekly Weather and Crop Bulletin scores.
 
@@ -29,13 +30,13 @@ PYTHONPATH=src uv run python -m corn_forecast.cli classify-move \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
   --fixed-return-threshold 0.02 \
-  --feature-sets price_only,price_calendar,price_calendar_ai
+  --feature-sets price_only,price_ai,price_calendar,price_calendar_ai
 
 PYTHONPATH=src uv run python -m corn_forecast.cli return-strategy \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
-  --feature-sets price_only,price_calendar,price_calendar_ai \
+  --feature-sets price_only,price_ai,price_calendar,price_calendar_ai \
   --transaction-cost-bps 5 \
   --buffer-bps 25
 ```
@@ -47,6 +48,7 @@ Main fixed-band three-class classification results:
 | input set | accuracy | balanced accuracy | macro F1 | OOS rows | folds |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `price_only` | 46.9% | 31.9% | 31.4% | 175 | 14 |
+| `price_ai` | 49.7% | 32.6% | 32.6% | 175 | 14 |
 | `price_calendar` | 42.3% | 30.9% | 30.4% | 175 | 14 |
 | `price_calendar_ai` | 42.9% | 30.0% | 30.0% | 175 | 14 |
 
@@ -55,10 +57,11 @@ Auxiliary return-regression diagnostics emitted by the same direction-target run
 | input set | MAE | RMSE | R2 | direction accuracy |
 | --- | ---: | ---: | ---: | ---: |
 | `price_only` | 0.0175 | 0.0246 | -0.0449 | 52.0% |
+| `price_ai` | 0.0182 | 0.0254 | -0.1161 | 48.6% |
 | `price_calendar` | 0.0173 | 0.0243 | -0.0220 | 53.1% |
 | `price_calendar_ai` | 0.0180 | 0.0252 | -0.1018 | 53.7% |
 
-Interpretation: under the fixed +/-2% three-class target, adding calendar and GLM USDA scores does not improve balanced accuracy or macro F1 versus price-only. The AI feature set slightly improves sign accuracy in the auxiliary regression diagnostic, but worsens regression error and three-class classification quality.
+Interpretation: under the fixed +/-2% three-class target, `price_ai` modestly improves the three-class classification metrics versus `price_only`. That improvement does not appear in the return-regression diagnostic, where `price_ai` worsens error and sign accuracy.
 
 ## Expected-Return Pipeline
 
@@ -68,6 +71,8 @@ Expected-return forecast and trading diagnostics:
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `price_only` | Ridge | 0.0175 | 0.0246 | -0.0449 | 52.0% | 11.4% | 3.3% | 0.089 | -14.2% |
 | `price_only` | HGB | 0.0187 | 0.0258 | -0.1535 | 50.9% | 32.0% | -25.9% | -0.769 | -32.8% |
+| `price_ai` | Ridge | 0.0182 | 0.0254 | -0.1161 | 48.6% | 20.6% | 3.1% | 0.077 | -20.7% |
+| `price_ai` | HGB | 0.0189 | 0.0259 | -0.1640 | 46.9% | 30.9% | -30.9% | -0.997 | -33.6% |
 | `price_calendar` | Ridge | 0.0173 | 0.0243 | -0.0220 | 53.1% | 21.1% | -6.2% | -0.188 | -16.8% |
 | `price_calendar` | HGB | 0.0181 | 0.0252 | -0.0989 | 53.7% | 30.9% | 3.6% | 0.130 | -9.4% |
 | `price_calendar_ai` | Ridge | 0.0180 | 0.0252 | -0.1018 | 53.7% | 27.4% | 10.7% | 0.322 | -14.8% |

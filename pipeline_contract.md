@@ -75,6 +75,7 @@ price_calendar
 price_calendar_weather
 price_calendar_text
 price_calendar_weather_text
+price_ai
 price_calendar_ai
 price_calendar_weather_ai
 price_calendar_weather_text_ai

@@ -139,6 +139,8 @@ def pipeline_feature_columns(panel: pd.DataFrame, feature_set: str) -> tuple:
         return price_columns + calendar_columns + text_columns, "report_text"
     if feature_set == "price_calendar_weather_text":
         return price_columns + calendar_columns + weather_columns + text_columns, "report_text"
+    if feature_set == "price_ai":
+        return price_columns + ai_columns, None
     if feature_set == "price_calendar_ai":
         return price_columns + calendar_columns + ai_columns, None
     if feature_set == "price_calendar_weather_ai":

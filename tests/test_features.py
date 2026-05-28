@@ -66,3 +66,9 @@ def test_pipeline_feature_sets_pick_up_weather_text_and_ai_columns():
     assert "text_drought_score" in numeric
     assert "ai_bullish_score" in numeric
     assert text_column == "report_text"
+
+    numeric, text_column = pipeline_feature_columns(panel, "price_ai")
+    assert "price_lag_return_1w" in numeric
+    assert "ai_bullish_score" in numeric
+    assert "calendar_week_sin" not in numeric
+    assert text_column is None

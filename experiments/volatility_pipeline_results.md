@@ -27,7 +27,7 @@ PYTHONPATH=src uv run python -m corn_forecast.cli volatility \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
-  --feature-sets price_only,price_calendar,price_calendar_ai
+  --feature-sets price_only,price_ai,price_calendar,price_calendar_ai
 ```
 
 ## Results
@@ -36,6 +36,8 @@ PYTHONPATH=src uv run python -m corn_forecast.cli volatility \
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `price_only` | Ridge | 0.0127 | 0.0173 | -0.0252 | -0.046 | 78.9% | 54.5% | 7.4% |
 | `price_only` | HGB | 0.0129 | 0.0181 | -0.1248 | 0.020 | 75.4% | 51.3% | 9.7% |
+| `price_ai` | Ridge | 0.0125 | 0.0173 | -0.0245 | 0.027 | 79.4% | 56.0% | 8.0% |
+| `price_ai` | HGB | 0.0131 | 0.0186 | -0.1775 | 0.003 | 71.4% | 48.8% | 13.7% |
 | `price_calendar` | Ridge | 0.0126 | 0.0168 | 0.0411 | 0.160 | 77.1% | 59.0% | 14.9% |
 | `price_calendar` | HGB | 0.0122 | 0.0170 | 0.0160 | 0.250 | 74.9% | 55.4% | 14.9% |
 | `price_calendar_ai` | Ridge | 0.0125 | 0.0168 | 0.0377 | 0.158 | 76.0% | 57.2% | 14.9% |
@@ -45,7 +47,7 @@ Actual OOS high-volatility rate: 19.4%.
 
 ## Interpretation
 
-Volatility appears more predictable than return direction in this sample. Price-only volatility models have negative OOS R2, while adding calendar features produces positive OOS R2 and better rank correlation. The GLM USDA scores do not clearly improve over `price_calendar` here, but they remain competitive and preserve positive OOS R2. This is a useful project result because it suggests the agricultural-season and USDA-report information may be more valuable for risk forecasting than for directional return forecasting.
+Volatility appears more predictable than return direction in this sample. Price-only and price-plus-GLM volatility models have negative OOS R2, while adding calendar features produces positive OOS R2 and better rank correlation. The GLM USDA scores do not clearly improve over `price_calendar` here, but they remain competitive when combined with calendar features. This is a useful project result because it suggests agricultural seasonality is the main driver of predictable risk, while USDA-report signals may be better treated as a complement rather than a replacement for season controls.
 
 ## Files Updated
 
