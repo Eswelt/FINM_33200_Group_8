@@ -1,0 +1,9 @@
+Name,Metadata Complete,Object Type,Identifier,Pipeline,Missing Fields,Page Link
+CORN ETF Trading Signal Pipeline,False,pipeline,CORN,CORN,"build_commands, os_compatibility",../index.html
+Weekly Feature Panel,False,dataframe,feature_panel,CORN,links_to_data_providers,./dataframes/CORN/feature_panel.html
+Fixed Threshold Classification Predictions,False,dataframe,price_target_predictions,CORN,links_to_data_providers,./dataframes/CORN/price_target_predictions.html
+Expected Return Strategy Predictions,False,dataframe,expected_return_predictions,CORN,links_to_data_providers,./dataframes/CORN/expected_return_predictions.html
+Volatility Forecast Predictions,False,dataframe,volatility_predictions,CORN,links_to_data_providers,./dataframes/CORN/volatility_predictions.html
+Horizon Robustness Metrics,False,dataframe,horizon_robustness_metrics,CORN,links_to_data_providers,./dataframes/CORN/horizon_robustness_metrics.html
+Horizon Robustness Predictions,False,dataframe,horizon_robustness_predictions,CORN,links_to_data_providers,./dataframes/CORN/horizon_robustness_predictions.html
+GDELT Weekly News Scores,False,dataframe,gdelt_weekly_scores,CORN,links_to_data_providers,./dataframes/CORN/gdelt_weekly_scores.html

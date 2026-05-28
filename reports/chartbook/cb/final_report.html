@@ -1,0 +1,868 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Current Write-up: CORN ETF Trading Signal Pipeline &#8212; CORN ETF Trading Signal Pipeline</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=206a6f58" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+
+    <script src="../_static/documentation_options.js?v=b9472d72"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cb/final_report';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Glimpses Report" href="data_glimpses.html" />
+    <link rel="prev" title="CORN ETF Trading Signal Workflow" href="workflow.html" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+     
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="CORN ETF Trading Signal Pipeline - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="CORN ETF Trading Signal Pipeline - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    CORN ETF Trading Signal Pipeline
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks 📖</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/CORN/corn_forecast_workflow.html">CORN Forecast Workflow Report</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="workflow.html">CORN ETF Trading Signal Workflow</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Current Write-up: CORN ETF Trading Signal Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_glimpses.html">Data Glimpses Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="three_input_results.html">Three Input Pipeline Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="price_ai_ablation.html">Price Plus GLM Ablation Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="volatility_results.html">Volatility Pipeline Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="horizon_robustness.html">Horizon Robustness Results</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pipeline Charts 📈</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="charts.html">Chart List</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pipeline Dataframes 📊</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/expected_return_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:expected_return_predictions</span></code> - Expected Return Strategy Predictions</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/feature_panel.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:feature_panel</span></code> - Weekly Feature Panel</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/gdelt_weekly_scores.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:gdelt_weekly_scores</span></code> - GDELT Weekly News Scores</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/horizon_robustness_metrics.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_metrics</span></code> - Horizon Robustness Metrics</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/horizon_robustness_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:horizon_robustness_predictions</span></code> - Horizon Robustness Predictions</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/price_target_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:price_target_predictions</span></code> - Fixed Threshold Classification Predictions</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="dataframes/CORN/volatility_predictions.html">Dataframe: <code class="docutils literal notranslate"><span class="pre">CORN:volatility_predictions</span></code> - Volatility Forecast Predictions</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/cb/final_report.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Current Write-up: CORN ETF Trading Signal Pipeline</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary">Executive Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-question">Research Question</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-design">Validation Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-1-direction-classification">Pipeline 1: Direction Classification</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-week-direction-results">One-week direction results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#horizon-robustness-for-direction">Horizon robustness for direction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-2-expected-return">Pipeline 2: Expected Return</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-3-volatility-forecasting">Pipeline 3: Volatility Forecasting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-results-by-horizon">Volatility results by horizon</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-input-comparison">Volatility input comparison</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-volatility-is-more-predictable-than-return">Why Volatility Is More Predictable Than Return</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-limitations">Current Limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                   <section class="tex2jax_ignore mathjax_ignore" id="current-write-up-corn-etf-trading-signal-pipeline">
+<h1>Current Write-up: CORN ETF Trading Signal Pipeline<a class="headerlink" href="#current-write-up-corn-etf-trading-signal-pipeline" title="Link to this heading">#</a></h1>
+<p>Updated: <code class="docutils literal notranslate"><span class="pre">2026-05-27</span></code>.</p>
+<section id="executive-summary">
+<h2>Executive Summary<a class="headerlink" href="#executive-summary" title="Link to this heading">#</a></h2>
+<p>This project studies whether structured agricultural information can improve CORN ETF trading-signal research. The current model results use three completed data blocks:</p>
+<ul class="simple">
+<li><p>Historical CORN ETF prices from Yahoo Finance.</p></li>
+<li><p>Deterministic corn-season calendar features.</p></li>
+<li><p>USDA Weekly Weather and Crop Bulletin text parsed from PDFs and scored with GLM into seven crop-risk features.</p></li>
+</ul>
+<p>One additional data block has been uploaded but is not yet integrated into the model comparison:</p>
+<ul class="simple">
+<li><p>GDELT weekly news scores.</p></li>
+</ul>
+<p>One planned data block is still pending from teammates:</p>
+<ul class="simple">
+<li><p>Weather features.</p></li>
+</ul>
+<p>The main finding so far is that USDA/seasonal information is more useful for risk and horizon-regime analysis than for precise one-week return prediction. One-week return forecasts remain weak, but 4-week and 13-week volatility forecasts improve materially when crop-season features are included. The next model iteration should add GDELT and weather as explicit input blocks.</p>
+</section>
+<section id="research-question">
+<h2>Research Question<a class="headerlink" href="#research-question" title="Link to this heading">#</a></h2>
+<p>The project asks whether agricultural information can improve trading decisions for <code class="docutils literal notranslate"><span class="pre">CORN</span></code>, the Teucrium Corn ETF. We frame this as a trading-signal problem rather than a raw price-level prediction problem.</p>
+<p>The completed experiments compare four input sets:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>input set</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code></p></td>
+<td><p>Historical CORN ETF price features.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
+<td><p>Price features plus GLM-extracted USDA report scores.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
+<td><p>Price features plus deterministic crop-season calendar controls.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
+<td><p>Price, calendar, and GLM USDA scores.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The GLM scores are derived from parsed USDA Weekly Weather and Crop Bulletin text. They measure moisture stress, heat stress, excess rain risk, planting delay risk, harvest delay risk, yield risk, and crop condition trend.</p>
+</section>
+<section id="validation-design">
+<h2>Validation Design<a class="headerlink" href="#validation-design" title="Link to this heading">#</a></h2>
+<p>The sample is frozen at:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>2011-01-01 to 2026-05-15
+</pre></div>
+</div>
+<p>The out-of-sample window starts after:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>2022-12-31
+</pre></div>
+</div>
+<p>Validation uses expanding walk-forward splits:</p>
+<ul class="simple">
+<li><p>13-week test windows.</p></li>
+<li><p>13-week retrain step.</p></li>
+<li><p>No random train/test split.</p></li>
+<li><p>Features are point-in-time at the prediction week.</p></li>
+</ul>
+<p>The horizon robustness experiment keeps a weekly prediction cadence but changes the forward target horizon:</p>
+<ul class="simple">
+<li><p>1 week.</p></li>
+<li><p>4 weeks.</p></li>
+<li><p>13 weeks.</p></li>
+</ul>
+<p>For 4-week and 13-week targets, adjacent predictions overlap. Those results should be read as horizon-sensitivity evidence rather than independent quarterly observations.</p>
+</section>
+<section id="pipeline-1-direction-classification">
+<h2>Pipeline 1: Direction Classification<a class="headerlink" href="#pipeline-1-direction-classification" title="Link to this heading">#</a></h2>
+<p>The main direction target is a fixed-threshold three-class label:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Y =  1 if forward return &gt;= +2%
+Y =  0 if -2% &lt; forward return &lt; +2%
+Y = -1 if forward return &lt;= -2%
+</pre></div>
+</div>
+<section id="one-week-direction-results">
+<h3>One-week direction results<a class="headerlink" href="#one-week-direction-results" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>input set</p></th>
+<th class="head text-right"><p>accuracy</p></th>
+<th class="head text-right"><p>balanced accuracy</p></th>
+<th class="head text-right"><p>macro F1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code></p></td>
+<td class="text-right"><p>46.9%</p></td>
+<td class="text-right"><p>31.9%</p></td>
+<td class="text-right"><p>31.4%</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
+<td class="text-right"><p>49.7%</p></td>
+<td class="text-right"><p>32.6%</p></td>
+<td class="text-right"><p>32.6%</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
+<td class="text-right"><p>42.3%</p></td>
+<td class="text-right"><p>30.9%</p></td>
+<td class="text-right"><p>30.4%</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
+<td class="text-right"><p>42.9%</p></td>
+<td class="text-right"><p>30.0%</p></td>
+<td class="text-right"><p>30.0%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For the one-week direction task, <code class="docutils literal notranslate"><span class="pre">price_ai</span></code> is the best of the tested inputs, but the improvement is modest. This is evidence that USDA/GLM scores contain some directional information, but the one-week fixed-band classification task remains hard.</p>
+</section>
+<section id="horizon-robustness-for-direction">
+<h3>Horizon robustness for direction<a class="headerlink" href="#horizon-robustness-for-direction" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>horizon</p></th>
+<th class="head"><p>best input set</p></th>
+<th class="head text-right"><p>balanced accuracy</p></th>
+<th class="head text-right"><p>macro F1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1 week</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
+<td class="text-right"><p>32.6%</p></td>
+<td class="text-right"><p>32.6%</p></td>
+</tr>
+<tr class="row-odd"><td><p>4 weeks</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
+<td class="text-right"><p>43.5%</p></td>
+<td class="text-right"><p>43.0%</p></td>
+</tr>
+<tr class="row-even"><td><p>13 weeks</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
+<td class="text-right"><p>46.6%</p></td>
+<td class="text-right"><p>44.8%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The direction task improves when the target horizon is extended. This is economically plausible: crop reports and seasonal risk windows may not move the ETF immediately in the next week, but they can matter over a 4-week or 13-week horizon.</p>
+</section>
+</section>
+<section id="pipeline-2-expected-return">
+<h2>Pipeline 2: Expected Return<a class="headerlink" href="#pipeline-2-expected-return" title="Link to this heading">#</a></h2>
+<p>The expected-return pipeline directly forecasts forward cumulative log return and trades only when predicted return clears transaction cost plus a buffer.</p>
+<p>The one-week expected-return results are weak statistically:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>best one-week run</p></th>
+<th class="head text-right"><p>strategy return</p></th>
+<th class="head text-right"><p>Sharpe</p></th>
+<th class="head text-right"><p>R2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code> + Ridge</p></td>
+<td class="text-right"><p>10.7%</p></td>
+<td class="text-right"><p>0.322</p></td>
+<td class="text-right"><p>-0.102</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The trading outcome is positive for that run, but the return forecast R2 remains negative. The 4-week and 13-week expected-return runs also have negative R2 and poor strategy Sharpe. We therefore do not treat expected-return forecasting as the main project result.</p>
+<p>Interpretation:</p>
+<blockquote>
+<div><p>The current features may help identify some risk regimes, but they do not reliably estimate return levels.</p>
+</div></blockquote>
+</section>
+<section id="pipeline-3-volatility-forecasting">
+<h2>Pipeline 3: Volatility Forecasting<a class="headerlink" href="#pipeline-3-volatility-forecasting" title="Link to this heading">#</a></h2>
+<p>The volatility pipeline predicts future realized volatility:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1-week volatility = abs(next 1-week return)
+4-week / 13-week volatility = sqrt(sum of squared forward weekly returns)
+</pre></div>
+</div>
+<p>It also classifies high-volatility periods using each training window’s 70th percentile volatility threshold.</p>
+<section id="volatility-results-by-horizon">
+<h3>Volatility results by horizon<a class="headerlink" href="#volatility-results-by-horizon" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>horizon</p></th>
+<th class="head"><p>best R2 run</p></th>
+<th class="head text-right"><p>R2</p></th>
+<th class="head text-right"><p>Spearman</p></th>
+<th class="head text-right"><p>high-vol balanced accuracy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1 week</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code> + Ridge</p></td>
+<td class="text-right"><p>0.041</p></td>
+<td class="text-right"><p>0.160</p></td>
+<td class="text-right"><p>59.0%</p></td>
+</tr>
+<tr class="row-odd"><td><p>4 weeks</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code> + Ridge</p></td>
+<td class="text-right"><p>0.233</p></td>
+<td class="text-right"><p>0.420</p></td>
+<td class="text-right"><p>68.6%</p></td>
+</tr>
+<tr class="row-even"><td><p>13 weeks</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code> + HGB</p></td>
+<td class="text-right"><p>0.241</p></td>
+<td class="text-right"><p>0.687</p></td>
+<td class="text-right"><p>70.6%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The volatility pipeline is the strongest current result. Forecast quality improves at 4-week and 13-week horizons, especially when crop-season calendar features are included.</p>
+</section>
+<section id="volatility-input-comparison">
+<h3>Volatility input comparison<a class="headerlink" href="#volatility-input-comparison" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>input set</p></th>
+<th class="head"><p>conclusion</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_only</span></code></p></td>
+<td><p>Weak baseline; limited volatility predictability.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_ai</span></code></p></td>
+<td><p>GLM scores alone do not materially improve volatility forecasting.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
+<td><p>Most stable volatility signal; seasonality is the main driver.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar_ai</span></code></p></td>
+<td><p>Competitive with calendar and sometimes better for high-volatility flags, but not consistently better than calendar alone.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This suggests that USDA/GLM scores are best interpreted inside the crop calendar. A report about planting delay, heat stress, or harvest disruption has different meaning depending on the crop stage.</p>
+</section>
+</section>
+<section id="why-volatility-is-more-predictable-than-return">
+<h2>Why Volatility Is More Predictable Than Return<a class="headerlink" href="#why-volatility-is-more-predictable-than-return" title="Link to this heading">#</a></h2>
+<p>USDA reports and crop-season signals often change uncertainty before they give a clean directional edge. A drought, planting delay, or crop condition deterioration may widen the market’s risk distribution without saying exactly whether next week’s ETF return will be positive or negative.</p>
+<p>The project evidence matches that logic:</p>
+<ul class="simple">
+<li><p>One-week return and direction prediction remain noisy.</p></li>
+<li><p>Volatility prediction improves with longer horizons.</p></li>
+<li><p>Calendar features are especially important for risk prediction.</p></li>
+<li><p>GLM USDA scores provide some directional signal and may help high-volatility flagging, but they do not replace seasonality.</p></li>
+</ul>
+<p>For investors, the volatility model is useful as a risk overlay:</p>
+<ul class="simple">
+<li><p>Scale position size down when predicted volatility is high.</p></li>
+<li><p>Require a stronger return signal before trading in high-risk windows.</p></li>
+<li><p>Flag periods where options or hedging may be more relevant than directional ETF exposure.</p></li>
+</ul>
+</section>
+<section id="current-limitations">
+<h2>Current Limitations<a class="headerlink" href="#current-limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>GDELT weekly news scores have been uploaded but are not yet included in the reported model runs.</p></li>
+<li><p>Weather features are not yet included.</p></li>
+<li><p>Multi-week horizon results use overlapping targets, so they should not be treated as independent quarterly observations.</p></li>
+<li><p>Expected-return R2 remains negative across horizons.</p></li>
+<li><p>GLM scores are model-generated structured features, not ground-truth agronomic measurements.</p></li>
+<li><p>Current results should be presented as evidence about signal shape and risk regimes, not as a deployable trading strategy.</p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<p>The next iteration should add:</p>
+<ol class="arabic simple">
+<li><p>GDELT news features as a separate input block.</p></li>
+<li><p>Weather features as a separate input block.</p></li>
+<li><p>A final comparison table:</p>
+<ul class="simple">
+<li><p>price only</p></li>
+<li><p>price + GLM</p></li>
+<li><p>price + calendar</p></li>
+<li><p>price + calendar + GLM</p></li>
+<li><p>price + calendar + GLM + GDELT</p></li>
+<li><p>price + calendar + GLM + weather</p></li>
+<li><p>full model</p></li>
+</ul>
+</li>
+<li><p>A concise final conclusion focused on whether new information improves:</p>
+<ul class="simple">
+<li><p>direction classification,</p></li>
+<li><p>expected-return trading,</p></li>
+<li><p>volatility/risk-regime forecasting.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="reproducibility">
+<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
+<p>Core commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>sync<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>--extra<span class="w"> </span>docs
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>dev<span class="w"> </span>doit<span class="w"> </span>fetch_prices<span class="w"> </span>build_features
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>scripts/run_horizon_robustness.py
+uv<span class="w"> </span>run<span class="w"> </span>pytest
+</pre></div>
+</div>
+<p>ChartBook build:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>docs<span class="w"> </span>chartbook<span class="w"> </span>build<span class="w"> </span>reports/chartbook<span class="w"> </span>-f<span class="w"> </span>--project-dir<span class="w"> </span>.
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>scripts/fix_chartbook_assets.py
+</pre></div>
+</div>
+</section>
+</section>
+
+<div class="section ablog__blog_comments">
+   
+</div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="workflow.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">CORN ETF Trading Signal Workflow</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="data_glimpses.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Data Glimpses Report</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary">Executive Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-question">Research Question</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-design">Validation Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-1-direction-classification">Pipeline 1: Direction Classification</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-week-direction-results">One-week direction results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#horizon-robustness-for-direction">Horizon robustness for direction</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-2-expected-return">Pipeline 2: Expected Return</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-3-volatility-forecasting">Pipeline 3: Volatility Forecasting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-results-by-horizon">Volatility results by horizon</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volatility-input-comparison">Volatility input comparison</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-volatility-is-more-predictable-than-return">Why Volatility Is More Predictable Than Return</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-limitations">Current Limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By FINM 33200 Group 8
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, FINM 33200 Group 8, FINM 33200 Group 8.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
