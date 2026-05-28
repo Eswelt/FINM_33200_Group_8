@@ -10,7 +10,7 @@ def ensure_project_dirs(root: Path) -> None:
         "data/raw",
         "data/interim",
         "data/processed",
-        "docs_src/reports/figures",
-        "docs_src/reports/tables",
+        "output/report/figures",
+        "output/report/tables",
     ):
         (root / relative).mkdir(parents=True, exist_ok=True)

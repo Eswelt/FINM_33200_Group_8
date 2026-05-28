@@ -33,3 +33,9 @@ docs_src/reports/html/*
 docs_src/reports/chartbook/*
 !docs_src/reports/figures/.gitkeep
 !docs_src/reports/tables/.gitkeep
+
+# ChartBook may also emit a root-level reports/ build directory locally.
+reports/
+
+# Consolidated generated report outputs.
+output/

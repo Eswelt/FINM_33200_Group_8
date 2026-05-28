@@ -25,14 +25,28 @@ The final write-up focuses on whether crop-season timing, USDA/GLM report scores
 ## Quick Start
 
 ```bash
-uv sync --python 3.12 --extra dev --extra docs
-uv run --extra dev doit baseline
+uv run --extra dev --extra docs doit
 ```
 
-This writes:
+`doit` defaults to the full cached local workflow: feature panel, model experiments,
+robustness checks, final report assets, ChartBook docs, and tests. Generated report
+and documentation tasks clean their previous outputs before rewriting them, so reruns
+do not accumulate duplicate ChartBook/report files. For a first local setup, you can
+still pre-sync the environment explicitly:
 
-- `docs_src/reports/price_target_tests.json`
-- `docs_src/reports/price_target_predictions.csv`
+```bash
+uv sync --python 3.12 --extra dev --extra docs
+```
+
+Main generated outputs include:
+
+- `output/report/price_target_tests.json`
+- `output/report/price_target_predictions.csv`
+- `output/report/expected_return_metrics.json`
+- `output/report/volatility_metrics.json`
+- `output/report/horizon_robustness_metrics.csv`
+- `output/report/notebooks/corn_forecast_workflow.ipynb`
+- `output/report/chartbook/index.html`
 
 Generated report outputs are ignored by git. Cached data files live under `data/` and are kept separate from report generation.
 
@@ -52,7 +66,13 @@ Run the current classification baseline:
 uv run --extra dev doit baseline
 ```
 
-Run the main research experiments and regenerate the notebook/HTML report:
+Run the model experiment bundle:
+
+```bash
+uv run --extra dev doit experiments
+```
+
+Run the main research experiments and regenerate the notebook report source:
 
 ```bash
 uv run --extra dev doit research
@@ -64,23 +84,28 @@ Refresh external data sources explicitly:
 uv run --extra dev doit refresh_data
 ```
 
+Delete generated reports/docs before a manual fresh rebuild:
+
+```bash
+uv run --extra dev doit clean_outputs
+```
+
 Build the ChartBook documentation site:
 
 ```bash
 uv run --extra dev --extra docs doit docs
 ```
 
-Open the generated HTML files on macOS:
+Open the generated ChartBook site on macOS:
 
 ```bash
-open docs_src/reports/chartbook/index.html
-open docs_src/reports/html/corn_forecast_workflow.html
+open output/report/chartbook/index.html
 ```
 
 Run the full local workflow:
 
 ```bash
-uv run --extra dev --extra docs doit all
+uv run --extra dev --extra docs doit
 ```
 
 Run tests:
@@ -89,40 +114,29 @@ Run tests:
 uv run --extra dev doit tests
 ```
 
+`uv run --extra dev --extra docs doit all` is the explicit form of the same full workflow.
 `chartbook` requires Python 3.10 or newer. The existing local Python 3.9 environment can still run the forecasting code and generated notebook script, but the ChartBook site build should be run from Python 3.10+.
 
-The default `baseline`, `research`, and `docs` tasks use the cached frozen data already under `data/`. Run `refresh_data` only when you intentionally want to refresh external sources.
+The default `all`, `baseline`, `experiments`, `research`, and `docs` tasks use the cached frozen data already under `data/`. Run `refresh_data` only when you intentionally want to refresh external sources. `clean_outputs` removes generated report and documentation artifacts under `output/report/`, but leaves cached raw/interim data alone.
 
-## Underlying CLI Commands
+## pydoit Task Wrappers
 
-Equivalent CLI command for the current classification baseline:
+Run the current classification baseline:
 
 ```bash
-PYTHONPATH=src uv run python -m cli classify-move \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --fixed-return-threshold 0.02 \
-  --feature-sets price_only,price_calendar
+uv run --extra dev doit classify_move
 ```
 
 Build a shared feature panel after weekly feature tables have been placed under `data/interim/`:
 
 ```bash
-PYTHONPATH=src uv run python -m cli fetch-prices
-PYTHONPATH=src uv run python -m cli build-features
+uv run --extra dev doit build_features
 ```
 
 Run the auxiliary expected-return pipeline:
 
 ```bash
-PYTHONPATH=src uv run python -m cli return-strategy \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --feature-sets price_only,price_calendar \
-  --transaction-cost-bps 5 \
-  --buffer-bps 25
+uv run --extra dev doit return_strategy
 ```
 
 The expected-return pipeline predicts next-week log return directly and trades only when the predicted return exceeds transaction costs plus a buffer. It is an auxiliary experiment; the current main target is the fixed 2% arithmetic-return classification task. Internally, the 2% band is converted to log-return bounds before comparing with `target_log_return_next`.
@@ -130,11 +144,7 @@ The expected-return pipeline predicts next-week log return directly and trades o
 Run the auxiliary volatility pipeline:
 
 ```bash
-PYTHONPATH=src uv run python -m cli volatility \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --feature-sets price_only,price_calendar,price_calendar_ai
+uv run --extra dev doit volatility
 ```
 
 The volatility pipeline predicts `abs(next_week_log_return)` and reports both regression diagnostics and a high-volatility classification check based on each training window's 70th percentile absolute return.

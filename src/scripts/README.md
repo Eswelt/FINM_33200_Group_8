@@ -2,10 +2,10 @@
 
 Small one-off scripts can live here when a task is not worth adding to the CLI.
 
-Prefer the CLI for core workflow:
+Prefer pydoit for the core workflow:
 
 ```bash
-PYTHONPATH=src uv run python -m cli --help
+uv run --extra dev doit list
 ```
 
 Routine script commands are exposed through pydoit:

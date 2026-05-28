@@ -23,7 +23,7 @@ FEATURE_SETS = (
     "price_calendar_gdelt",
     "price_calendar_ai_gdelt",
 )
-OUTPUT_DIR = Path("docs_src/reports")
+OUTPUT_DIR = Path("output/report")
 EXPERIMENT_DIR = Path("docs_src/experiments")
 
 

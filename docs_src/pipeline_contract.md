@@ -128,8 +128,8 @@ uv run --extra dev doit classify_move
 Output:
 
 ```text
-docs_src/reports/price_target_tests.json
-docs_src/reports/price_target_predictions.csv
+output/report/price_target_tests.json
+output/report/price_target_predictions.csv
 ```
 
 Primary metrics:
@@ -180,8 +180,8 @@ uv run --extra dev doit return_strategy
 Output:
 
 ```text
-docs_src/reports/expected_return_metrics.json
-docs_src/reports/expected_return_predictions.csv
+output/report/expected_return_metrics.json
+output/report/expected_return_predictions.csv
 ```
 
 Primary forecast diagnostics:
@@ -227,29 +227,19 @@ USDA Weekly Weather and Crop Bulletin PDFs can be reduced to core CORN-relevant 
 First, batch download the raw PDFs from USDA ESMIS:
 
 ```bash
-PYTHONPATH=src uv run python -m scripts.download_wwcb \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --output-dir data/external/wwcb_pdfs \
-  --manifest data/interim/wwcb_manifest.csv
+uv run --extra dev doit wwcb_download
 ```
 
 For a small test run:
 
 ```bash
-PYTHONPATH=src uv run python -m scripts.download_wwcb --start 2026-05-01 --end 2026-05-31 --limit 2 --dry-run
+uv run --extra dev doit wwcb_download_dry_run
 ```
 
 Then parse downloaded PDFs:
 
 ```bash
-PYTHONPATH=src uv run python -m scripts.parse_wwcb path/to/wwcb.pdf --output data/interim/wwcb_core_text.parquet
-```
-
-The input can also be a folder of PDFs:
-
-```bash
-PYTHONPATH=src uv run python -m scripts.parse_wwcb data/external/wwcb_pdfs --output data/interim/wwcb_core_text.parquet
+uv run --extra dev doit wwcb_parse
 ```
 
 Output columns:
@@ -310,24 +300,14 @@ ai_crop_condition_trend  -2 clearly worse to 2 clearly better
 Small local mock run, no API key required:
 
 ```bash
-PYTHONPATH=src uv run python -m scripts.extract_wwcb_ai_features \
-  --input data/interim/wwcb_core_text.parquet \
-  --output data/interim/ai_weekly.parquet \
-  --raw-output data/interim/ai_wwcb_raw.parquet \
-  --limit 3 \
-  --mock
+uv run --extra dev doit wwcb_ai_features_mock
 ```
 
 GLM run:
 
 ```bash
 export BIGMODEL_API_KEY=your_key_here
-
-PYTHONPATH=src uv run python -m scripts.extract_wwcb_ai_features \
-  --input data/interim/wwcb_core_text.parquet \
-  --output data/interim/ai_weekly.parquet \
-  --raw-output data/interim/ai_wwcb_raw.parquet \
-  --model glm-4.5-flash
+uv run --extra dev doit wwcb_ai_features
 ```
 
 `ai_weekly.parquet` is the file consumed by the forecasting pipelines. `ai_wwcb_raw.parquet` keeps report-level metadata and token usage for auditing.

@@ -23,11 +23,7 @@ Common setup:
 Command:
 
 ```bash
-PYTHONPATH=src uv run python -m cli volatility \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --feature-sets price_only,price_ai,price_calendar,price_calendar_ai
+uv run --extra dev doit volatility
 ```
 
 ## Results
@@ -52,5 +48,5 @@ Volatility appears more predictable than return direction in this sample. Price-
 ## Files Updated
 
 - `src/volatility.py`
-- `docs_src/reports/volatility_metrics.json`
-- `docs_src/reports/volatility_predictions.csv`
+- `output/report/volatility_metrics.json`
+- `output/report/volatility_predictions.csv`

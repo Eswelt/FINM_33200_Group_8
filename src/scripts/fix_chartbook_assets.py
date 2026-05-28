@@ -7,9 +7,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_DIR = ROOT / "docs_src" / "figures"
-TARGET_DIR = ROOT / "docs_src" / "reports" / "chartbook" / "cb" / "figures"
-FINAL_REPORT = ROOT / "docs_src" / "reports" / "chartbook" / "cb" / "final_report.html"
+SOURCE_DIR = ROOT / "output" / "report" / "figures"
+TARGET_DIR = ROOT / "output" / "report" / "chartbook" / "cb" / "figures"
+FINAL_REPORT = ROOT / "output" / "report" / "chartbook" / "cb" / "final_report.html"
 
 
 def main() -> int:

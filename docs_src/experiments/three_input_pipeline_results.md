@@ -23,22 +23,7 @@ Common setup:
 Commands:
 
 ```bash
-uv run --extra dev doit fetch_prices build_features
-
-PYTHONPATH=src uv run python -m cli classify-move \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --fixed-return-threshold 0.02 \
-  --feature-sets price_only,price_ai,price_calendar,price_calendar_ai
-
-PYTHONPATH=src uv run python -m cli return-strategy \
-  --start 2011-01-01 \
-  --end 2026-05-15 \
-  --split-date 2022-12-31 \
-  --feature-sets price_only,price_ai,price_calendar,price_calendar_ai \
-  --transaction-cost-bps 5 \
-  --buffer-bps 25
+uv run --extra dev doit experiments
 ```
 
 ## Direction Pipeline
@@ -82,7 +67,7 @@ Interpretation: all return regressions have negative OOS R2, so the return forec
 
 ## Files Updated
 
-- `docs_src/reports/price_target_tests.json`
-- `docs_src/reports/price_target_predictions.csv`
-- `docs_src/reports/expected_return_metrics.json`
-- `docs_src/reports/expected_return_predictions.csv`
+- `output/report/price_target_tests.json`
+- `output/report/price_target_predictions.csv`
+- `output/report/expected_return_metrics.json`
+- `output/report/expected_return_predictions.csv`

@@ -58,10 +58,22 @@ Run the current main baseline:
 uv run --extra dev doit baseline
 ```
 
-Run the main research experiments and regenerate the notebook/HTML report:
+Run the main research experiments and regenerate the notebook report source:
 
 ```bash
 uv run --extra dev doit research
+```
+
+Run the model experiment bundle only:
+
+```bash
+uv run --extra dev doit experiments
+```
+
+Delete generated reports/docs before a manual fresh rebuild:
+
+```bash
+uv run --extra dev doit clean_outputs
 ```
 
 Refresh external data sources when network access is intended:
@@ -76,17 +88,16 @@ Build the ChartBook site:
 uv run --extra dev --extra docs doit docs
 ```
 
-Open the generated HTML files on macOS:
+Open the generated ChartBook site on macOS:
 
 ```bash
-open docs_src/reports/chartbook/index.html
-open docs_src/reports/html/corn_forecast_workflow.html
+open output/report/chartbook/index.html
 ```
 
 Run the full local workflow:
 
 ```bash
-uv run --extra dev --extra docs doit all
+uv run --extra dev --extra docs doit
 ```
 
 Run tests:
@@ -95,9 +106,9 @@ Run tests:
 uv run --extra dev doit tests
 ```
 
-`chartbook` requires Python 3.10 or newer. The forecasting package itself remains compatible with the existing project runtime, but the ChartBook documentation extra should be run in a Python 3.10+ environment.
+`uv run --extra dev --extra docs doit all` is the explicit task-name form of the same command. `chartbook` requires Python 3.10 or newer. The forecasting package itself remains compatible with the existing project runtime, but the ChartBook documentation extra should be run in a Python 3.10+ environment.
 
-The default `baseline`, `research`, and `docs` tasks use local cached data. The `refresh_data` task is intentionally separate so report generation does not unexpectedly call external services.
+The default `all`, `baseline`, `experiments`, `research`, and `docs` tasks use local cached data. Generated report and documentation tasks clean their previous outputs under `output/report/` before rewriting them, so reruns do not accumulate duplicate ChartBook/report files. The `refresh_data` task is intentionally separate so report generation does not unexpectedly call external services.
 
 ## Task Map
 
@@ -107,22 +118,29 @@ The default `baseline`, `research`, and `docs` tasks use local cached data. The 
 | `fetch_usda` | `cli fetch-usda` | `data/raw/usda_releases.csv` |
 | `fetch_weather` | `cli fetch-weather` | `data/interim/weather_weekly.parquet` |
 | `refresh_data` | `fetch_prices`, `fetch_usda`, `fetch_weather` | Explicit external data refresh |
+| `clean_outputs` | local cleanup callables | Generated `output/report/` cleanup without touching cached raw/interim data |
 | `build_features` | `cli build-features` | `data/processed/feature_panel.parquet` |
-| `train_evaluate` | `cli train-evaluate` | `docs_src/reports/metrics.json`, `docs_src/reports/predictions.csv` |
-| `model_report` | `cli make-report` | `docs_src/reports/model_report.md`, `docs_src/reports/figures/*.png` |
-| `classify_move` | `cli classify-move` | `docs_src/reports/price_target_tests.json`, `docs_src/reports/price_target_predictions.csv` |
-| `return_strategy` | `cli return-strategy` | `docs_src/reports/expected_return_metrics.json`, `docs_src/reports/expected_return_predictions.csv` |
-| `select_threshold` | `cli select-threshold` | `docs_src/reports/threshold_selection.json`, `docs_src/reports/threshold_selection_predictions.csv` |
-| `notebook` | `src/scripts/build_project_notebook.py` | `docs_src/reports/notebooks/corn_forecast_workflow.ipynb`, `docs_src/reports/html/corn_forecast_workflow.html` |
-| `chartbook_build` | `chartbook build` plus local figure asset sync | `docs_src/reports/chartbook/index.html` |
+| `train_evaluate` | `cli train-evaluate` | `output/report/metrics.json`, `output/report/predictions.csv` |
+| `model_report` | `cli make-report` | `output/report/model_report.md`, `output/report/figures/*.png` |
+| `classify_move` | `cli classify-move` | `output/report/price_target_tests.json`, `output/report/price_target_predictions.csv` |
+| `return_strategy` | `cli return-strategy` | `output/report/expected_return_metrics.json`, `output/report/expected_return_predictions.csv` |
+| `volatility` | `cli volatility` | `output/report/volatility_metrics.json`, `output/report/volatility_predictions.csv` |
+| `select_threshold` | `cli select-threshold` | `output/report/threshold_selection.json`, `output/report/threshold_selection_predictions.csv` |
+| `horizon_robustness` | `src/scripts/run_horizon_robustness.py` | `output/report/horizon_robustness_metrics.csv`, `output/report/horizon_robustness_predictions.csv` |
+| `experiments` | `classify_move`, `return_strategy`, `volatility`, `select_threshold`, `horizon_robustness` | Full model experiment bundle |
+| `notebook` | `src/scripts/build_project_notebook.py` | `output/report/notebooks/corn_forecast_workflow.ipynb`, `output/report/final_report.md` |
+| `chartbook_build` | `chartbook build` plus local figure asset sync | `output/report/chartbook/index.html` |
+| `all` | `core`, `research`, `docs`, `tests` | Full cached local workflow |
 
 Optional WWCB tasks are also exposed:
 
 ```bash
 uv run --extra dev doit wwcb_download
+uv run --extra dev doit wwcb_download_dry_run
 uv run --extra dev doit wwcb_parse
 uv run --extra dev doit wwcb_ai_features
 uv run --extra dev doit wwcb_ai_features_mock
+uv run --extra dev doit wwcb_pipeline_mock
 ```
 
 The real AI feature task requires a GLM API key. The mock task is deterministic and useful for offline checks.
@@ -224,24 +242,22 @@ uv run --extra dev doit select_threshold_rolling
 The documentation task writes:
 
 ```text
-docs_src/final_report.md
-docs_src/figures/final_*.png
-docs_src/reports/figures/final_*.png
-docs_src/reports/notebooks/corn_forecast_workflow.ipynb
-docs_src/reports/html/corn_forecast_workflow.html
-docs_src/reports/chartbook/index.html
+output/report/final_report.md
+output/report/data_glimpses.md
+output/report/figures/*.png
+output/report/notebooks/corn_forecast_workflow.ipynb
+output/report/chartbook/index.html
 ```
 
 Open the HTML outputs:
 
 ```bash
-open docs_src/reports/chartbook/index.html
-open docs_src/reports/html/corn_forecast_workflow.html
+open output/report/chartbook/index.html
 ```
 
-The notebook and standalone HTML summarize current local outputs, including metric tables, prediction file shapes, and generated final-report figures. ChartBook uses `chartbook.toml` to include this notebook and the workflow notes in a generated documentation site.
+The notebook and final-report markdown summarize current local outputs, including metric tables, prediction file shapes, and generated figures. ChartBook uses `chartbook.toml` to render the notebook and workflow notes into the generated documentation site.
 
-For the most compact submission-ready summary, open `docs_src/reports/chartbook/cb/final_report.html` or `docs_src/reports/html/corn_forecast_workflow.html`.
+For the most compact submission-ready summary, open `output/report/chartbook/cb/final_report.html`.
 
 ## Operational Notes
 

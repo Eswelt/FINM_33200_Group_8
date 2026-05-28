@@ -136,7 +136,7 @@ def write_markdown_report(metrics: Dict[str, Dict[str, float]], predictions: pd.
             "",
             f"- Prediction window: {start} to {end}.",
             f"- Best model by strategy Sharpe in this run: `{best_model}`.",
-            "- Figures: `docs_src/reports/figures/predicted_probabilities.png`, `docs_src/reports/figures/roc_curves.png`, and `docs_src/reports/figures/cumulative_returns.png`.",
+            "- Figures: `output/report/figures/predicted_probabilities.png`, `output/report/figures/roc_curves.png`, and `output/report/figures/cumulative_returns.png`.",
             "- CSV/JSON outputs are generated locally and ignored by git.",
         ]
     )

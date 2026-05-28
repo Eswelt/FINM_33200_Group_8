@@ -1,9 +1,8 @@
-"""Generate the CORN workflow notebook and a standalone HTML rendering."""
+"""Generate the CORN workflow notebook and ChartBook source report."""
 
 from __future__ import annotations
 
 import argparse
-import base64
 import json
 import math
 import os
@@ -24,12 +23,12 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 DOCS_SRC = ROOT / "docs_src"
-REPORTS_DIR = DOCS_SRC / "reports"
+OUTPUT_DIR = ROOT / "output"
+REPORTS_DIR = OUTPUT_DIR / "report"
 DEFAULT_NOTEBOOK = REPORTS_DIR / "notebooks" / "corn_forecast_workflow.ipynb"
-DEFAULT_HTML = REPORTS_DIR / "html" / "corn_forecast_workflow.html"
-DEFAULT_REPORT_MD = DOCS_SRC / "final_report.md"
+DEFAULT_REPORT_MD = REPORTS_DIR / "final_report.md"
 FIGURE_DIR = REPORTS_DIR / "figures"
-DOCS_FIGURE_DIR = DOCS_SRC / "figures"
+CHARTBOOK_FIGURE_DIR = REPORTS_DIR / "figures"
 
 
 PERCENT_COLUMNS = {
@@ -238,7 +237,7 @@ def _source_map() -> pd.DataFrame:
         ("Threshold robustness", "src/threshold_selection.py", "Volatility-adjusted 3-class target selection."),
         ("Binary direction", "src/models.py, strategy.py", "Secondary up/down classifier and trading backtest."),
         ("WWCB/AI text", "src/text/*.py, src/scripts/*.py", "PDF download/parse and GLM/mock structured AI features."),
-        ("Report generation", "src/reports.py, src/scripts/build_project_notebook.py", "Figures, markdown, notebook, standalone HTML."),
+        ("Report generation", "src/reports.py, src/scripts/build_project_notebook.py", "Figures, markdown, notebook, and ChartBook inputs."),
         ("Tests", "src/tests/*.py", "40 tests covering adapters, features, models, targets, strategy, parser, AI features."),
     ]
     return pd.DataFrame(rows, columns=["area", "files", "role"])
@@ -255,8 +254,8 @@ def _project_directory_map() -> pd.DataFrame:
         ("data/interim/", "weather_weekly.parquet, ai_weekly.parquet, gdelt_weekly_scores.parquet", "Staged weekly feature blocks before the final modeling panel."),
         ("data/processed/", "feature_panel.parquet", "Final weekly modeling panel consumed by all model tasks."),
         ("docs_src/experiments/", "*_results.md", "Experiment notes and robustness write-ups included in ChartBook."),
-        ("docs_src/", "research_design.md, pipeline_contract.md, project_workflow.md", "Source docs plus generated ChartBook markdown outputs."),
-        ("docs_src/reports/", "metrics, predictions, figures, notebooks, html, chartbook", "Generated model outputs, notebook, standalone HTML, and ChartBook site."),
+        ("docs_src/", "research_design.md, pipeline_contract.md, project_workflow.md", "Source docs included in ChartBook."),
+        ("output/report/", "metrics, predictions, figures, notebooks, chartbook", "Generated model outputs, report notebook, figures, and ChartBook site."),
         ("src/tests/", "test_*.py", "Unit and smoke tests for adapters, feature engineering, models, and reports."),
     ]
     return pd.DataFrame(rows, columns=["directory", "contains", "role"])
@@ -264,13 +263,16 @@ def _project_directory_map() -> pd.DataFrame:
 
 def _task_map() -> pd.DataFrame:
     rows = [
+        ("all", "Default full cached local workflow", "models, reports, docs, tests"),
         ("baseline", "Current fixed 2 percent arithmetic-return classification baseline", "price_target_tests.json, price_target_predictions.csv"),
-        ("research", "Main experiment bundle", "classification, expected-return, threshold, notebook"),
+        ("experiments", "Model experiment bundle", "classification, expected-return, volatility, threshold, horizon robustness"),
+        ("research", "Experiments plus notebook report source", "model outputs, corn_forecast_workflow.ipynb"),
         ("core", "Feature panel plus binary direction report", "feature_panel.parquet, metrics.json, figures"),
-        ("docs", "Final report, notebook, ChartBook", "docs_src/reports/html, docs_src/reports/notebooks, docs_src/reports/chartbook"),
+        ("docs", "Final report, notebook, ChartBook", "output/report/notebooks, output/report/chartbook"),
+        ("clean_outputs", "Remove generated report/docs artifacts", "fresh rebuild without stale ChartBook/report files"),
         ("refresh_data", "Explicit network refresh", "Yahoo prices, USDA releases, weather cache/catalog"),
         ("wwcb_*", "Optional text/AI feature pipeline", "WWCB manifest, parsed text, ai_weekly.parquet"),
-        ("tests", "Project test suite", "37 tests"),
+        ("tests", "Project test suite", "pytest over src/tests"),
     ]
     return pd.DataFrame(rows, columns=["task", "purpose", "main outputs"])
 
@@ -295,9 +297,8 @@ def _workflow_output_map() -> pd.DataFrame:
             "docs",
             [
                 DEFAULT_NOTEBOOK,
-                DEFAULT_HTML,
                 DEFAULT_REPORT_MD,
-                DOCS_SRC / "data_glimpses.md",
+                REPORTS_DIR / "data_glimpses.md",
                 REPORTS_DIR / "chartbook" / "index.html",
             ],
         ),
@@ -305,10 +306,13 @@ def _workflow_output_map() -> pd.DataFrame:
     rows = []
     for workflow, paths in workflows:
         missing = [path for path in paths if not path.exists()]
+        status = "ready" if not missing else "missing outputs"
+        if workflow == "docs":
+            status = "built by chartbook_build"
         rows.append(
             {
                 "workflow": workflow,
-                "status": "ready" if not missing else "missing outputs",
+                "status": status,
                 "main outputs": ", ".join(str(path.relative_to(ROOT)) for path in paths[:5])
                 + (" ..." if len(paths) > 5 else ""),
             }
@@ -538,7 +542,7 @@ def _build_caveats(
     if not binary_metrics.empty:
         caveats.append("The binary direction results use a different target (`target_up_next`) and are secondary, not the main 2 percent classification result.")
     caveats.append("Optional weather/text/AI data exist locally, but the main default feature sets are still `price_only` and `price_calendar`.")
-    caveats.append("Generated report and data outputs are ignored by git; rerun `uv run --extra dev doit docs` before submission.")
+    caveats.append("Generated report and data outputs are ignored by git; rerun `uv run --extra dev --extra docs doit` before submission. The pydoit tasks clean old report/docs artifacts before rewriting them.")
     return caveats
 
 
@@ -576,8 +580,7 @@ def _build_final_report_markdown(context: dict, generated_at: str) -> str:
         "## How To Open",
         "",
         "```bash",
-        "open docs_src/reports/chartbook/index.html",
-        "open docs_src/reports/html/corn_forecast_workflow.html",
+        "open output/report/chartbook/index.html",
         "```",
         "",
         "## Executive Summary",
@@ -642,9 +645,7 @@ def _build_final_report_markdown(context: dict, generated_at: str) -> str:
             "",
             "```bash",
             "uv sync --python 3.12 --extra dev --extra docs",
-            "uv run --extra dev doit research",
-            "uv run --extra dev doit docs",
-            "uv run --extra dev doit tests",
+            "uv run --extra dev --extra docs doit",
             "```",
         ]
     )
@@ -806,11 +807,12 @@ def _generate_report_figures(context: dict) -> List[Path]:
 
 
 def _sync_chartbook_figures(paths: Iterable[Path]) -> List[Path]:
-    DOCS_FIGURE_DIR.mkdir(parents=True, exist_ok=True)
+    CHARTBOOK_FIGURE_DIR.mkdir(parents=True, exist_ok=True)
     copied = []
     for path in paths:
-        destination = DOCS_FIGURE_DIR / path.name
-        shutil.copy2(path, destination)
+        destination = CHARTBOOK_FIGURE_DIR / path.name
+        if path.resolve() != destination.resolve():
+            shutil.copy2(path, destination)
         copied.append(destination)
     return copied
 
@@ -865,16 +867,15 @@ def build_notebook() -> dict:
 
 Generated at `{generated_at}`.
 
-This report is generated by `uv run --extra dev doit docs`. It consolidates the code map, data inventory, main results, auxiliary results, figures, and known problems for the CORN ETF weekly trading-signal project.
+This report is generated by `uv run --extra dev --extra docs doit`. It consolidates the code map, data inventory, main results, auxiliary results, figures, and known problems for the CORN ETF weekly trading-signal project.
 """
         ),
         _markdown_cell(
             """
-## Open The HTML Outputs
+## Open The ChartBook Report
 
 ```bash
-open docs_src/reports/chartbook/index.html
-open docs_src/reports/html/corn_forecast_workflow.html
+open output/report/chartbook/index.html
 ```
 """
         ),
@@ -971,9 +972,9 @@ import pandas as pd
 
 root = Path("..").resolve().parent
 feature_panel = pd.read_parquet(root / "data/processed/feature_panel.parquet")
-price_metrics = pd.read_json(root / "docs_src/reports/price_target_tests.json").T
-expected_return_metrics = pd.read_json(root / "docs_src/reports/expected_return_metrics.json").T
-threshold_metrics = pd.read_json(root / "docs_src/reports/threshold_selection.json").T
+price_metrics = pd.read_json(root / "output/report/price_target_tests.json").T
+expected_return_metrics = pd.read_json(root / "output/report/expected_return_metrics.json").T
+threshold_metrics = pd.read_json(root / "output/report/threshold_selection.json").T
 feature_panel.tail()
 """
         ),
@@ -997,19 +998,18 @@ feature_panel.tail()
 ## Generated Outputs
 
 ```text
-docs_src/reports/notebooks/corn_forecast_workflow.ipynb
-docs_src/reports/html/corn_forecast_workflow.html
-docs_src/reports/chartbook/index.html
+output/report/notebooks/corn_forecast_workflow.ipynb
+output/report/final_report.md
+output/report/chartbook/index.html
 ```
 
-Open the HTML outputs on macOS:
+Open the generated ChartBook site on macOS:
 
 ```bash
-open docs_src/reports/chartbook/index.html
-open docs_src/reports/html/corn_forecast_workflow.html
+open output/report/chartbook/index.html
 ```
 
-The notebook and HTML report are generated artifacts. Source documentation lives in `docs_src/project_workflow.md`; ChartBook configuration lives in `chartbook.toml`; workflow automation lives in `dodo.py`.
+The notebook and final report markdown are generated artifacts consumed by ChartBook. Source documentation lives in `docs_src/project_workflow.md`; ChartBook configuration lives in `chartbook.toml`; workflow automation lives in `dodo.py`.
 """
         )
     )
@@ -1028,112 +1028,9 @@ The notebook and HTML report are generated artifacts. Source documentation lives
     }
 
 
-def _markdown_to_html(markdown: str) -> str:
-    lines = markdown.splitlines()
-    html_lines = []
-    in_code = False
-    code_lines = []
-    in_list = False
-
-    def close_list():
-        nonlocal in_list
-        if in_list:
-            html_lines.append("</ul>")
-            in_list = False
-
-    for line in lines:
-        stripped = line.strip()
-        if stripped.startswith("```"):
-            close_list()
-            if in_code:
-                html_lines.append("<pre><code>" + escape("\n".join(code_lines)) + "</code></pre>")
-                code_lines = []
-                in_code = False
-            else:
-                in_code = True
-            continue
-        if in_code:
-            code_lines.append(line)
-            continue
-        if stripped.startswith("<img "):
-            close_list()
-            html_lines.append(stripped)
-            continue
-        if stripped.startswith("#"):
-            close_list()
-            level = min(len(stripped) - len(stripped.lstrip("#")), 6)
-            text = stripped[level:].strip()
-            html_lines.append(f"<h{level}>{escape(text)}</h{level}>")
-        elif stripped.startswith("- "):
-            if not in_list:
-                html_lines.append("<ul>")
-                in_list = True
-            html_lines.append(f"<li>{escape(stripped[2:])}</li>")
-        elif stripped:
-            close_list()
-            html_lines.append(f"<p>{escape(stripped)}</p>")
-        else:
-            close_list()
-    close_list()
-    return "\n".join(html_lines)
-
-
-def _image_to_data_uri(path: Path) -> str:
-    encoded = base64.b64encode(path.read_bytes()).decode("ascii")
-    return f"data:image/png;base64,{encoded}"
-
-
-def render_html(notebook: dict) -> str:
-    body = []
-    for cell in notebook["cells"]:
-        if cell["cell_type"] == "markdown":
-            source = cell.get("source", "")
-            if "![" in source and "](" in source:
-                source = _embed_markdown_images(source)
-            body.append(_markdown_to_html(source))
-        elif cell["cell_type"] == "code":
-            source = cell.get("source", "")
-            if source.strip():
-                body.append("<details><summary>Code</summary><pre><code>" + escape(source) + "</code></pre></details>")
-            for output in cell.get("outputs", []):
-                html = output.get("data", {}).get("text/html")
-                if html:
-                    body.append(html)
-    return (
-        "<!doctype html><html><head><meta charset=\"utf-8\">"
-        "<title>CORN ETF Trading Signal Workflow Report</title>"
-        "<style>"
-        "body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:40px;line-height:1.55;color:#202124;}"
-        "h1,h2,h3{line-height:1.2;margin-top:1.6em;} code,pre{background:#f6f8fa;border-radius:6px;}"
-        "pre{padding:12px;overflow:auto;} code{padding:2px 4px;} table.dataframe{border-collapse:collapse;width:100%;font-size:13px;margin:12px 0 28px;}"
-        "table.dataframe th,table.dataframe td{border:1px solid #d0d7de;padding:6px 8px;text-align:left;vertical-align:top;}"
-        "table.dataframe th{background:#f6f8fa;} img{max-width:100%;height:auto;border:1px solid #d0d7de;}"
-        "details{margin:12px 0;}"
-        "</style></head><body>"
-        + "\n".join(body)
-        + "</body></html>"
-    )
-
-
-def _embed_markdown_images(source: str) -> str:
-    result = []
-    for line in source.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("![") and "](" in stripped and stripped.endswith(")"):
-            alt = stripped[2 : stripped.index("]")]
-            rel = stripped[stripped.index("](") + 2 : -1]
-            path = (DEFAULT_NOTEBOOK.parent / rel).resolve()
-            if path.exists() and path.suffix.lower() == ".png":
-                result.append(f'<img alt="{escape(alt)}" src="{_image_to_data_uri(path)}">')
-                continue
-        result.append(line)
-    return "\n".join(result)
-
-
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Build project workflow notebook and HTML report.")
+    parser = argparse.ArgumentParser(description="Build project workflow notebook and ChartBook report sources.")
     parser.add_argument("--notebook", type=Path, default=DEFAULT_NOTEBOOK)
-    parser.add_argument("--html", type=Path, default=DEFAULT_HTML)
     return parser
 
 
@@ -1141,11 +1038,9 @@ def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     notebook = build_notebook()
     args.notebook.parent.mkdir(parents=True, exist_ok=True)
-    args.html.parent.mkdir(parents=True, exist_ok=True)
     args.notebook.write_text(json.dumps(notebook, indent=2), encoding="utf-8")
-    args.html.write_text(render_html(notebook), encoding="utf-8")
     print(f"Wrote notebook: {args.notebook}")
-    print(f"Wrote HTML: {args.html}")
+    print(f"Wrote final report markdown: {DEFAULT_REPORT_MD}")
     return 0
 
 

@@ -2,7 +2,7 @@
 
 Run from the repository root:
 
-    PYTHONPATH=src uv run python -m scripts.run_classification_baseline
+    uv run --extra dev doit baseline
 """
 
 from cli import main

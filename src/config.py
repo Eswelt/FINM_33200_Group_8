@@ -85,7 +85,7 @@ class ProjectConfig:
 
     @property
     def reports_dir(self) -> Path:
-        return self.root / "docs_src" / "reports"
+        return self.root / "output" / "report"
 
     @property
     def figures_dir(self) -> Path:

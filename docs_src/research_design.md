@@ -115,8 +115,8 @@ uv run --extra dev doit classify_move
 Output:
 
 ```text
-docs_src/reports/price_target_tests.json
-docs_src/reports/price_target_predictions.csv
+output/report/price_target_tests.json
+output/report/price_target_predictions.csv
 ```
 
 Why `2%`:
@@ -283,7 +283,7 @@ rolling walk-forward
 Output:
 
 ```text
-docs_src/reports/predictions.csv
+output/report/predictions.csv
 ```
 
 Command:
@@ -368,9 +368,9 @@ transaction-cost-adjusted return
 Output:
 
 ```text
-docs_src/reports/metrics.json
-docs_src/reports/model_report.md
-docs_src/reports/figures/
+output/report/metrics.json
+output/report/model_report.md
+output/report/figures/
 ```
 
 Command:
@@ -385,13 +385,11 @@ Final project outputs:
 
 ```text
 data/processed/feature_panel.parquet
-docs_src/reports/predictions.csv
-docs_src/reports/metrics.json
-docs_src/reports/model_report.md
-docs_src/reports/figures/cumulative_returns.png
-docs_src/reports/figures/predicted_probabilities.png
-docs_src/reports/figures/confusion_matrix.png
-docs_src/reports/figures/feature_importance.png
+output/report/predictions.csv
+output/report/metrics.json
+output/report/model_report.md
+output/report/figures/cumulative_returns.png
+output/report/figures/predicted_probabilities.png
 ```
 
 Final research question:
@@ -408,25 +406,25 @@ All recurring commands are collected in `dodo.py`.
 uv sync --python 3.12 --extra dev --extra docs
 uv run --extra dev doit list
 uv run --extra dev doit baseline
+uv run --extra dev doit experiments
 uv run --extra dev doit research
+uv run --extra dev doit clean_outputs
 uv run --extra dev doit refresh_data
 uv run --extra dev --extra docs doit docs
-uv run --extra dev --extra docs doit all
+uv run --extra dev --extra docs doit
 ```
 
 Generated documentation:
 
 ```text
-docs_src/reports/notebooks/corn_forecast_workflow.ipynb
-docs_src/reports/html/corn_forecast_workflow.html
-docs_src/reports/chartbook/index.html
+output/report/notebooks/corn_forecast_workflow.ipynb
+output/report/chartbook/index.html
 ```
 
 Open the HTML outputs on macOS:
 
 ```bash
-open docs_src/reports/chartbook/index.html
-open docs_src/reports/html/corn_forecast_workflow.html
+open output/report/chartbook/index.html
 ```
 
 `chartbook` requires Python 3.10 or newer.

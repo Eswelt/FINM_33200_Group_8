@@ -22,7 +22,7 @@ def test_demo_pipeline_writes_core_outputs(tmp_path: Path):
     )
 
     assert exit_code == 0
-    reports_dir = tmp_path / "docs_src" / "reports"
+    reports_dir = tmp_path / "output" / "report"
     assert (reports_dir / "metrics.json").exists()
     assert (reports_dir / "predictions.csv").exists()
     assert (reports_dir / "figures" / "predicted_probabilities.png").exists()
