@@ -14,6 +14,12 @@ The stored outputs from one run are in:
 corn_etf_daily_decision_leadbylead_expanding_yearly/
 ```
 
+That results directory has its own README with a file-by-file description of the saved CSV, JSON, and plot outputs:
+
+```text
+corn_etf_daily_decision_leadbylead_expanding_yearly/README.md
+```
+
 ## Goal
 
 The experiment tests whether short-horizon weather forecasts add predictive information for CORN ETF returns beyond price/calendar controls.
@@ -44,13 +50,103 @@ GPCP observed precipitation:
 If `--price-csv` is not supplied, CORN ETF prices are downloaded from Yahoo Finance through `yfinance`.
 If the Yahoo Finance download fails and `corn_etf_prices.csv` exists next to the script, the script falls back to that local CSV.
 
-The default CFSv2 lead days are:
+The repository also includes the processed weather inputs needed to reproduce the saved run:
+
+```text
+weather_data/validtime_yearly/cfsv2_daily00z_validtime_2011.nc
+...
+weather_data/validtime_yearly/cfsv2_daily00z_validtime_2025.nc
+
+weather_data/era5_daily_surface_stats_2011_2025_n49_w104_s37_e80.nc
+
+weather_data/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.nc
+weather_data/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.csv
+```
+
+## Data Coverage And Provenance
+
+All regional weather statistics use the same Corn Belt bounding box:
+
+```text
+north=49, west=-104, south=37, east=-80
+```
+
+The CFSv2 forecast data are NOAA CFSv2 operational 9-month forecasts initialized at 00Z. The downloaded source files are 6-hourly forecast products, but the processed yearly files keep a summary set of lead times:
+
+```text
++7, +14, +21, +28, +30, +60, +90, +120, +150, +180, +210, +240, +270 days
+```
+
+For a 00Z initialization, these correspond to the following lead hours and valid times:
+
+```text
++7 days   = 168 lead hours  = 00Z valid time 7 days after initialization
++14 days  = 336 lead hours  = 00Z valid time 14 days after initialization
++21 days  = 504 lead hours  = 00Z valid time 21 days after initialization
++28 days  = 672 lead hours  = 00Z valid time 28 days after initialization
++30 days  = 720 lead hours  = 00Z valid time 30 days after initialization
++60 days  = 1440 lead hours
++90 days  = 2160 lead hours
++120 days = 2880 lead hours
++150 days = 3600 lead hours
++180 days = 4320 lead hours
++210 days = 5040 lead hours
++240 days = 5760 lead hours
++270 days = 6480 lead hours
+```
+
+The return model uses the short-horizon subset:
 
 ```text
 +7, +14, +21, +28, +30
 ```
 
-Each lead is modeled separately.
+Each lead is modeled separately. The yearly CFSv2 files are valid-time matched: for a row with valid date `t` and lead `h`, the source initialization date is `t - h`.
+
+ERA5 observed surface weather covers 2011-2025 and is stored here only as a postprocessed regional statistics file because the raw downloaded ERA5 data are too large for the repository. The model reads ERA5 near-surface temperature and specific humidity from:
+
+```text
+weather_data/era5_daily_surface_stats_2011_2025_n49_w104_s37_e80.nc
+```
+
+GPCP observed precipitation covers 2011-01-01 through 2025-12-31. The repository includes both NetCDF and CSV regional daily precipitation statistics:
+
+```text
+weather_data/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.nc
+weather_data/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.csv
+```
+
+## Data Preparation Scripts
+
+`download_cfsv2_00z_derecho_parallel.py` downloads CFSv2 00Z operational forecast files on Derecho and computes daily-initialization regional forecast statistics for:
+
+```text
+t2m, spfh, precip
+```
+
+Its default output layout is:
+
+```text
+/glade/work/jiachengye/33200/cfsv2/daily00z/YYYY/t2m_YYYYMMDD00.nc
+/glade/work/jiachengye/33200/cfsv2/daily00z/YYYY/spfh_YYYYMMDD00.nc
+/glade/work/jiachengye/33200/cfsv2/daily00z/YYYY/precip_YYYYMMDD00.nc
+```
+
+`test1_era5_load.py` is a legacy/non-parallel version of the CFSv2 daily-initialization processing workflow. Despite the filename, it is not the ERA5 postprocessing script.
+
+`build_cfsv2_validtime_yearly.py` reorganizes those daily-initialization CFSv2 files by valid date and writes:
+
+```text
+cfsv2_daily00z_validtime_YYYY.nc
+```
+
+`test_gpcp_download.py` downloads GPCP daily precipitation and computes the regional precipitation statistics.
+
+`recompute_gpcp_stats.py` recomputes the same GPCP regional statistics from already downloaded daily GPCP files. This is useful when the daily files already exist on GLADE and only the regional NetCDF/CSV needs to be rebuilt.
+
+The ERA5 regional surface statistics file is an input to this repository. The raw ERA5 download and processing step is not included here because the raw data volume is large.
+
+`download_corn_etf_prices.py` downloads CORN ETF daily prices into the CSV format accepted by the return-regression script.
 
 ## Weather Feature Construction
 

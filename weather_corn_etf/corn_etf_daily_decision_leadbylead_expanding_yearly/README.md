@@ -8,6 +8,68 @@ This directory stores one completed run of the weather-based CORN ETF experiment
 
 The run uses CFSv2 weather forecasts, ERA5/GPCP observed weather, and CORN ETF prices to test whether lead-specific weather forecast factors improve daily return prediction and trading performance.
 
+This is a results directory. It stores model-ready panels, predictions, metrics, and plots from processed weather inputs. Raw weather downloads are not stored here.
+
+## Weather Data Used
+
+The saved run uses the processed weather files in:
+
+```text
+../weather_data/
+```
+
+CFSv2 forecast inputs are valid-time matched yearly files:
+
+```text
+../weather_data/validtime_yearly/cfsv2_daily00z_validtime_2011.nc
+...
+../weather_data/validtime_yearly/cfsv2_daily00z_validtime_2025.nc
+```
+
+Each CFSv2 file stores daily 00Z regional forecast statistics by valid date. The available summary lead days are:
+
+```text
++7, +14, +21, +28, +30, +60, +90, +120, +150, +180, +210, +240, +270
+```
+
+The regression results in this directory use the short-lead subset:
+
+```text
++7, +14, +21, +28, +30
+```
+
+Each lead is evaluated as a separate regression experiment. For example, the +7 model uses only the +7-day CFSv2 weather factors in addition to the price/calendar baseline.
+
+ERA5 observed surface weather is used as a processed regional statistics file:
+
+```text
+../weather_data/era5_daily_surface_stats_2011_2025_n49_w104_s37_e80.nc
+```
+
+The raw ERA5 download is not included in the repository because it is large. This processed file provides the observed near-surface variables used to construct initialization-date anomalies.
+
+GPCP observed precipitation is stored as processed regional daily statistics:
+
+```text
+../weather_data/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.nc
+../weather_data/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.csv
+```
+
+GPCP covers 2011-01-01 through 2025-12-31 and supplies the observed precipitation anomaly used in the projected-change features.
+
+The preprocessing scripts live one directory above this results folder:
+
+```text
+../download_cfsv2_00z_derecho_parallel.py
+../build_cfsv2_validtime_yearly.py
+../test1_era5_load.py
+../test_gpcp_download.py
+../recompute_gpcp_stats.py
+../download_corn_etf_prices.py
+```
+
+`test1_era5_load.py` is a legacy CFSv2 daily-initialization processing script, not an ERA5 generation script. The ERA5 file used here is included only as a processed regional statistics input.
+
 ## Run Configuration
 
 The exact run metadata is saved in:
