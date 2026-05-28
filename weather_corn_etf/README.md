@@ -42,6 +42,7 @@ GPCP observed precipitation:
 ```
 
 If `--price-csv` is not supplied, CORN ETF prices are downloaded from Yahoo Finance through `yfinance`.
+If the Yahoo Finance download fails and `corn_etf_prices.csv` exists next to the script, the script falls back to that local CSV.
 
 The default CFSv2 lead days are:
 
@@ -138,10 +139,10 @@ if predicted_return < -signal_buffer: position = -1
 otherwise:                            position = 0
 ```
 
-The default stored run used:
+The no-buffer stored run in `corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/` used:
 
 ```text
-signal_buffer = 0.003
+signal_buffer = 0.0
 transaction_cost_bps = 5.0
 ```
 
@@ -155,14 +156,30 @@ The `signal_5td_proxy_*` metrics compound overlapping 5-trading-day signal retur
 
 ## Main Command
 
-Example Derecho command:
+Example Derecho command for the no-buffer (`signal_buffer_0p0pct`) result:
 
 ```bash
 python test_corn_etf_cfsv2_daily_decision_leadbylead_expanding_yearly.py \
   --cfsv2-root /glade/work/jiachengye/33200/cfsv2/validtime_yearly \
   --era5-path /glade/work/jiachengye/33200/era5_daily_surface_stats_2011_2025_n49_w104_s37_e80.nc \
   --gpcp-path /glade/work/jiachengye/33200/gpcp/stats/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.nc \
-  --signal-buffer 0.003 \
+  --price-csv corn_etf_prices.csv \
+  --out-dir corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct \
+  --signal-buffer 0.0 \
+  --make-plots \
+  --overwrite
+```
+
+The script can also be run from the repository root by overriding the GLADE defaults with repo-relative paths:
+
+```bash
+python weather_corn_etf/test_corn_etf_cfsv2_daily_decision_leadbylead_expanding_yearly.py \
+  --cfsv2-root weather_corn_etf/weather_data/validtime_yearly \
+  --era5-path weather_corn_etf/weather_data/era5_daily_surface_stats_2011_2025_n49_w104_s37_e80.nc \
+  --gpcp-path weather_corn_etf/weather_data/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.nc \
+  --price-csv weather_corn_etf/corn_etf_prices.csv \
+  --out-dir weather_corn_etf/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct \
+  --signal-buffer 0.0 \
   --make-plots \
   --overwrite
 ```

@@ -29,6 +29,8 @@ import pandas as pd
 import xarray as xr
 
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+DEFAULT_LOCAL_PRICE_CSV = SCRIPT_DIR / "corn_etf_prices.csv"
 DEFAULT_CFSV2_ROOT = Path("/glade/work/jiachengye/33200/cfsv2/validtime_yearly")
 DEFAULT_ERA5_PATH = Path("/glade/work/jiachengye/33200/era5_daily_surface_stats_2011_2025_n49_w104_s37_e80.nc")
 DEFAULT_GPCP_PATH = Path(
@@ -508,7 +510,17 @@ def load_prices(args: argparse.Namespace) -> pd.DataFrame:
     start = f"{args.start_year}-01-01"
     end = f"{args.end_year + 1}-02-01"
     print(f"Downloading {args.symbol} prices from Yahoo Finance: {start} to {end}", flush=True)
-    return fetch_price_yfinance(args.symbol, start, end)
+    try:
+        return fetch_price_yfinance(args.symbol, start, end)
+    except Exception as exc:
+        if DEFAULT_LOCAL_PRICE_CSV.exists():
+            print(
+                f"Yahoo Finance price download failed ({exc}); "
+                f"reading local price CSV {DEFAULT_LOCAL_PRICE_CSV}",
+                flush=True,
+            )
+            return read_price_csv(DEFAULT_LOCAL_PRICE_CSV)
+        raise
 
 
 def build_daily_price_panel(

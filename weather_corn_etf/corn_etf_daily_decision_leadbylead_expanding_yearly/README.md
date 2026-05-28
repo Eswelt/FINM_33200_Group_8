@@ -16,7 +16,7 @@ The exact run metadata is saved in:
 cfsv2_corn_etf_daily_decision_metadata.json
 ```
 
-Key settings from the saved metadata:
+Key settings from the top-level saved metadata:
 
 ```text
 CFSv2 lead days: +7, +14, +21, +28, +30
@@ -30,6 +30,33 @@ Climatology window: 10 calendar days
 Initialization observed anomaly window: trailing 7 days, shifted by 1 day
 Signal buffer: 0.003
 Transaction cost: 5 bps per turnover unit
+```
+
+The no-buffer result used for the main class-project comparison is stored in:
+
+```text
+signal_buffer_0p0pct/
+```
+
+That run uses:
+
+```text
+Signal buffer: 0.0
+Transaction cost: 5 bps per turnover unit
+```
+
+From the repository root, it can be reproduced with:
+
+```bash
+python weather_corn_etf/test_corn_etf_cfsv2_daily_decision_leadbylead_expanding_yearly.py \
+  --cfsv2-root weather_corn_etf/weather_data/validtime_yearly \
+  --era5-path weather_corn_etf/weather_data/era5_daily_surface_stats_2011_2025_n49_w104_s37_e80.nc \
+  --gpcp-path weather_corn_etf/weather_data/gpcp_daily_area_stats_20110101_20251231_north49_west104_south37_west80.nc \
+  --price-csv weather_corn_etf/corn_etf_prices.csv \
+  --out-dir weather_corn_etf/corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct \
+  --signal-buffer 0.0 \
+  --make-plots \
+  --overwrite
 ```
 
 ## Main CSV Files
