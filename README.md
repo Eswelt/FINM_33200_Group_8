@@ -10,6 +10,8 @@ Y =  0 if -2% < next_week_return < +2%
 Y = -1 if next_week_return <= -2%
 ```
 
+The implementation stores next-week log returns and converts this arithmetic 2% band to log-return bounds.
+
 The current experiments compare:
 
 - `price_only`: historical price features
@@ -29,10 +31,10 @@ uv run --extra dev doit baseline
 
 This writes:
 
-- `reports/price_target_tests.json`
-- `reports/price_target_predictions.csv`
+- `docs_src/reports/price_target_tests.json`
+- `docs_src/reports/price_target_predictions.csv`
 
-Generated data and report outputs are ignored by git.
+Generated report outputs are ignored by git. Cached data files live under `data/` and are kept separate from report generation.
 
 ## pydoit Workflow
 
@@ -71,8 +73,8 @@ uv run --extra dev --extra docs doit docs
 Open the generated HTML files on macOS:
 
 ```bash
-open reports/chartbook/index.html
-open reports/html/corn_forecast_workflow.html
+open docs_src/reports/chartbook/index.html
+open docs_src/reports/html/corn_forecast_workflow.html
 ```
 
 Run the full local workflow:
@@ -93,16 +95,10 @@ The default `baseline`, `research`, and `docs` tasks use the cached frozen data 
 
 ## Underlying CLI Commands
 
-Run the current classification baseline:
+Equivalent CLI command for the current classification baseline:
 
 ```bash
-uv run python run_classification_baseline.py
-```
-
-Equivalent CLI command:
-
-```bash
-uv run python -m corn_forecast.cli classify-move \
+PYTHONPATH=src uv run python -m cli classify-move \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
@@ -113,14 +109,14 @@ uv run python -m corn_forecast.cli classify-move \
 Build a shared feature panel after weekly feature tables have been placed under `data/interim/`:
 
 ```bash
-uv run python -m corn_forecast.cli fetch-prices
-uv run python -m corn_forecast.cli build-features
+PYTHONPATH=src uv run python -m cli fetch-prices
+PYTHONPATH=src uv run python -m cli build-features
 ```
 
 Run the auxiliary expected-return pipeline:
 
 ```bash
-uv run python -m corn_forecast.cli return-strategy \
+PYTHONPATH=src uv run python -m cli return-strategy \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
@@ -129,12 +125,12 @@ uv run python -m corn_forecast.cli return-strategy \
   --buffer-bps 25
 ```
 
-The expected-return pipeline predicts next-week log return directly and trades only when the predicted return exceeds transaction costs plus a buffer. It is an auxiliary experiment; the current main target is the fixed 2% classification task.
+The expected-return pipeline predicts next-week log return directly and trades only when the predicted return exceeds transaction costs plus a buffer. It is an auxiliary experiment; the current main target is the fixed 2% arithmetic-return classification task. Internally, the 2% band is converted to log-return bounds before comparing with `target_log_return_next`.
 
 Run the auxiliary volatility pipeline:
 
 ```bash
-uv run python -m corn_forecast.cli volatility \
+PYTHONPATH=src uv run python -m cli volatility \
   --start 2011-01-01 \
   --end 2026-05-15 \
   --split-date 2022-12-31 \
@@ -145,12 +141,11 @@ The volatility pipeline predicts `abs(next_week_log_return)` and reports both re
 
 ## Project Documents
 
-- `step_by_step.md`: research design, target definition, time split, and validation logic
-- `pipeline_contract.md`: feature-table contract and modular pipeline interface
+- `docs_src/research_design.md`: research design, target definition, time split, and validation logic
+- `docs_src/pipeline_contract.md`: feature-table contract and modular pipeline interface
 - `docs_src/project_workflow.md`: consolidated ChartBook workflow documentation
 - `chartbook.toml`: ChartBook pipeline metadata, dataframes, notes, and notebook registry
 - `dodo.py`: pydoit task graph for all routine commands
-- `run_classification_baseline.py`: one-command baseline runner
 
 ## Data Interface
 
@@ -199,7 +194,7 @@ price_calendar_ai_gdelt
 Main classification target:
 
 ```text
-next-week return down / flat / up using a fixed 2% band
+next-week arithmetic return down / flat / up using a fixed 2% band
 ```
 
 Price features:

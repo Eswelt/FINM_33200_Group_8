@@ -10,13 +10,15 @@ The project frames CORN ETF forecasting as a weekly trading-signal problem. The 
 Can calendar seasonality improve weekly CORN ETF trading signals beyond historical price baselines?
 ```
 
-The main target is a fixed-threshold three-class next-week return label:
+The main target is a fixed-threshold three-class next-week arithmetic return label:
 
 ```text
 Y =  1 if next_week_return >= +2%
 Y =  0 if -2% < next_week_return < +2%
 Y = -1 if next_week_return <= -2%
 ```
+
+Because the model panel stores next-week log return, the implementation converts the +/-2% arithmetic band to `log(0.98)` and `log(1.02)` before assigning labels.
 
 The auxiliary experiment predicts next-week log return directly and trades only when the predicted return clears transaction costs plus a buffer.
 
@@ -77,8 +79,8 @@ uv run --extra dev --extra docs doit docs
 Open the generated HTML files on macOS:
 
 ```bash
-open reports/chartbook/index.html
-open reports/html/corn_forecast_workflow.html
+open docs_src/reports/chartbook/index.html
+open docs_src/reports/html/corn_forecast_workflow.html
 ```
 
 Run the full local workflow:
@@ -101,18 +103,18 @@ The default `baseline`, `research`, and `docs` tasks use local cached data. The 
 
 | pydoit task | Underlying command | Main outputs |
 | --- | --- | --- |
-| `fetch_prices` | `corn_forecast.cli fetch-prices` | `data/raw/prices_CORN.csv` |
-| `fetch_usda` | `corn_forecast.cli fetch-usda` | `data/raw/usda_releases.csv` |
-| `fetch_weather` | `corn_forecast.cli fetch-weather` | `data/interim/weather_weekly.parquet` |
+| `fetch_prices` | `cli fetch-prices` | `data/raw/prices_CORN.csv` |
+| `fetch_usda` | `cli fetch-usda` | `data/raw/usda_releases.csv` |
+| `fetch_weather` | `cli fetch-weather` | `data/interim/weather_weekly.parquet` |
 | `refresh_data` | `fetch_prices`, `fetch_usda`, `fetch_weather` | Explicit external data refresh |
-| `build_features` | `corn_forecast.cli build-features` | `data/processed/feature_panel.parquet` |
-| `train_evaluate` | `corn_forecast.cli train-evaluate` | `reports/metrics.json`, `reports/predictions.csv` |
-| `model_report` | `corn_forecast.cli make-report` | `reports/model_report.md`, `reports/figures/*.png` |
-| `classify_move` | `corn_forecast.cli classify-move` | `reports/price_target_tests.json`, `reports/price_target_predictions.csv` |
-| `return_strategy` | `corn_forecast.cli return-strategy` | `reports/expected_return_metrics.json`, `reports/expected_return_predictions.csv` |
-| `select_threshold` | `corn_forecast.cli select-threshold` | `reports/threshold_selection.json`, `reports/threshold_selection_predictions.csv` |
-| `notebook` | `scripts/build_project_notebook.py` | `reports/notebooks/corn_forecast_workflow.ipynb`, `reports/html/corn_forecast_workflow.html` |
-| `chartbook_build` | `chartbook build` plus local figure asset sync | `reports/chartbook/index.html` |
+| `build_features` | `cli build-features` | `data/processed/feature_panel.parquet` |
+| `train_evaluate` | `cli train-evaluate` | `docs_src/reports/metrics.json`, `docs_src/reports/predictions.csv` |
+| `model_report` | `cli make-report` | `docs_src/reports/model_report.md`, `docs_src/reports/figures/*.png` |
+| `classify_move` | `cli classify-move` | `docs_src/reports/price_target_tests.json`, `docs_src/reports/price_target_predictions.csv` |
+| `return_strategy` | `cli return-strategy` | `docs_src/reports/expected_return_metrics.json`, `docs_src/reports/expected_return_predictions.csv` |
+| `select_threshold` | `cli select-threshold` | `docs_src/reports/threshold_selection.json`, `docs_src/reports/threshold_selection_predictions.csv` |
+| `notebook` | `src/scripts/build_project_notebook.py` | `docs_src/reports/notebooks/corn_forecast_workflow.ipynb`, `docs_src/reports/html/corn_forecast_workflow.html` |
+| `chartbook_build` | `chartbook build` plus local figure asset sync | `docs_src/reports/chartbook/index.html` |
 
 Optional WWCB tasks are also exposed:
 
@@ -224,22 +226,22 @@ The documentation task writes:
 ```text
 docs_src/final_report.md
 docs_src/figures/final_*.png
-reports/figures/final_*.png
-reports/notebooks/corn_forecast_workflow.ipynb
-reports/html/corn_forecast_workflow.html
-reports/chartbook/index.html
+docs_src/reports/figures/final_*.png
+docs_src/reports/notebooks/corn_forecast_workflow.ipynb
+docs_src/reports/html/corn_forecast_workflow.html
+docs_src/reports/chartbook/index.html
 ```
 
 Open the HTML outputs:
 
 ```bash
-open reports/chartbook/index.html
-open reports/html/corn_forecast_workflow.html
+open docs_src/reports/chartbook/index.html
+open docs_src/reports/html/corn_forecast_workflow.html
 ```
 
 The notebook and standalone HTML summarize current local outputs, including metric tables, prediction file shapes, and generated final-report figures. ChartBook uses `chartbook.toml` to include this notebook and the workflow notes in a generated documentation site.
 
-For the most compact submission-ready summary, open `reports/chartbook/cb/final_report.html` or `reports/html/corn_forecast_workflow.html`.
+For the most compact submission-ready summary, open `docs_src/reports/chartbook/cb/final_report.html` or `docs_src/reports/html/corn_forecast_workflow.html`.
 
 ## Operational Notes
 

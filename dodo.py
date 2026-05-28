@@ -27,9 +27,9 @@ ROOT = Path(__file__).resolve().parent
 DATA_RAW = ROOT / "data" / "raw"
 DATA_INTERIM = ROOT / "data" / "interim"
 DATA_PROCESSED = ROOT / "data" / "processed"
-REPORTS = ROOT / "reports"
-FIGURES = REPORTS / "figures"
 DOCS_SRC = ROOT / "docs_src"
+REPORTS = DOCS_SRC / "reports"
+FIGURES = REPORTS / "figures"
 PYTHON = "PYTHONPATH=src uv run python"
 
 
@@ -42,7 +42,7 @@ def _existing(paths):
 
 
 def _cli(command: str, *args: str) -> str:
-    return " ".join((f"{PYTHON} -m corn_forecast.cli", command, *args))
+    return " ".join((f"{PYTHON} -m cli", command, *args))
 
 
 COMMON_ARGS = (
@@ -225,7 +225,7 @@ def task_wwcb_download():
     """Download USDA Weekly Weather and Crop Bulletin PDFs and a manifest."""
     return {
         "actions": [
-            f"{PYTHON} scripts/download_wwcb.py "
+            f"{PYTHON} -m scripts.download_wwcb "
             f"--start {START} --end {END} "
             "--output-dir data/external/wwcb_pdfs "
             "--manifest data/interim/wwcb_manifest.csv"
@@ -238,7 +238,7 @@ def task_wwcb_parse():
     """Parse downloaded WWCB PDFs into weekly core text."""
     return {
         "actions": [
-            f"{PYTHON} scripts/parse_wwcb.py "
+            f"{PYTHON} -m scripts.parse_wwcb "
             "data/external/wwcb_pdfs --output data/interim/wwcb_core_text.parquet"
         ],
         "file_dep": [_path(DATA_INTERIM / "wwcb_manifest.csv")],
@@ -249,7 +249,7 @@ def task_wwcb_parse():
 def task_wwcb_ai_features():
     """Extract weekly AI features from parsed WWCB text."""
     return {
-        "actions": [f"{PYTHON} scripts/extract_wwcb_ai_features.py"],
+        "actions": [f"{PYTHON} -m scripts.extract_wwcb_ai_features"],
         "file_dep": [_path(DATA_INTERIM / "wwcb_core_text.parquet")],
         "targets": [_path(DATA_INTERIM / "ai_weekly.parquet"), _path(DATA_INTERIM / "ai_wwcb_raw.parquet")],
     }
@@ -258,7 +258,7 @@ def task_wwcb_ai_features():
 def task_wwcb_ai_features_mock():
     """Extract deterministic mock AI features for offline documentation and tests."""
     return {
-        "actions": [f"{PYTHON} scripts/extract_wwcb_ai_features.py --mock"],
+        "actions": [f"{PYTHON} -m scripts.extract_wwcb_ai_features --mock"],
         "file_dep": [_path(DATA_INTERIM / "wwcb_core_text.parquet")],
         "uptodate": [False],
     }
@@ -268,12 +268,12 @@ def task_notebook():
     """Generate the project workflow notebook and standalone HTML report."""
     deps = [
         ROOT / "README.md",
-        ROOT / "step_by_step.md",
-        ROOT / "pipeline_contract.md",
+        DOCS_SRC / "research_design.md",
+        DOCS_SRC / "pipeline_contract.md",
         DOCS_SRC / "project_workflow.md",
     ]
     return {
-        "actions": [f"{PYTHON} scripts/build_project_notebook.py"],
+        "actions": [f"{PYTHON} -m scripts.build_project_notebook"],
         "file_dep": _existing(deps),
         "uptodate": [False],
         "targets": [
@@ -297,11 +297,16 @@ def task_chartbook_build():
     """Build the ChartBook HTML documentation site."""
     return {
         "actions": [
-            f"{CHARTBOOK} build reports/chartbook -f --project-dir .",
-            f"{PYTHON} scripts/fix_chartbook_assets.py",
+            f"{CHARTBOOK} build docs_src/reports/chartbook -f --project-dir .",
+            f"{PYTHON} -m scripts.fix_chartbook_assets",
         ],
-        "task_dep": ["notebook"],
-        "file_dep": ["chartbook.toml", _path(DOCS_SRC / "project_workflow.md"), _path(DOCS_SRC / "final_report.md")],
+        "task_dep": ["notebook", "chartbook_glimpses"],
+        "file_dep": [
+            "chartbook.toml",
+            _path(DOCS_SRC / "project_workflow.md"),
+            _path(DOCS_SRC / "final_report.md"),
+            _path(DOCS_SRC / "data_glimpses.md"),
+        ],
         "targets": [_path(REPORTS / "chartbook" / "index.html")],
     }
 
@@ -357,5 +362,5 @@ def task_all():
 def task_tests():
     """Run the project test suite."""
     return {
-        "actions": ["PYTHONPATH=src uv run pytest"],
+        "actions": ["PYTHONPATH=src uv run --extra dev python -m pytest src/tests"],
     }

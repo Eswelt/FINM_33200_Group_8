@@ -3,12 +3,13 @@
 # knobs so teammates can run experiments without changing source code.
 
 [target]
-# The production target is next-week log return direction.
-# Keep the continuous return too, because it is used to score the trading signal.
+# The main target is a fixed-band next-week arithmetic return class.
+# The panel stores log returns, so fixed_return_threshold is converted to log bounds.
 symbol = "CORN"
 horizon_weeks = 1
-classification_target = "target_up_next"
+classification_target = "target_return_3class"
 return_target = "target_log_return_next"
+fixed_return_threshold = 0.02
 
 [validation]
 # Expanding walk-forward validation approximates how a strategy would have

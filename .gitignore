@@ -20,15 +20,16 @@ data/external/*
 !data/processed/.gitkeep
 !data/external/.gitkeep
 
-reports/*.csv
-reports/*.json
-reports/*.md
-reports/figures/*
-reports/tables/*
-reports/notebooks/*
-reports/html/*
-reports/chartbook/*
-!reports/figures/.gitkeep
-!reports/tables/.gitkeep
-
 docs_src/figures/*
+docs_src/final_report.md
+docs_src/data_glimpses.md
+docs_src/reports/*.csv
+docs_src/reports/*.json
+docs_src/reports/*.md
+docs_src/reports/figures/*
+docs_src/reports/tables/*
+docs_src/reports/notebooks/*
+docs_src/reports/html/*
+docs_src/reports/chartbook/*
+!docs_src/reports/figures/.gitkeep
+!docs_src/reports/tables/.gitkeep

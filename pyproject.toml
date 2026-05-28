@@ -22,6 +22,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "doit>=0.36",
+  "py>=1.11",
   "pytest>=8",
 ]
 docs = [
@@ -31,11 +32,30 @@ docs = [
 ]
 
 [project.scripts]
-corn-forecast = "corn_forecast.cli:main"
+corn-forecast = "cli:main"
+
+[tool.setuptools]
+py-modules = [
+  "cli",
+  "config",
+  "expected_return_strategy",
+  "features",
+  "modeling",
+  "models",
+  "paths",
+  "price_target_tests",
+  "reports",
+  "storage",
+  "strategy",
+  "threshold_selection",
+  "validation",
+  "volatility",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+include = ["data*", "scripts*", "text*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
-testpaths = ["tests"]
+testpaths = ["src/tests"]
