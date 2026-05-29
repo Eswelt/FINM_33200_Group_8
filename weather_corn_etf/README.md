@@ -250,6 +250,67 @@ strategy_return_t = position_t * next_1d_return_t - transaction_cost
 
 The `signal_5td_proxy_*` metrics compound overlapping 5-trading-day signal returns and should be read as signal diagnostics, not as directly investable portfolio returns.
 
+## Regression Setup And Main Results
+
+For each CFSv2 lead, `decision_date` is the forecast initialization date and `valid_date = decision_date + lead`. For example, the +7 model uses the 00Z forecast initialized on the decision date for weather conditions valid 7 days later; the +14 model uses the same 00Z initialization but weather conditions valid 14 days later.
+
+The regression target is:
+
+```text
+target_return_t = CORN_close_{t+5 trading days} / CORN_close_t - 1
+```
+
+The three lead-by-lead regression specifications are:
+
+```text
+Model 0: price_calendar
+target_return
+~ price_return_lag_{1,2,5,10,21d}
++ price_vol_{5,10,21,63d}
++ price_momentum_{5,10,21,63d}
++ month, quarter, week-of-year sin/cos, day-of-week sin/cos
++ planting, pollination, harvest, winter-storage dummies
+
+Model 1: forecast_anom
+target_return
+~ price_calendar
++ heat_forecast_z_l{lead}
++ dryness_forecast_z_l{lead}
++ heat_forecast_z_l{lead} * dryness_forecast_z_l{lead}
+
+Model 2: forecast_anom_projected_change
+target_return
+~ forecast_anom model
++ heat_projected_change_l{lead}
++ dryness_projected_change_l{lead}
++ heat_projected_change_l{lead} * dryness_projected_change_l{lead}
+```
+
+Here `heat_forecast_z` is the z-scored CFSv2 temperature anomaly relative to the lead-specific CFSv2 annual climatology. `dryness_forecast_z` is `-1 * precipitation z-score`, so larger values mean drier forecast conditions. Projected-change variables compare the forecast anomaly with the initialization observed anomaly from ERA5/GPCP.
+
+The no-buffer results below use the long/short rule:
+
+```text
+long  if predicted_return > 0.0%
+short if predicted_return < 0.0%
+```
+
+Out-of-sample R2 is measured against the expanding training-window mean return. The +7 and +14 day 00Z forecast models have the clearest positive R2 results, with +7 fitting best in the current run. The projected-change model is the strongest +7 specification.
+
+![OOS R2 Summary](corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/daily_decision_oos_r2_summary.png)
+
+The Sharpe-ratio comparison shows the same pattern: using projected change together with the climatological forecast anomaly generally improves over using the forecast anomaly alone, and is comparable to or better than the price/calendar baseline.
+
+![Sharpe Summary](corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/daily_decision_sharpe_summary.png)
+
+Realized daily-rebalanced equity curves are strongest for the short leads. In this 0.0% threshold long/short strategy, +7 reaches roughly 1.6-1.7x growth of $1 and +14 reaches roughly 2x over the 2022-2025 out-of-sample period.
+
+| +7 Lead | +14 Lead | +21 Lead |
+|---|---|---|
+| ![+7 Lead Equity](corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/lead_07_daily_rebalanced_equity.png) | ![+14 Lead Equity](corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/lead_14_daily_rebalanced_equity.png) | ![+21 Lead Equity](corn_etf_daily_decision_leadbylead_expanding_yearly/signal_buffer_0p0pct/plots/lead_21_daily_rebalanced_equity.png) |
+
+Overall, the strongest signal comes from short-horizon forecast information, especially when the model combines CFSv2 anomaly relative to the annual cycle with projected change from the current observed weather state.
+
 ## Main Command
 
 Example Derecho command for the no-buffer (`signal_buffer_0p0pct`) result:
