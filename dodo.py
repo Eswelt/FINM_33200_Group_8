@@ -300,16 +300,20 @@ def task_chartbook_build():
             f"{CHARTBOOK} build reports/chartbook -f --project-dir .",
             f"{PYTHON} scripts/fix_chartbook_assets.py",
         ],
-        "task_dep": ["notebook"],
-        "file_dep": ["chartbook.toml", _path(DOCS_SRC / "project_workflow.md"), _path(DOCS_SRC / "final_report.md")],
+        "file_dep": [
+            "chartbook.toml",
+            _path(DOCS_SRC / "final_figure_analysis.md"),
+            _path(DOCS_SRC / "weather_corn_etf_daily_decision_report.md"),
+            _path(DOCS_SRC / "project_readme_workflow.md"),
+        ],
         "targets": [_path(REPORTS / "chartbook" / "index.html")],
     }
 
 
 def task_docs():
-    """Build the notebook, standalone HTML, and ChartBook documentation site."""
+    """Build the current three-page ChartBook documentation site."""
     return {
-        "task_dep": ["notebook", "chartbook_glimpses", "chartbook_build"],
+        "task_dep": ["chartbook_build"],
         "actions": None,
     }
 

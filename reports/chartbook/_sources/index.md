@@ -1,4 +1,4 @@
-# CORN ETF Volatility Forecasting Pipeline
+# CORN ETF Forecasting Reports
 
 Last updated: {sub-ref}`today`
 
@@ -9,22 +9,16 @@ Last updated: {sub-ref}`today`
 ```{toctree}
 :maxdepth: 1
 :caption: Notebooks 📖
-CORN Forecast Workflow Report <cb/notebooks/CORN/corn_forecast_workflow>
+
 ```
 
 
 ```{toctree}
 :maxdepth: 1
 :caption: Notes 📝
-cb/workflow.md
-cb/final_report.md
-cb/data_glimpses.md
-cb/three_input_results.md
-cb/price_ai_ablation.md
-cb/gdelt_integration.md
-cb/seasonality_volatility_benchmark.md
-cb/volatility_results.md
-cb/horizon_robustness.md
+cb/project_readme_workflow.md
+cb/final_figure_analysis.md
+cb/weather_corn_etf_daily_decision.md
 ```
 
 
@@ -42,13 +36,7 @@ cb/charts.md
 ```{toctree}
 :maxdepth: 1
 :caption: Pipeline Dataframes 📊
-cb/dataframes/CORN/expected_return_predictions.md
-cb/dataframes/CORN/feature_panel.md
-cb/dataframes/CORN/gdelt_weekly_scores.md
-cb/dataframes/CORN/horizon_robustness_metrics.md
-cb/dataframes/CORN/horizon_robustness_predictions.md
-cb/dataframes/CORN/price_target_predictions.md
-cb/dataframes/CORN/volatility_predictions.md
+
 ```
 
 
@@ -61,16 +49,16 @@ apidocs/index
 
 
 ## Pipeline Specs
-| Pipeline Name                   | CORN ETF Volatility Forecasting Pipeline                       |
+| Pipeline Name                   | CORN ETF Forecasting Reports                       |
 |---------------------------------|--------------------------------------------------------|
 | Pipeline ID                     | [CORN](./index.md)              |
 | Lead Pipeline Developer         | FINM 33200 Group 8             |
 | Contributors                    | FINM 33200 Group 8           |
 | Git Repo URL                    | local                        |
 | Pipeline Web Page               | <a href="file:///Users/Haruki/Library/Mobile Documents/com~apple~CloudDocs/Python/AIF/final/FINM_33200_Group_8/docs/index.html">Pipeline Web Page      |
-| Date of Last Code Update        | 2026-05-28 00:30:21           |
+| Date of Last Code Update        | 2026-05-28 20:56:33           |
 | OS Compatibility                |  |
-| Linked Dataframes               |  [CORN:feature_panel](cb/dataframes/CORN/feature_panel.md)<br>  [CORN:price_target_predictions](cb/dataframes/CORN/price_target_predictions.md)<br>  [CORN:expected_return_predictions](cb/dataframes/CORN/expected_return_predictions.md)<br>  [CORN:volatility_predictions](cb/dataframes/CORN/volatility_predictions.md)<br>  [CORN:horizon_robustness_metrics](cb/dataframes/CORN/horizon_robustness_metrics.md)<br>  [CORN:horizon_robustness_predictions](cb/dataframes/CORN/horizon_robustness_predictions.md)<br>  [CORN:gdelt_weekly_scores](cb/dataframes/CORN/gdelt_weekly_scores.md)<br>  |
+| Linked Dataframes               |  |
 
 
 
