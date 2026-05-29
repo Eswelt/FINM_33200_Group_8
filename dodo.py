@@ -29,6 +29,7 @@ DATA_INTERIM = ROOT / "data" / "interim"
 DATA_PROCESSED = ROOT / "data" / "processed"
 REPORTS = ROOT / "reports"
 FIGURES = REPORTS / "figures"
+CHARTBOOK_DIR = REPORTS / "chartbook"
 DOCS_SRC = ROOT / "docs_src"
 PYTHON = "PYTHONPATH=src uv run python"
 
@@ -302,11 +303,18 @@ def task_chartbook_build():
         ],
         "file_dep": [
             "chartbook.toml",
+            "scripts/fix_chartbook_assets.py",
             _path(DOCS_SRC / "final_figure_analysis.md"),
             _path(DOCS_SRC / "weather_corn_etf_daily_decision_report.md"),
             _path(DOCS_SRC / "project_readme_workflow.md"),
         ],
-        "targets": [_path(REPORTS / "chartbook" / "index.html")],
+        "targets": [
+            _path(CHARTBOOK_DIR / "index.html"),
+            _path(CHARTBOOK_DIR / "cb" / "project_readme_workflow.html"),
+            _path(CHARTBOOK_DIR / "cb" / "final_figure_analysis.html"),
+            _path(CHARTBOOK_DIR / "cb" / "weather_corn_etf_daily_decision.html"),
+            _path(CHARTBOOK_DIR / "cb" / "charts.html"),
+        ],
     }
 
 
