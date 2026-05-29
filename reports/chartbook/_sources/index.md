@@ -19,6 +19,7 @@ Last updated: {sub-ref}`today`
 cb/project_readme_workflow.md
 cb/final_figure_analysis.md
 cb/weather_corn_etf_daily_decision.md
+cb/limitations_discussion_future_work.md
 ```
 
 
@@ -55,8 +56,8 @@ apidocs/index
 | Lead Pipeline Developer         | FINM 33200 Group 8             |
 | Contributors                    | FINM 33200 Group 8           |
 | Git Repo URL                    | local                        |
-| Pipeline Web Page               | <a href="file:///Users/Haruki/Library/Mobile Documents/com~apple~CloudDocs/Python/AIF/final/FINM_33200_Group_8/docs/index.html">Pipeline Web Page      |
-| Date of Last Code Update        | 2026-05-28 20:56:33           |
+| Pipeline Web Page               | <a href="file:///Users/jiachengye/Desktop/UChicago/Classes/Generative_and_Agentic_AI/class_project/FINM_33200_Group_8/docs/index.html">Pipeline Web Page      |
+| Date of Last Code Update        | 2026-05-29 13:55:23           |
 | OS Compatibility                |  |
 | Linked Dataframes               |  |
 

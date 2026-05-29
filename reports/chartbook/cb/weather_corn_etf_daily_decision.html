@@ -1,0 +1,785 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Weather Forecast Signals and Daily Trading Results &#8212; CORN ETF Forecasting Reports</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=206a6f58" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+
+    <script src="../_static/documentation_options.js?v=b9472d72"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cb/weather_corn_etf_daily_decision';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Limitations, Discussion, and Future Work" href="limitations_discussion_future_work.html" />
+    <link rel="prev" title="Text, News, Calendar, and Price Signal Results" href="final_figure_analysis.html" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+     
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="CORN ETF Forecasting Reports - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="CORN ETF Forecasting Reports - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    CORN ETF Forecasting Reports
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="project_readme_workflow.html">CORN ETF Forecasting Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="final_figure_analysis.html">Text, News, Calendar, and Price Signal Results</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Weather Forecast Signals and Daily Trading Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limitations_discussion_future_work.html">Limitations, Discussion, and Future Work</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pipeline Charts 📈</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="charts.html">Chart List</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/cb/weather_corn_etf_daily_decision.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Weather Forecast Signals and Daily Trading Results</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-weather-signals-matter">Why Weather Signals Matter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experiment-design">Experiment Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-days-and-model-variants">Lead Days and Model Variants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#weather-feature-construction">Weather Feature Construction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#headline-weather-results">Headline Weather Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-charts">Summary Charts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-rebalanced-total-return">Daily-Rebalanced Total Return</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-rebalanced-sharpe-ratio">Daily-Rebalanced Sharpe Ratio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-sample-r2">Out-of-Sample R2</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-specific-equity-curves">Lead-Specific Equity Curves</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-7">Lead +7</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-14">Lead +14</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-21">Lead +21</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-28">Lead +28</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-30">Lead +30</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretation">Interpretation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#economic-interpretation">Economic Interpretation</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                   <section class="tex2jax_ignore mathjax_ignore" id="weather-forecast-signals-and-daily-trading-results">
+<h1>Weather Forecast Signals and Daily Trading Results<a class="headerlink" href="#weather-forecast-signals-and-daily-trading-results" title="Link to this heading">#</a></h1>
+<section id="why-weather-signals-matter">
+<h2>Why Weather Signals Matter<a class="headerlink" href="#why-weather-signals-matter" title="Link to this heading">#</a></h2>
+<p>Corn prices are closely tied to expectations about crop supply. Heat and dryness during key growing periods can change yield expectations, and those expectations can move futures-linked instruments such as the Teucrium Corn ETF (<code class="docutils literal notranslate"><span class="pre">CORN</span></code>).</p>
+<p>The weather experiment asks whether forward-looking weather forecasts add trading value beyond a price/calendar baseline. Instead of predicting weekly classes, this part of the project makes daily trading decisions using short-lead weather forecasts.</p>
+</section>
+<section id="experiment-design">
+<h2>Experiment Design<a class="headerlink" href="#experiment-design" title="Link to this heading">#</a></h2>
+<p>The weather pipeline combines three information sets:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Information set</p></th>
+<th class="head"><p>Role in the experiment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Price and calendar baseline</p></td>
+<td><p>Captures recent <code class="docutils literal notranslate"><span class="pre">CORN</span></code> market behavior and crop-season timing.</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFSv2 forecast anomalies</p></td>
+<td><p>Measures expected heat, dryness, and heat-by-dryness risk at specific forecast leads.</p></td>
+</tr>
+<tr class="row-even"><td><p>ERA5/GPCP observed anomalies</p></td>
+<td><p>Measures current physical conditions before the forecast horizon.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Each model predicts the future 5-trading-day <code class="docutils literal notranslate"><span class="pre">CORN</span></code> return. Trading performance is measured through a daily-rebalanced strategy that applies the model signal to the next one-day realized return.</p>
+<p>The out-of-sample period covers 2022 through 2025. Each lead/model comparison uses 826 daily decision rows and an expanding yearly training design.</p>
+</section>
+<section id="lead-days-and-model-variants">
+<h2>Lead Days and Model Variants<a class="headerlink" href="#lead-days-and-model-variants" title="Link to this heading">#</a></h2>
+<p>The analysis focuses on short forecast leads:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lead day</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>+7</p></td>
+<td><p>One-week-ahead weather information.</p></td>
+</tr>
+<tr class="row-odd"><td><p>+14</p></td>
+<td><p>Two-week-ahead weather information.</p></td>
+</tr>
+<tr class="row-even"><td><p>+21</p></td>
+<td><p>Three-week-ahead weather information.</p></td>
+</tr>
+<tr class="row-odd"><td><p>+28</p></td>
+<td><p>Four-week-ahead weather information.</p></td>
+</tr>
+<tr class="row-even"><td><p>+30</p></td>
+<td><p>Roughly one-month-ahead weather information.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For each lead, the experiment compares:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Model variant</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
+<td><p>Price and crop-calendar baseline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">forecast_anom</span></code></p></td>
+<td><p>Baseline plus CFSv2 forecast anomaly factors.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">forecast_anom_projected_change</span></code></p></td>
+<td><p>Baseline plus forecast anomalies measured relative to observed initialization conditions.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The projected-change feature set is the most economically intuitive weather signal: it asks whether the forecast is becoming hotter or drier relative to the current observed state.</p>
+</section>
+<section id="weather-feature-construction">
+<h2>Weather Feature Construction<a class="headerlink" href="#weather-feature-construction" title="Link to this heading">#</a></h2>
+<p>CFSv2 forecast anomalies are computed relative to lead-specific CFSv2 model climatology:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>forecast_anom_{t,h} = CFSv2_forecast_{t,h} - CFSv2_climatology_{h, day-of-year}
+</pre></div>
+</div>
+<p>The default climatology mode is <code class="docutils literal notranslate"><span class="pre">expanding</span></code>, so each date only uses earlier dates when estimating climatology. The day-of-year climatology uses a 10-day window.</p>
+<p>The script also builds initialization observed anomalies from ERA5/GPCP using a trailing 7-day average shifted by one day to avoid look-ahead.</p>
+<p>The main weather variables are:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>heat_forecast_z = z-scored CFSv2 temperature anomaly
+dryness_forecast_z = -1 * z-scored CFSv2 precipitation anomaly
+heat_x_dryness = heat_forecast_z * dryness_forecast_z
+</pre></div>
+</div>
+<p>Projected-change variables compare the forecast anomaly with the initialization observed anomaly:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>heat_projected_change = heat_forecast_z - init_obs_heat_z
+dryness_projected_change = dryness_forecast_z - init_obs_dryness_z
+projected_heat_x_dryness = heat_projected_change * dryness_projected_change
+</pre></div>
+</div>
+<p>Higher heat and higher dryness are both coded as higher supply-risk signals.</p>
+</section>
+<section id="headline-weather-results">
+<h2>Headline Weather Results<a class="headerlink" href="#headline-weather-results" title="Link to this heading">#</a></h2>
+<p>The strongest result is the +14-day projected-change model. It delivers the highest daily-rebalanced total return and Sharpe ratio in the no-buffer comparison.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lead</p></th>
+<th class="head"><p>Model</p></th>
+<th class="head"><p>Total return</p></th>
+<th class="head"><p>Sharpe</p></th>
+<th class="head"><p>Max drawdown</p></th>
+<th class="head"><p>OOS R2</p></th>
+<th class="head"><p>Corr.</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>+14</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">forecast_anom_projected_change</span></code></p></td>
+<td><p>116.1%</p></td>
+<td><p>1.303</p></td>
+<td><p>-11.7%</p></td>
+<td><p>0.0001</p></td>
+<td><p>0.086</p></td>
+</tr>
+<tr class="row-odd"><td><p>+30</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">forecast_anom_projected_change</span></code></p></td>
+<td><p>80.9%</p></td>
+<td><p>1.022</p></td>
+<td><p>-13.0%</p></td>
+<td><p>-0.0011</p></td>
+<td><p>0.083</p></td>
+</tr>
+<tr class="row-even"><td><p>+7</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">forecast_anom_projected_change</span></code></p></td>
+<td><p>63.0%</p></td>
+<td><p>0.859</p></td>
+<td><p>-13.6%</p></td>
+<td><p>0.0049</p></td>
+<td><p>0.102</p></td>
+</tr>
+<tr class="row-odd"><td><p>+28</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">forecast_anom_projected_change</span></code></p></td>
+<td><p>48.2%</p></td>
+<td><p>0.711</p></td>
+<td><p>-23.8%</p></td>
+<td><p>-0.0019</p></td>
+<td><p>0.080</p></td>
+</tr>
+<tr class="row-even"><td><p>+21</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">forecast_anom_projected_change</span></code></p></td>
+<td><p>39.1%</p></td>
+<td><p>0.612</p></td>
+<td><p>-20.3%</p></td>
+<td><p>-0.0068</p></td>
+<td><p>0.070</p></td>
+</tr>
+<tr class="row-odd"><td><p>Baseline</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">price_calendar</span></code></p></td>
+<td><p>24.9%</p></td>
+<td><p>0.444</p></td>
+<td><p>-25.3%</p></td>
+<td><p>-0.0036</p></td>
+<td><p>0.072</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The trading metrics are stronger than the regression diagnostics. OOS R2 and correlation are small, so the result should be interpreted as an exploratory trading signal rather than a high-precision return forecast.</p>
+</section>
+<section id="summary-charts">
+<h2>Summary Charts<a class="headerlink" href="#summary-charts" title="Link to this heading">#</a></h2>
+<section id="daily-rebalanced-total-return">
+<h3>Daily-Rebalanced Total Return<a class="headerlink" href="#daily-rebalanced-total-return" title="Link to this heading">#</a></h3>
+<a class="reference internal image-reference" href="cb/figures/weather_daily_decision/daily_decision_total_return_summary.png"><img alt="Daily decision total return summary" class="align-center" src="figures/weather_daily_decision/daily_decision_total_return_summary.png" style="width: 67%;" />
+</a>
+<p>The total return summary shows that projected-change weather factors dominate the price/calendar baseline across the most important short leads. The +14 and +30 projected-change models are the clearest standouts.</p>
+</section>
+<section id="daily-rebalanced-sharpe-ratio">
+<h3>Daily-Rebalanced Sharpe Ratio<a class="headerlink" href="#daily-rebalanced-sharpe-ratio" title="Link to this heading">#</a></h3>
+<a class="reference internal image-reference" href="cb/figures/weather_daily_decision/daily_decision_sharpe_summary.png"><img alt="Daily decision Sharpe summary" class="align-center" src="figures/weather_daily_decision/daily_decision_sharpe_summary.png" style="width: 67%;" />
+</a>
+<p>The Sharpe comparison tells the same story in risk-adjusted terms. The +14 projected-change model has the strongest Sharpe, while the +7 and +30 projected-change models also improve meaningfully over the baseline.</p>
+</section>
+<section id="out-of-sample-r2">
+<h3>Out-of-Sample R2<a class="headerlink" href="#out-of-sample-r2" title="Link to this heading">#</a></h3>
+<a class="reference internal image-reference" href="cb/figures/weather_daily_decision/daily_decision_oos_r2_summary.png"><img alt="Daily decision OOS R2 summary" class="align-center" src="figures/weather_daily_decision/daily_decision_oos_r2_summary.png" style="width: 67%;" />
+</a>
+<p>The R2 chart is much more conservative than the trading charts. Only a few specifications are near or slightly above the train-mean benchmark. This gap is important: the weather models are not explaining large fractions of daily return variance, but they may still rank or sign returns well enough to improve a trading rule.</p>
+</section>
+</section>
+<section id="lead-specific-equity-curves">
+<h2>Lead-Specific Equity Curves<a class="headerlink" href="#lead-specific-equity-curves" title="Link to this heading">#</a></h2>
+<section id="lead-7">
+<h3>Lead +7<a class="headerlink" href="#lead-7" title="Link to this heading">#</a></h3>
+<a class="reference internal image-reference" href="cb/figures/weather_daily_decision/lead_07_daily_rebalanced_equity.png"><img alt="Lead +7 daily-rebalanced equity" class="align-center" src="figures/weather_daily_decision/lead_07_daily_rebalanced_equity.png" style="width: 67%;" />
+</a>
+<p>At +7 days, the projected-change signal improves both total return and risk-adjusted performance relative to the price/calendar baseline.</p>
+</section>
+<section id="lead-14">
+<h3>Lead +14<a class="headerlink" href="#lead-14" title="Link to this heading">#</a></h3>
+<a class="reference internal image-reference" href="cb/figures/weather_daily_decision/lead_14_daily_rebalanced_equity.png"><img alt="Lead +14 daily-rebalanced equity" class="align-center" src="figures/weather_daily_decision/lead_14_daily_rebalanced_equity.png" style="width: 67%;" />
+</a>
+<p>The +14-day lead is the strongest result. The projected-change model compounds well through the test period and has the best Sharpe ratio in the weather experiment.</p>
+</section>
+<section id="lead-21">
+<h3>Lead +21<a class="headerlink" href="#lead-21" title="Link to this heading">#</a></h3>
+<a class="reference internal image-reference" href="cb/figures/weather_daily_decision/lead_21_daily_rebalanced_equity.png"><img alt="Lead +21 daily-rebalanced equity" class="align-center" src="figures/weather_daily_decision/lead_21_daily_rebalanced_equity.png" style="width: 67%;" />
+</a>
+<p>The +21-day lead remains positive but is less compelling than +14 and +30. Weather information still helps, but the signal is weaker.</p>
+</section>
+<section id="lead-28">
+<h3>Lead +28<a class="headerlink" href="#lead-28" title="Link to this heading">#</a></h3>
+<a class="reference internal image-reference" href="cb/figures/weather_daily_decision/lead_28_daily_rebalanced_equity.png"><img alt="Lead +28 daily-rebalanced equity" class="align-center" src="figures/weather_daily_decision/lead_28_daily_rebalanced_equity.png" style="width: 67%;" />
+</a>
+<p>The +28-day lead shows positive performance for the projected-change model, but with larger drawdowns than the best short-lead results.</p>
+</section>
+<section id="lead-30">
+<h3>Lead +30<a class="headerlink" href="#lead-30" title="Link to this heading">#</a></h3>
+<a class="reference internal image-reference" href="cb/figures/weather_daily_decision/lead_30_daily_rebalanced_equity.png"><img alt="Lead +30 daily-rebalanced equity" class="align-center" src="figures/weather_daily_decision/lead_30_daily_rebalanced_equity.png" style="width: 67%;" />
+</a>
+<p>The +30-day projected-change model is the second strongest weather result by Sharpe and total return. This suggests that one-month-ahead forecast shifts may contain useful market information.</p>
+</section>
+</section>
+<section id="interpretation">
+<h2>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading">#</a></h2>
+<p>In short, the weather experiment suggests that CFSv2 forecasts contain incremental information for <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF returns, but the useful signal is concentrated in short forecast leads and is strongest when forecast anomalies are combined with projected-change variables. The price/calendar baseline is already demanding, so the weather models are being tested against recent market behavior and crop-season controls, not against a naive benchmark. The strongest empirical pattern is that projected changes in heat and dryness risk appear more market-relevant than forecast levels alone. The evidence is encouraging, but it should be presented as exploratory signal value rather than as a production-ready trading rule.</p>
+<section id="discussion">
+<h3>Discussion<a class="headerlink" href="#discussion" title="Link to this heading">#</a></h3>
+<p>The main empirical question is whether subseasonal weather forecast information contains incremental predictive content for <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF returns beyond standard price and calendar controls. The results suggest that the answer is conditionally yes, but the useful signal is concentrated in short leads and is stronger when the model uses both forecast anomalies and projected-change anomalies.</p>
+<p>The price/calendar model is a demanding baseline because it already includes lagged returns, recent volatility, momentum, month and quarter controls, cyclical week-of-year and day-of-week controls, and crop-season dummies. Therefore, the weather models are not simply being compared against a naive constant-return benchmark. They are tested on whether CFSv2 weather forecast information improves prediction after controlling for basic price dynamics and seasonality.</p>
+<p>Across the tested leads, the clearest evidence appears at the short forecast horizons, especially the +7-day and +14-day leads. This is economically intuitive. <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF is a futures-based corn exposure, so the most relevant weather information is likely information that can change market expectations over the next several trading days. Longer-lead forecasts may still contain useful climate information, but their noise level and forecast uncertainty are higher, which can weaken their relationship with short-horizon ETF returns.</p>
+<p>The comparison between the <code class="docutils literal notranslate"><span class="pre">forecast_anom</span></code> and <code class="docutils literal notranslate"><span class="pre">forecast_anom_projected_change</span></code> models is especially important. The <code class="docutils literal notranslate"><span class="pre">forecast_anom</span></code> model asks whether the CFSv2 forecast is hot or dry relative to the model’s lead-specific annual cycle. The projected-change variables ask a more market-relevant question: given the weather conditions already observed near the decision date, does the forecast imply that heat or dryness risk will intensify or fade? This distinction matters because futures prices should respond more to new information than to weather states that are already known or already priced.</p>
+<p>The trading results should be interpreted as exploratory rather than as a production trading system. The regression target is the future 5-trading-day <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF return, but the plotted trading strategy converts the predicted 5-day return into a daily long/short position and compounds realized next-day returns. This makes the equity curves useful for comparing signals, but they are not a fully realistic implementation of a weekly holding-period strategy. In addition, transaction costs are included in a simplified way, and the backtest does not model all real-world frictions such as bid-ask spreads, ETF liquidity, borrow costs for short positions, tax treatment, or market impact.</p>
+<p>A second caution is that regression fit and trading performance are not identical. A model can improve OOS R2 or prediction-realized correlation without always producing the highest Sharpe ratio, because trading performance also depends on the sign threshold, position turnover, return volatility, and drawdown profile. For this reason, the most convincing evidence is not any single metric, but the joint pattern across OOS R2, correlation, direction accuracy, Sharpe ratio, drawdown, and equity-curve behavior.</p>
+<p>The current results are consistent with the idea that short-horizon CFSv2 forecasts contain some tradable information for <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF returns, particularly when forecast anomalies are measured relative to the current observed weather state. However, the effect is not uniform across all leads or all model specifications. The strongest conclusion is therefore not that weather forecasts mechanically predict <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF returns, but that projected changes in Corn Belt heat and dryness forecasts appear to add incremental information beyond price/calendar controls in the 2022-2025 out-of-sample period.</p>
+</section>
+<section id="economic-interpretation">
+<h3>Economic Interpretation<a class="headerlink" href="#economic-interpretation" title="Link to this heading">#</a></h3>
+<p>The economic mechanism is based on corn supply risk. <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF provides exchange-traded exposure to CBOT corn futures rather than physical corn. Because corn futures prices reflect market expectations about future corn supply and demand, weather forecasts can matter when they change expectations about crop stress, yield risk, harvest conditions, or storage and transportation risk. During the U.S. growing season, hot and dry Corn Belt forecasts are plausibly bullish because they can increase expected supply risk. Outside the main growing season, the interpretation is less direct, which motivates future work using season-specific weather factors.</p>
+<p>The projected-change model has a natural economic interpretation. A hot and dry forecast may not be new information if the Corn Belt is already hot and dry. But a forecast that implies a transition from normal current conditions to much hotter or drier future conditions may represent a more meaningful update to market expectations. This is why the projected-change variables may capture a more tradable signal than the forecast anomaly variables alone.</p>
+</section>
+</section>
+</section>
+
+<div class="section ablog__blog_comments">
+   
+</div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="final_figure_analysis.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Text, News, Calendar, and Price Signal Results</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="limitations_discussion_future_work.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Limitations, Discussion, and Future Work</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-weather-signals-matter">Why Weather Signals Matter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experiment-design">Experiment Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-days-and-model-variants">Lead Days and Model Variants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#weather-feature-construction">Weather Feature Construction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#headline-weather-results">Headline Weather Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-charts">Summary Charts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-rebalanced-total-return">Daily-Rebalanced Total Return</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-rebalanced-sharpe-ratio">Daily-Rebalanced Sharpe Ratio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-sample-r2">Out-of-Sample R2</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-specific-equity-curves">Lead-Specific Equity Curves</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-7">Lead +7</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-14">Lead +14</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-21">Lead +21</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-28">Lead +28</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lead-30">Lead +30</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretation">Interpretation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#economic-interpretation">Economic Interpretation</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By FINM 33200 Group 8
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, FINM 33200 Group 8, FINM 33200 Group 8.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

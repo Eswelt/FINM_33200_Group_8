@@ -29,3 +29,6 @@ path_to_markdown_file = "./docs_src/final_figure_analysis.md"
 
 [notes.weather_corn_etf_daily_decision]
 path_to_markdown_file = "./docs_src/weather_corn_etf_daily_decision_report.md"
+
+[notes.limitations_discussion_future_work]
+path_to_markdown_file = "./docs_src/limitations_discussion_future_work.md"

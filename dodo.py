@@ -21,7 +21,7 @@ FULL_FEATURE_SETS = (
 FIXED_RETURN_THRESHOLD = "0.02"
 TRANSACTION_COST_BPS = "5"
 BUFFER_BPS = "25"
-CHARTBOOK = "PYTHONPATH=src uv run --extra docs chartbook"
+CHARTBOOK = "LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 PYTHONPATH=src uv run --extra docs chartbook"
 
 ROOT = Path(__file__).resolve().parent
 DATA_RAW = ROOT / "data" / "raw"
@@ -306,6 +306,7 @@ def task_chartbook_build():
             "scripts/fix_chartbook_assets.py",
             _path(DOCS_SRC / "final_figure_analysis.md"),
             _path(DOCS_SRC / "weather_corn_etf_daily_decision_report.md"),
+            _path(DOCS_SRC / "limitations_discussion_future_work.md"),
             _path(DOCS_SRC / "project_readme_workflow.md"),
         ],
         "targets": [
@@ -313,6 +314,7 @@ def task_chartbook_build():
             _path(CHARTBOOK_DIR / "cb" / "project_readme_workflow.html"),
             _path(CHARTBOOK_DIR / "cb" / "final_figure_analysis.html"),
             _path(CHARTBOOK_DIR / "cb" / "weather_corn_etf_daily_decision.html"),
+            _path(CHARTBOOK_DIR / "cb" / "limitations_discussion_future_work.html"),
             _path(CHARTBOOK_DIR / "cb" / "charts.html"),
         ],
     }

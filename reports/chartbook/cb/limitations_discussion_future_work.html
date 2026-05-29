@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Chart List &#8212; CORN ETF Forecasting Reports</title>
+    <title>Limitations, Discussion, and Future Work &#8212; CORN ETF Forecasting Reports</title>
   
   
   
@@ -51,13 +51,14 @@
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'cb/charts';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cb/limitations_discussion_future_work';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Limitations, Discussion, and Future Work" href="limitations_discussion_future_work.html" /> 
+    <link rel="next" title="Chart List" href="charts.html" />
+    <link rel="prev" title="Weather Forecast Signals and Daily Trading Results" href="weather_corn_etf_daily_decision.html" /> 
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -145,6 +146,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -208,15 +213,15 @@
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Notes 📝</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_readme_workflow.html">CORN ETF Forecasting Project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="final_figure_analysis.html">Text, News, Calendar, and Price Signal Results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="weather_corn_etf_daily_decision.html">Weather Forecast Signals and Daily Trading Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="limitations_discussion_future_work.html">Limitations, Discussion, and Future Work</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Limitations, Discussion, and Future Work</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pipeline Charts 📈</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Chart List</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="charts.html">Chart List</a></li>
 </ul>
 
     </div>
@@ -276,7 +281,7 @@
       
       
       
-      <li><a href="../_sources/cb/charts.md" target="_blank"
+      <li><a href="../_sources/cb/limitations_discussion_future_work.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -346,7 +351,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -357,11 +364,22 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Chart List</h1>
+    <h1>Limitations, Discussion, and Future Work</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-level-takeaway">Project-Level Takeaway</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-across-the-two-experiments">Discussion Across The Two Experiments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#future-proposed-work">Future Proposed Work</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -370,10 +388,42 @@
                 
 <div id="searchbox"></div>
                 <article class="bd-article">
-                   <section class="tex2jax_ignore mathjax_ignore" id="chart-list">
-<h1>Chart List<a class="headerlink" href="#chart-list" title="Link to this heading">#</a></h1>
-<ul class="postlist-style-circle postlist simple">
-</ul>
+                   <section class="tex2jax_ignore mathjax_ignore" id="limitations-discussion-and-future-work">
+<h1>Limitations, Discussion, and Future Work<a class="headerlink" href="#limitations-discussion-and-future-work" title="Link to this heading">#</a></h1>
+<section id="project-level-takeaway">
+<h2>Project-Level Takeaway<a class="headerlink" href="#project-level-takeaway" title="Link to this heading">#</a></h2>
+<p>The project tests whether <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF returns can be predicted better when market history is combined with domain-specific information. The weekly text/news pipeline asks whether USDA-style text, AI scores, GDELT news signals, calendar variables, and price history improve return classification or expected-return trading. The daily weather pipeline asks whether short-lead CFSv2 forecasts add incremental value beyond a price/calendar baseline.</p>
+<p>The two strands tell a consistent story. Classification accuracy is difficult because large weekly moves are sparse and noisy, but strategy-based evaluation shows more encouraging evidence of signal value. The weather results are strongest at short forecast leads, especially when forecast anomalies are measured relative to current observed weather conditions.</p>
+</section>
+<section id="discussion-across-the-two-experiments">
+<h2>Discussion Across The Two Experiments<a class="headerlink" href="#discussion-across-the-two-experiments" title="Link to this heading">#</a></h2>
+<p>The text/news experiment is best interpreted as an information-set comparison. Price-only signals provide the necessary baseline. Calendar variables add crop-season structure, while AI/USDA-style and GDELT news features attempt to capture market-relevant information that is not fully summarized by recent returns. The fixed +/-2% classifier remains weak because the target is imbalanced: most weeks are flat, while the up and down classes are relatively rare. Expected-return and strategy metrics therefore provide a more useful evaluation lens than raw classification accuracy alone.</p>
+<p>The weather experiment is more directly tied to a commodity-market mechanism. <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF is linked to CBOT corn futures, and corn futures prices reflect expectations about future crop supply and demand. Forecasts of heat and dryness can matter when they change expected crop stress or yield risk. The projected-change variables are especially important because they compare future forecast conditions with the observed state near the decision date. This framing is closer to how markets process new information: a hot and dry forecast is more relevant if it represents a meaningful deterioration from current conditions.</p>
+<p>Across both experiments, the most persuasive evidence is not a single metric. OOS R2, correlation, direction accuracy, Sharpe ratio, drawdown, turnover, and cumulative return need to be read together. A model can have small R2 but still improve a trading rule if it ranks signs or large opportunities better than the baseline. Conversely, a visually attractive equity curve can be fragile if it depends on a short sample, high turnover, or a few concentrated episodes.</p>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<p>The main limitation is sample size. The weekly model has 175 out-of-sample weeks, and the daily weather model covers 2022-2025. These samples are useful for walk-forward and expanding-window testing, but they do not span many commodity-market regimes. Any strong-looking strategy result should therefore be treated as exploratory evidence rather than as proof of a production trading system.</p>
+<p>The classification target is another limitation. A fixed +/-2% weekly threshold creates a highly imbalanced three-class problem. The flat class dominates, so conventional accuracy can be misleading. This is why balanced accuracy, macro F1, and trading outcomes are more informative than raw accuracy.</p>
+<p>The text/news pipeline depends on feature proxies. USDA-style text scores, AI features, and GDELT news measures may capture useful information, but they are still noisy summaries of a much larger information environment. The current design does not fully model how quickly news is incorporated into futures prices or how different types of news should decay over time.</p>
+<p>The weather pipeline uses a single U.S. Corn Belt bounding box. This is a reasonable MVP design, but corn futures also respond to global supply risks and to weather outside the U.S. South America is especially relevant during the U.S. winter, and the current U.S.-only weather specification may miss Brazil and Argentina corn-region signals.</p>
+<p>The same heat and dryness variables are used across the full calendar year. This is transparent, but the economic meaning of weather changes by crop stage. Hot and dry conditions are most relevant during pollination, wet and cold conditions may matter more during planting, wet conditions can delay harvest, and winter U.S. Corn Belt weather is less directly tied to current production. A season-gated specification would let weather variables have different coefficients during planting, pollination, harvest, and winter-storage periods.</p>
+<p>The weather backtest is also a simplified implementation. The regression target is the future 5-trading-day <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF return, but the plotted trading strategy converts the predicted 5-day return into a daily long/short position and compounds realized next-day returns. This makes the equity curves useful for comparing signals, but it is not the same as a fully realistic weekly holding-period strategy.</p>
+<p>The backtests include a transaction-cost assumption, but they do not fully model bid-ask spreads, ETF liquidity, borrow costs for short positions, market impact, taxes, or execution timing. Long/short rules are useful for measuring directional signal value, but a long/cash rule may be more realistic for weather supply-risk signals because bearish weather interpretations are not necessarily symmetric with bullish hot/dry crop-stress signals.</p>
+</section>
+<section id="future-proposed-work">
+<h2>Future Proposed Work<a class="headerlink" href="#future-proposed-work" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Add season-specific weather interactions. Weather coefficients should be allowed to differ across planting, pollination, harvest, and winter-storage periods.</p></li>
+<li><p>Add forecast-revision variables. A useful weather feature is the change in the forecast for the same valid date from one decision date to the next, because markets should react more strongly to new information than to already known forecast levels.</p></li>
+<li><p>Add South America weather factors for December-May. Brazil and Argentina corn-region weather can affect global supply expectations when U.S. Corn Belt weather is less directly relevant.</p></li>
+<li><p>Compare daily-rebalanced and 5-trading-day holding-period strategies. The current weather regression target is a future 5-trading-day return, so a weekly or non-overlapping holding-period backtest would be a useful robustness check.</p></li>
+<li><p>Evaluate long/cash strategies in addition to long/short rules. Weather supply-risk signals may be asymmetric: hot and dry crop stress can be bullish, but benign weather does not necessarily imply an equally strong bearish trade.</p></li>
+<li><p>Improve target definitions for text/news models. Alternatives include volatility-adjusted thresholds, quantile targets, ranking losses, or direct expected-return objectives rather than fixed absolute return bands.</p></li>
+<li><p>Add turnover-aware model selection. Strategy performance should be evaluated with transaction costs and turnover constraints inside the validation loop, not only after forecasts are generated.</p></li>
+<li><p>Test robustness across alternative commodities and weather regions. A broader commodity panel would help determine whether the observed patterns are specific to <code class="docutils literal notranslate"><span class="pre">CORN</span></code> ETF or reflect a more general agricultural futures mechanism.</p></li>
+</ol>
+</section>
 </section>
 
 <div class="section ablog__blog_comments">
@@ -391,13 +441,22 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="limitations_discussion_future_work.html"
+       href="weather_corn_etf_daily_decision.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Limitations, Discussion, and Future Work</p>
+        <p class="prev-next-title">Weather Forecast Signals and Daily Trading Results</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="charts.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chart List</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -405,6 +464,25 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-level-takeaway">Project-Level Takeaway</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-across-the-two-experiments">Discussion Across The Two Experiments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#future-proposed-work">Future Proposed Work</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
