@@ -8,7 +8,10 @@ __pycache__/
 .doit.db
 *.egg-info/
 .env
-.env.*
+# .env.*
+
+# Allow example environment file
+!.env.example*
 
 # Keep source-controlled placeholders, but do not commit downloaded data or model output.
 data/raw/*
