@@ -311,6 +311,56 @@ Realized daily-rebalanced equity curves are strongest for the short leads. In th
 
 Overall, the strongest signal comes from short-horizon forecast information, especially when the model combines CFSv2 anomaly relative to the annual cycle with projected change from the current observed weather state.
 
+## Interpretation Notes
+
+The discussion below refers to the no-buffer `signal_buffer_0p0pct` results used for the main class-project comparison.
+
+### Discussion
+
+The main empirical question is whether subseasonal weather forecast information contains incremental predictive content for CORN ETF returns beyond standard price and calendar controls. The results suggest that the answer is conditionally yes, but the useful signal is concentrated in short leads and is stronger when the model uses both forecast anomalies and projected-change anomalies.
+
+The price/calendar model is a demanding baseline because it already includes lagged returns, recent volatility, momentum, month and quarter controls, cyclical week-of-year and day-of-week controls, and crop-season dummies. Therefore, the weather models are not simply being compared against a naive constant-return benchmark. They are tested on whether CFSv2 weather forecast information improves prediction after controlling for basic price dynamics and seasonality.
+
+Across the tested leads, the clearest evidence appears at the short forecast horizons, especially the +7-day and +14-day leads. This is economically intuitive. CORN ETF is a futures-based corn exposure, so the most relevant weather information is likely information that can change market expectations over the next several trading days. Longer-lead forecasts may still contain useful climate information, but their noise level and forecast uncertainty are higher, which can weaken their relationship with short-horizon ETF returns.
+
+The comparison between the `forecast_anom` and `forecast_anom_projected_change` models is especially important. The `forecast_anom` model asks whether the CFSv2 forecast is hot or dry relative to the model's lead-specific annual cycle. The projected-change variables ask a more market-relevant question: given the weather conditions already observed near the decision date, does the forecast imply that heat or dryness risk will intensify or fade? This distinction matters because futures prices should respond more to new information than to weather states that are already known or already priced. In the +7-day equity curve, the projected-change model produces the strongest cumulative growth among the three model specifications, suggesting that the change from current observed conditions to forecasted future conditions is more informative than the forecast anomaly level alone.
+
+The trading results should be interpreted as exploratory rather than as a production trading system. The regression target is the future 5-trading-day CORN ETF return, but the plotted trading strategy converts the predicted 5-day return into a daily long/short position and compounds realized next-day returns. This makes the equity curves useful for comparing signals, but they are not a fully realistic implementation of a weekly holding-period strategy. In addition, transaction costs are included in a simplified way, and the backtest does not model all real-world frictions such as bid-ask spreads, ETF liquidity, borrow costs for short positions, tax treatment, or market impact.
+
+A second caution is that regression fit and trading performance are not identical. A model can improve OOS R2 or prediction-realized correlation without always producing the highest Sharpe ratio, because trading performance also depends on the sign threshold, position turnover, return volatility, and drawdown profile. For this reason, the most convincing evidence is not any single metric, but the joint pattern across OOS R2, correlation, direction accuracy, Sharpe ratio, drawdown, and equity-curve behavior.
+
+The current results are consistent with the idea that short-horizon CFSv2 forecasts contain some tradable information for CORN ETF returns, particularly when forecast anomalies are measured relative to the current observed weather state. However, the effect is not uniform across all leads or all model specifications. The strongest conclusion is therefore not that weather forecasts mechanically predict CORN ETF returns, but that projected changes in Corn Belt heat and dryness forecasts appear to add incremental information beyond price/calendar controls in the 2022-2025 out-of-sample period.
+
+### Economic Interpretation
+
+The economic mechanism is based on corn supply risk. CORN ETF provides exchange-traded exposure to CBOT corn futures rather than physical corn. Because corn futures prices reflect market expectations about future corn supply and demand, weather forecasts can matter when they change expectations about crop stress, yield risk, harvest conditions, or storage and transportation risk. During the U.S. growing season, hot and dry Corn Belt forecasts are plausibly bullish because they can increase expected supply risk. Outside the main growing season, the interpretation is less direct, which motivates future work using season-specific weather factors.
+
+The projected-change model has a natural economic interpretation. A hot and dry forecast may not be new information if the Corn Belt is already hot and dry. But a forecast that implies a transition from normal current conditions to much hotter or drier future conditions may represent a more meaningful update to market expectations. This is why the projected-change variables may capture a more tradable signal than the forecast anomaly variables alone.
+
+### Limitations
+
+Several limitations should be kept in mind.
+
+First, the test period is short. The out-of-sample evaluation covers 2022-2025, which is useful for a realistic expanding-window design but still represents only a small number of market regimes.
+
+Second, the current model uses a single Corn Belt bounding box. This is a reasonable MVP design, but corn futures prices also respond to weather in other regions, especially South America during the U.S. winter. Future versions could add Brazil and Argentina corn-region weather factors for December-May.
+
+Third, the same heat and dryness variables are currently used across the full calendar year. This is simple and transparent, but the economic meaning of weather changes across the crop cycle. For example, hot and dry conditions are most relevant during pollination, wet and cold conditions may matter more during planting, wet conditions may delay harvest, and winter U.S. Corn Belt weather is less directly tied to current U.S. corn production. A season-gated specification could allow weather variables to have different coefficients during planting, pollination, harvest, and winter-storage periods.
+
+Fourth, the backtest uses simplified trading assumptions. The long/short rule is useful for measuring whether model predictions have directional value, but a more conservative strategy would use a signal buffer or a long/cash rule. This may be more realistic because bearish weather signals are not necessarily symmetric with bullish supply-risk signals.
+
+### Suggested Extensions
+
+1. Add season-specific weather interactions. Instead of applying the same heat and dryness coefficients throughout the year, interact weather factors with planting, pollination, harvest, and winter-storage indicators.
+
+2. Add forecast-revision variables. A useful next feature is the change in the forecast for the same valid date from one decision date to the next. This would better capture new information entering the market.
+
+3. Add South America weather factors for December-May. U.S. Corn Belt weather is less relevant after harvest, but Brazil and Argentina weather can still affect global corn supply expectations during the U.S. winter.
+
+4. Compare daily-rebalanced and 5-trading-day holding-period strategies. Since the regression target is a 5-trading-day return, a non-overlapping or weekly holding-period backtest would be a useful robustness check.
+
+5. Evaluate long/cash rules in addition to long/short rules. A thresholded long/cash strategy may better reflect the asymmetric interpretation of weather signals: hot/dry crop stress may be bullish, while benign weather does not necessarily imply an equally strong bearish trade.
+
 ## Main Command
 
 Example Derecho command for the no-buffer (`signal_buffer_0p0pct`) result:
